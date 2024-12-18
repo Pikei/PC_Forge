@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="PC_Forge" type="CompoundRunConfigurationType">
+    <toRun name="PC_Forge_frontend" type="js.build_tools.npm" />
+    <toRun name="PC_Forge_webscrapper" type="PythonConfigurationType" />
+    <toRun name="PC_Forge_backend" type="SpringBootApplicationConfigurationType" />
+    <method v="2" />
+  </configuration>
+</component>
