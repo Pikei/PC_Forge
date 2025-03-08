@@ -2,10 +2,11 @@ from product.Product import Product
 
 
 class Motherboard(Product):
-    def __init__(self, name, producer, category, description, price, chipset, socket, memory_standard, memory_slots,
+    def __init__(self, name, producer, category, description, price, producer_code, chipset, socket, memory_standard,
+                 memory_slots,
                  memory_max_capacity, memory_type, supported_memory_frequencies, mb_standard, width, depth, wifi,
                  bluetooth, audio, m2_slots, sata_ports, usb_ports):
-        super().__init__(name, producer, category, description, price)
+        super().__init__(name, producer, category, description, price, producer_code)
         self.chipset = chipset
         self.socket = socket
         self.memory_standard = memory_standard

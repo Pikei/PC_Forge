@@ -1,22 +1,28 @@
-import requests
-from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions
 
 class Util:
-    def __init__(self, base_url, sub_url):
-        self.__base_url = base_url
-        self.__sub_url = sub_url
+    def __init__(self, url):
+        self.url = url
         self.all_links = []
-        self.__response = None
-        self.__html = None
-        self.__soup = None
+        options = Options()
+        options.add_argument("--headless")
+        self.__webdriver = webdriver.Chrome(options=options)
 
-    def find_products(self, product_selector, product_class, next_page_selector, next_page_class):
-        self.__response = requests.get(self.__base_url + self.__sub_url)
-        self.__html = self.__response.text
-        self.__soup = BeautifulSoup(self.__html, features="html.parser")
-        products = self.__soup.find_all(product_selector, class_=product_class)
-        for i in range(len(products)):
-            self.all_links.append(self.__base_url + products[i].get("href"))
-        if self.__soup.find(next_page_selector, class_=next_page_class):
-            self.__sub_url = self.__soup.find(next_page_selector, class_=next_page_class).find("a").get("href")
-            self.find_products(product_selector, product_class, next_page_selector, next_page_class)
+    def find_products(self):
+        self.__webdriver.get(self.url)
+        WebDriverWait(self.__webdriver, 10).until(expected_conditions.presence_of_element_located((By.TAG_NAME, "a")))
+        links = self.__webdriver.find_elements(By.CSS_SELECTOR, "a.productLink")
+        for link in links:
+            self.all_links.append(link.get_attribute("href"))
+
+        try:
+            next_page = self.__webdriver.find_element(By.CSS_SELECTOR, "li.pagination-lg.next a.pagination-btn")
+            self.url = next_page.get_attribute("href")
+            self.find_products()
+        except:
+            self.__webdriver.quit()
+        return self.all_links
