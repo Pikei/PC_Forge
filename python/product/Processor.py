@@ -1,10 +1,9 @@
-from Product import Product
+from product.Product import Product
 
 
 class Processor(Product):
     def __init__(self, name, producer, category, description, price, producer_code, line, model, cores, threads, socket,
-                 unlocked,
-                 frequency, max_frequency, integrated_graphics_unit, tdp, cooler_included):
+                 unlocked, frequency, max_frequency, integrated_graphics_unit, tdp, cooler_included):
         super().__init__(name, producer, category, description, price, producer_code)
         self.line = line
         self.model = model
