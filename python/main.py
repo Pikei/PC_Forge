@@ -1,28 +1,38 @@
-from unicodedata import category
+from selenium.webdriver.chrome.options import Options
+from selenium import webdriver
 
-from product.ProductCategory import UrlCategory
-from util import SpecsUtil
+from ProductParser import ProductParser
+from product.Product import Product
+from product.ProductCategory import UrlCategory, ProductCategory
+from util import WebUtil
+
 if __name__ == "__main__":
-    morele_main = "https://www.morele.net/"
-    products = {}
-    util = SpecsUtil(morele_main + UrlCategory.CPU)
-    links = util.find_products()
-    for link in links:
-        cpu = util.parse_cpu(link)
-        if cpu is None:
+    products: dict[str:Product] = {}
+    options = Options()
+    options.add_argument("--headless")
+    options.add_argument("--window-size=1920,1080")
+    driver = webdriver.Chrome(options=options)
+    parser = ProductParser(driver)
+    util = WebUtil(driver)
+    all_links = []
+    for url in UrlCategory:
+        for link in util.find_products(url):
+            all_links.append(link)
+
+    for link in all_links:
+        prod = parser.parse_product(link)
+        if prod is None:
             continue
-        if cpu.producer_code in products:
-            print("product: ", cpu.name, " already exists.")
-            if cpu.packaging != products[cpu.producer_code].packaging:
-                print(cpu.packaging, " | ", products[cpu.producer_code].packaging)
-            if cpu.description_headers != products[cpu.producer_code].description_headers:
-                print(cpu.description_headers, " | ", products[cpu.producer_code].description_headers)
-            if cpu.description_paragraphs != products[cpu.producer_code].description_paragraphs:
-                print(cpu.description_paragraphs, " | ", products[cpu.producer_code].description_paragraphs)
-            if cpu.price != products[cpu.producer_code].price:
-                print(cpu.price, " | ", products[cpu.producer_code].price)
-            if cpu.cooler_included != products[cpu.producer_code].cooler_included:
-                print(cpu.cooler_included, " | ", products[cpu.producer_code].cooler_included)
+        if prod.producer_code in products:
+            print("=========Duplicate===========")
+            prod.print_product_specs()
+            products[prod.producer_code].print_product_specs()
+            print("==============================")
         else:
-            products[cpu.producer_code] = cpu
-            cpu.print_product_specs()
+            products[prod.producer_code] = prod
+            print("SUCCESS: Parsed:", prod.name)
+
+    for prod in products.values():
+        prod.print_product_specs()
+
+    print("Parsed products: " + str(len(products)) + "/" + str(len(all_links)))
