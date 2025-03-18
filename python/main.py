@@ -3,7 +3,7 @@ from selenium import webdriver
 
 from ProductParser import ProductParser
 from product.Product import Product
-from product.ProductCategory import UrlCategory, ProductCategory
+from product.ProductCategory import UrlCategory
 from util import WebUtil
 
 if __name__ == "__main__":
@@ -30,7 +30,7 @@ if __name__ == "__main__":
             print("==============================")
         else:
             products[prod.producer_code] = prod
-            print("SUCCESS: Parsed:", prod.name)
+            print("Successfully parsed:", prod.name)
 
     for prod in products.values():
         prod.print_product_specs()

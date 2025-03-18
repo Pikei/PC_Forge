@@ -1,5 +1,4 @@
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
 from product.Processor import Processor
@@ -34,10 +33,9 @@ class ProductParser:
             integrated_graphics_unit = None
         tdp = self.util.extract_int(self.util.get_value_from_spec_row(rows, "TDP"))
         cooler_included = self.util.translate_to_bool(self.util.get_value_from_spec_row(rows, "Załączone chłodzenie"))
-        return Processor(product.name, product.producer, product.category, product.description_headers,
-                         product.description_paragraphs, product.price, product.producer_code,
-                         line, model, num_of_cores, num_of_threads, socket, unlocked, frequency, max_frequency,
-                         integrated_graphics_unit, tdp, cooler_included, pack)
+        return Processor(product.name, product.producer, product.category, product.description, product.price,
+                         product.producer_code, line, model, num_of_cores, num_of_threads, socket, unlocked,
+                         frequency, max_frequency, integrated_graphics_unit, tdp, cooler_included, pack)
 
     def parse_product(self, url: str):
         print("Parsing:", url)
@@ -59,11 +57,16 @@ class ProductParser:
         product_category = str(self.product_category(cat_url))
         self.util.expand_description()
         desc = self.driver.find_element(By.CLASS_NAME, "panel-description")
-        desc_headers = self.util.description(desc.find_elements(By.TAG_NAME, "h3"))
-        desc_paragraphs = self.util.description(desc.find_elements(By.TAG_NAME, "p"))
-        # TODO dodać znajdowanie list w opisach
+        description = ""
+        # for child in desc.find_elements(By.XPATH, "./*"):
+        #     if child.text != "":
+        #         description += "<" + child.tag_name + ">" + child.text + "</" + child.tag_name + ">"
+        # description = ""
+        for row in desc.find_elements(By.CSS_SELECTOR, "div.row div.text1"):
+            # if row.text != "":
+            description += self.util.get_description(row)
         price = self.util.extract_float(self.driver.find_element(By.CLASS_NAME, "product-price").text)
-        product = Product(name, producer, product_category, desc_headers, desc_paragraphs, price, producer_code)
+        product = Product(name, producer, product_category, description, price, producer_code)
         match product_category:
             case ProductCategory.CASE:
                 pass

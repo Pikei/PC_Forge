@@ -1,11 +1,9 @@
 class Product:
-    def __init__(self, name: str, producer: str, category: str, description_headers: list[str],
-                 description_paragraphs: list[str], price: float, producer_code: str):
+    def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str):
         self.name: str = name
         self.producer = producer
         self.category = category
-        self.description_headers = description_headers
-        self.description_paragraphs = description_paragraphs
+        self.description = description
         self.price = price
         self.producer_code = producer_code
 
@@ -16,9 +14,7 @@ class Product:
         print("Producer code:", self.producer_code)
         print("Price [PLN]:", self.price)
         print("-- DESCRIPTION --")
-        for i in range(0, len(self.description_headers)):
-            print(self.description_headers[i])
-            print(self.description_paragraphs[i])
+        print(self.description.replace("<", "\n<").replace("\n</", "</"))
 
     def print_end(self):
         print("---------------------------------------\n")
