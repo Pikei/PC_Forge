@@ -1,0 +1,25 @@
+{
+  "prod1": {
+    "url": "https://www.morele.net/procesor-intel-core-i5-12400f-2-5-ghz-18-mb-box-bx8071512400f-9643517/",
+    "product_data": {
+      "name": "Procesor Intel Core i5-12400F",
+      "producer": "Intel",
+      "category": "CPU",
+      "description": "<h3>Intel Core i5-12400F</h3>\n<p>Dwunasta generacja procesorów Intel Core dla komputerów stacjonarnych - Alder Lake, opracowana została przede wszystkim po to, by sprostać wymaganiom graczy, oczekujących od zestawów komputerowych niezrównanej wydajności zarówno w rozrywce, jak i pracy wielozadaniowej.</p>\n<p>Dwa rodzaje rdzeni procesora Intel Core i5-12400F zadbają o to, by wydajności nie zabrakło nawet w najbardziej wymagających produkcjach. Łącznie procesor wyposażony został w aż 6 rdzeni i 12 wątków.</p>\n<h3>Intel Thread Director - właściwy rdzeń do właściwego zadania</h3>\n<p>Za przydzielanie zadań do właściwych rdzeni odpowiada technologia Intel Thread Director, priorytetyzująca zadania i zarządzająca obciążeniem procesora.</p>\n<h3>Wsparcie dla potężnych podzespołów</h3>\n<p>Nowa architektura to znacznie więcej, niż tylko surowa wydajność procesora. To również możliwość sparowania go z pozostałymi, równie wydajnymi podzespołami, by optymalnie wykorzystać oferowane przez nich możliwości.</p>\n<p>Procesor Intel Core i5-12400F może pracować nawet z najszybszymi pamięciami operacyjnymi - DDR5, oraz potrafi wykorzystać przepustowość interfejsu PCIe Gen5.</p>\n<p>Pełnię możliwości procesora można osiągnąć dzięki umieszczeniu go na płycie głównej wspierającej interfejs Thunderbolt 4, oraz wyposażonej w kartę sieciową Intel Killer Wi-Fi 6/6E (Gig+).</p>",
+      "price": 469.0,
+      "producer_code": "BX8071512400F",
+      "line": "Core i5",
+      "model": "i5-12400F",
+      "cores": 6,
+      "threads": 12,
+      "socket": "Socket 1700",
+      "unlocked": false,
+      "frequency": 2.5,
+      "max_frequency": 4.4,
+      "integrated_graphics_unit": null,
+      "tdp": 65,
+      "cooler_included": true,
+      "packaging": "BOX"
+    }
+  }
+}

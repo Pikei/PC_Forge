@@ -6,10 +6,8 @@ from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.support.expected_conditions import presence_of_element_located
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
-
 
 class WebUtil:
     def __init__(self, driver: webdriver.Chrome):
@@ -22,6 +20,7 @@ class WebUtil:
             element = WebDriverWait(self.driver, 5).until(
                 expected_conditions.presence_of_element_located(
                     (By.CSS_SELECTOR, "button.btn.btn-primary.w-100.btn--save-all")))
+            sleep(1)
             element.click()
             self.__cookies_accepted = True
         except:
@@ -43,6 +42,7 @@ class WebUtil:
         try:
             WebDriverWait(self.driver, 2).until(
                 expected_conditions.presence_of_element_located((by, wait_selector)))
+            sleep(1)
         except:
             print("element: ", wait_selector, " does not exist on this page.")
             return False
@@ -69,7 +69,7 @@ class WebUtil:
             if int(current_page_num) < int(last_page_num):
                 sleep(0.1)
                 self.driver.find_element(By.CSS_SELECTOR, "li.pagination-lg.next a.pagination-btn").click()
-                sleep(1)
+                sleep(0.5)
             else:
                 break
         return links
@@ -135,13 +135,14 @@ class WebUtil:
                 res += "</" + line.tag_name + ">"
         return res
 
-    def get_description(self, row: WebElement):
+    def get_description(self, row: WebElement, product_name: str):
         content = ""
         try:
-            wait = WebDriverWait(row, 10).until(expected_conditions.presence_of_element_located((By.TAG_NAME, "h3")))
-            content = self.parse_to_html(wait)
+            header = WebDriverWait(row, 10).until(expected_conditions.presence_of_element_located((By.TAG_NAME, "h3")))
+            content = self.parse_to_html(header)
         except:
             print("Description row without header")
+            content = "<h3>" + product_name + "</h3>"
         paragraphs = row.find_elements(By.TAG_NAME, "p")
         lists = row.find_elements(By.TAG_NAME, "ul")
         if len(paragraphs) > 0 and len(lists) > 0:

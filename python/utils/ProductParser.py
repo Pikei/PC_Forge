@@ -1,11 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-
 from product.Processor import Processor
 from product.Product import Product
 from product.ProductCategory import UrlCategory, ProductCategory
-from util import WebUtil
-
+from utils.WebUtil import WebUtil
 
 class ProductParser:
     def __init__(self, driver: webdriver.Chrome):
@@ -58,13 +56,8 @@ class ProductParser:
         self.util.expand_description()
         desc = self.driver.find_element(By.CLASS_NAME, "panel-description")
         description = ""
-        # for child in desc.find_elements(By.XPATH, "./*"):
-        #     if child.text != "":
-        #         description += "<" + child.tag_name + ">" + child.text + "</" + child.tag_name + ">"
-        # description = ""
         for row in desc.find_elements(By.CSS_SELECTOR, "div.row div.text1"):
-            # if row.text != "":
-            description += self.util.get_description(row)
+            description += self.util.get_description(row, name)
         price = self.util.extract_float(self.driver.find_element(By.CLASS_NAME, "product-price").text)
         product = Product(name, producer, product_category, description, price, producer_code)
         match product_category:
@@ -88,19 +81,5 @@ class ProductParser:
     @staticmethod
     def product_category(category_url):
         match category_url:
-            # case UrlCategory.CASE:
-            #     return ProductCategory.CASE
-            # case UrlCategory.GPU:
-            #     return ProductCategory.GPU
-            # case UrlCategory.SSD:
-            #     return ProductCategory.SSD
-            # case UrlCategory.HDD:
-            #     return ProductCategory.HDD
-            # case UrlCategory.MB:
-            #     return ProductCategory.MB
-            # case UrlCategory.POWER_SUPPLY:
-            #     return ProductCategory.POWER_SUPPLY
             case UrlCategory.CPU:
                 return ProductCategory.CPU
-            # case UrlCategory.RAM:
-            #     return ProductCategory.RAM
