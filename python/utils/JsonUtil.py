@@ -1,28 +1,46 @@
 import json
 import os
+
 from product.Processor import Processor
 from product.Product import Product
 from product.ProductCategory import ProductCategory
 
 class JsonUtil:
     def __init__(self):
-        self.json_path = os.path.join(os.getcwd(), "json", "saved_products.json")
+        directory_name = "json"
+        file_name = "saved_products.json"
+        self.json_path = os.path.join(os.getcwd(), directory_name, file_name)
         self.parsed_urls = {}
+        try:
+            os.mkdir(directory_name)
+            print(f"Directory '{directory_name}' created successfully.")
+        except FileExistsError:
+            print(f"Directory '{directory_name}' already exists.")
+        except PermissionError:
+            print(f"Permission denied: Unable to create '{directory_name}'.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
     def save_product(self, url: str, product: Product):
         data_to_save = {}
-        with open(self.json_path, mode="r+", encoding="utf-8") as json_file:
-            data = json.load(json_file)
-            data_to_save["url"] = url
-            data_to_save["product_data"] = self.parse_product_to_json(product)
-            data.append(data_to_save)
-            json_file.seek(0)
-            json.dump(data, json_file, indent=4)
+        data = []
+        data_to_save["url"] = url
+        data_to_save["product_data"] = self.parse_product_to_json(product)
+        try:
+            with open(self.json_path, mode="r+", encoding="utf-8") as json_file:
+                data = json.load(json_file)
+                data.append(data_to_save)
+                json_file.seek(0)
+                json.dump(data, json_file, indent=4)
+        except:
+            with open(self.json_path, mode="w", encoding="utf-8") as json_file:
+                data.append(data_to_save)
+                json.dump(data, json_file, indent=4)
 
     def load_saved_products(self):
         products: dict[str:Product] = {}
         if not os.path.exists(self.json_path):
-            print("Plik", self.json_path, "nie istnieje")
+            print("File", self.json_path, "does not exists")
             return {}
         with open(self.json_path, encoding="utf-8") as json_file:
             data = json.load(json_file)
