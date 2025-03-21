@@ -27,14 +27,10 @@ if __name__ == "__main__":
         prod = parser.parse_product(link)
         if prod is None:
             continue
-        if prod.producer_code in products:
-            print("=========Duplicate===========")
-            prod.print_product_specs()
-            products[prod.producer_code].print_product_specs()
-            print("==============================")
         else:
             products[prod.producer_code] = prod
-            print("Successfully parsed:", prod.name)
+            json.save_product(link, prod)
+            print("SUCCESS: Parsed and saved to JSON file ", prod.name)
 
     for prod in products.values():
         prod.print_product_specs()
