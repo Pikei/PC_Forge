@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from product.Processor import Processor
 from product.Product import Product
 from product.ProductCategory import UrlCategory, ProductCategory
+from utils.CommonUtils import CommonUtils
 from utils.WebUtil import WebUtil
 
 class ProductParser:
@@ -10,6 +11,7 @@ class ProductParser:
         self.url = "https://www.morele.net/"
         self.driver = driver
         self.util = WebUtil(self.driver)
+        CommonUtils.directory_exists("images")
 
     def parse_cpu(self, product: Product, rows):
         pack = str(self.util.get_value_from_spec_row(rows, "Wersja opakowania"))
@@ -43,6 +45,7 @@ class ProductParser:
         if not self.util.check_if_available():
             print("FAIL: Product is unavailable")
             return None
+
         rows = self.driver.find_elements(By.CLASS_NAME, "specification__row")
         producer_code = self.util.get_value_from_spec_row(rows, "Kod producenta")
         if producer_code == "":
@@ -59,6 +62,8 @@ class ProductParser:
         for row in desc.find_elements(By.CSS_SELECTOR, "div.row div.text1"):
             description += self.util.get_description(row, name)
         price = self.util.extract_float(self.driver.find_element(By.CLASS_NAME, "product-price").text)
+        self.save_images(producer_code)
+
         product = Product(name, producer, product_category, description, price, producer_code)
         match product_category:
             case ProductCategory.CASE:
@@ -83,3 +88,19 @@ class ProductParser:
         match category_url:
             case UrlCategory.CPU:
                 return ProductCategory.CPU
+
+    def hide_element_if_exists(self, by: By, locator: str):
+        elements_to_hide = self.driver.find_elements(by, locator)
+        if len(elements_to_hide) > 0:
+            for el in elements_to_hide:
+                self.driver.execute_script("arguments[0].style.display = 'none';", el)
+
+    def save_images(self, producer_code: str):
+        self.hide_element_if_exists(By.CSS_SELECTOR, "button.btn-shopping-lists")
+        self.hide_element_if_exists(By.CSS_SELECTOR, "button.btn-share-link")
+        self.hide_element_if_exists(By.CSS_SELECTOR, "div.prod-gallery-video-btn")
+        images = self.driver.find_elements(By.CSS_SELECTOR, "picture img")
+        for img in images:
+            if producer_code in img.accessible_name:
+                img.screenshot("images\\" + producer_code + ".png")
+                break

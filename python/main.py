@@ -31,7 +31,6 @@ if __name__ == "__main__":
             products[prod.producer_code] = prod
             json.save_product(link, prod)
             print("SUCCESS: Parsed and saved to JSON file ", prod.name)
-
     for prod in products.values():
         prod.print_product_specs()
 

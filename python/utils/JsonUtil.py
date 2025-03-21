@@ -4,22 +4,14 @@ import os
 from product.Processor import Processor
 from product.Product import Product
 from product.ProductCategory import ProductCategory
+from utils.CommonUtils import CommonUtils
 
 class JsonUtil:
     def __init__(self):
-        directory_name = "json"
         file_name = "saved_products.json"
-        self.json_path = os.path.join(os.getcwd(), directory_name, file_name)
+        self.json_path = os.path.join(os.getcwd(), "json", file_name)
         self.parsed_urls = {}
-        try:
-            os.mkdir(directory_name)
-            print(f"Directory '{directory_name}' created successfully.")
-        except FileExistsError:
-            print(f"Directory '{directory_name}' already exists.")
-        except PermissionError:
-            print(f"Permission denied: Unable to create '{directory_name}'.")
-        except Exception as e:
-            print(f"An error occurred: {e}")
+        CommonUtils.directory_exists("json")
 
     def save_product(self, url: str, product: Product):
         data_to_save = {}
