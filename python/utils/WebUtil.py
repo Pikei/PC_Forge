@@ -1,50 +1,90 @@
-import re
-from collections import OrderedDict
 from time import sleep
-
 from selenium import webdriver
-from selenium.webdriver import ActionChains
+from selenium.common import TimeoutException, NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support import expected_conditions as ec
+
+from utils.CommonUtils import CommonUtils
+
 
 class WebUtil:
+    """
+    Klasa zawierająca metody odpowiedzialne za pobieranie i interakcję z elementami na stronie
+    """
     def __init__(self, driver: webdriver.Chrome):
+        """
+        Konstruktor klasy ``WebUtil``
+        :param driver: Obiekt klasy WebDriver, odpowiedzialny za ładowanie strony i elementów znajdujących się na niej.
+        """
         self.driver = driver
         self.__cookies_accepted = False
         self.all_links = []
 
-    def accept_cookies(self):
+    def get_element(self, by: By, selector: str, driver=None):
+        """
+        Próbuje zlokalizować element na załadowanej stronie, czekając do 60 sekund, jeśli to konieczne.
+        Metoda ta zastępuje ``WebDriver.find_element()`` dodając czas oczekiwania na załadowanie elementu.
+        Metoda ``WebDriver.find_element()`` próbuje pobrać element od razu, co może sprawić,
+        że zostanie wyrzucony wyjątek, jeśli strona się jeszcze w pełni nie załadowała.
+        Rozwiązanie to jest przydatne w przypadku niestabilnego łącza internetowego.
+        Przy wywołaniu należy jednak pamiętać, że jeśli element nie istnieje na załadowanej stronie,
+        to metoda zwróci **None**, co spowoduje wyrzucenie wyjątku ``AttributeError``
+        w przypadku próby odwołania się do tego elementu.
+        :param by: Strategia lokalizowania elementu, np.: ``By.CLASS_NAME``, ``By.CSS_SELECTOR``, ``By.XPATH``
+        :param selector: Selektor wykorzystywany do zlokalizowania elementu dla konkretnej strategii
+        :param driver: Jest to argument opcjonalny, przekazywany obiekt klasy ``WebDriver`` lub ``WebElement``.
+            Służy do zawężenia obszaru poszukiwań elementu. Jeśli nie podano tego parametru przy wywołaniu metody,
+            używana jest główna instancja ``WebDriver`` w tej klasie
+        :return: Obiekt klasy ``WebElement`` jeśli został on zlokalizowany, **None** w przeciwnym razie
+        """
+        if driver is None:
+            driver = self.driver
         try:
-            element = WebDriverWait(self.driver, 5).until(
-                expected_conditions.presence_of_element_located(
-                    (By.CSS_SELECTOR, "button.btn.btn-primary.w-100.btn--save-all")))
-            sleep(1)
-            element.click()
-            self.__cookies_accepted = True
-        except:
-            return
+            element = WebDriverWait(driver, 60, poll_frequency=0.2).until(
+                ec.visibility_of_element_located((by, selector)))
+            return element
+        except TimeoutException:
+            return None
 
-    def expand_description(self):
+    def get_elements(self, by: By, selector: str, driver=None):
+        """
+        Próbuje zlokalizować wszystkie elementy na załadowanej stronie, czekając do 60 sekund, jeśli to konieczne.
+        Metoda ta zastępuje ``WebDriver.find_elements()`` dodając czas oczekiwania na załadowanie elementów.
+        Metoda ``WebDriver.find_elements()`` próbuje pobrać listę elementów od razu, co może sprawić,
+        że zostanie wyrzucony wyjątek, jeśli strona się jeszcze w pełni nie załadowała.
+        Rozwiązanie to jest przydatne w przypadku niestabilnego łącza internetowego.
+        :param by: Strategia lokalizowania elementów, np.: ``By.CLASS_NAME``, ``By.CSS_SELECTOR``, ``By.XPATH``
+        :param selector: Selektor wykorzystywany do zlokalizowania elementów dla konkretnej strategii
+        :param driver: Jest to argument opcjonalny, przekazywany obiekt klasy ``WebDriver`` lub ``WebElement``.
+            Służy do zawężenia obszaru poszukiwań elementów. Jeśli nie podano tego parametru przy wywołaniu metody,
+            używana jest główna instancja ``WebDriver`` w tej klasie
+        :return: Lista obiektów klasy ``WebElement`` jeśli wszystkie zostały zlokalizowane.
+            W przeciwnym razie zwracana jest pusta lista
+        """
+        if driver is None:
+            driver = self.driver
         try:
-            element = self.driver.find_element(By.CSS_SELECTOR, "toggle-btn.collapsible-description__btn.btn")
-            action = ActionChains(self.driver)
-            action.move_to_element(element).perform()
-            element.click()
-            sleep(1)
-        except:
-            return
+            elements = WebDriverWait(driver, 60, poll_frequency=0.2).until(
+                ec.presence_of_all_elements_located((by, selector)))
+            return elements if elements else []
+        except TimeoutException:
+            return []
 
-    def load_page(self, url: str, by: By, wait_selector: str):
-        sleep(0.5)
+    def load_page(self, url: str, by: By, selector: str):
+        """
+        Ładuje stronę, oczekując na pobranie kluczowego elementu.
+        Wywołuje metodę ``self.accept_cookies()``, jeśli pliki cookie jeszcze nie zostały zaakceptowane w tej sesji
+        :param url: Adres URL strony
+        :param by: Strategia lokalizowania elementu, np.: ``By.CLASS_NAME``, ``By.CSS_SELECTOR``, ``By.XPATH``
+        :param selector: Selektor wykorzystywany do zlokalizowania elementu dla konkretnej strategii
+        :return: **True**, jeśli wszystkie instrukcje zostały wykonane,
+            **False** jeśli nie udało się zlokalizować kluczowego elementu
+        """
         self.driver.get(url)
-        try:
-            WebDriverWait(self.driver, 2).until(
-                expected_conditions.presence_of_element_located((by, wait_selector)))
-            sleep(1)
-        except:
-            print("element: ", wait_selector, " does not exist on this page.")
+        if self.get_element(by, selector) is None:
+            print("element: ", selector, " does not exist on this page.")
             return False
 
         if not self.__cookies_accepted:
@@ -52,130 +92,79 @@ class WebUtil:
 
         return True
 
+    def accept_cookies(self):
+        """
+        Znajduje przycisk odpowiedzialny za akceptację plików cookie,
+        po czym go klika i ustawia flagę ``self.__cookies_accepted`` na **True**
+        """
+        cookie_btn = self.get_element(By.CSS_SELECTOR, "button.btn.btn-primary.w-100.btn--save-all")
+        if cookie_btn is not None:
+            cookie_btn.click()
+            self.__cookies_accepted = True
+        else:
+            return
+
     def find_products(self, url):
+        """
+        Ładuje podstronę z listą produktów w danej kategorii, po czym pobiera adresy URL do produktów.
+        Jeśli numer aktualnej strony jest mniejszy niż numer ostatniej strony,
+        pobiera link do następnej witryny i ładuje ją, wywołując metodę ``load_page()``, po czym powtarza proces.
+        :param url: Adres URL do pierwszej podstrony w danej kategorii produktów
+        :return: Lista adresów URL do produktów
+        """
         if not self.load_page(url, By.CSS_SELECTOR, "a.productLink"):
             return None
-        current_page_num = self.driver.find_element(By.CSS_SELECTOR, "li.pagination-lg.btn.active").text
-        last_page_num = self.driver.find_element(By.CSS_SELECTOR, "div.pagination-btn-nolink-anchor").text
-        category_name = self.driver.find_element(By.CSS_SELECTOR, "span.category-name.main").text
+        last_page_num = self.get_element(By.CSS_SELECTOR, "div.pagination-btn-nolink-anchor").text
+        category_name = self.get_element(By.CSS_SELECTOR, "span.category-name.main").text
         print("Getting product URLs. Current category: \"" + category_name + "\"")
-        links = []
-        while int(current_page_num) <= int(last_page_num):
-            current_page_num = self.driver.find_element(By.CSS_SELECTOR, "li.pagination-lg.btn.active").text
+        product_urls = []
+        while True:
+            current_page_num = self.get_element(By.CSS_SELECTOR, "li.pagination-lg.btn.active").text
             print("Page:", current_page_num + "/" + last_page_num)
-            for link in self.driver.find_elements(By.CSS_SELECTOR, "a.productLink"):
-                sleep(0.1)
-                links.append(link.get_attribute("href"))
+            for link in self.get_elements(By.CSS_SELECTOR, "a.productLink"):
+                product_urls.append(link.get_attribute("href"))
             if int(current_page_num) < int(last_page_num):
-                sleep(0.1)
-                self.driver.find_element(By.CSS_SELECTOR, "li.pagination-lg.next a.pagination-btn").click()
-                sleep(0.5)
+                url = self.get_element(By.CSS_SELECTOR, "li.pagination-lg.next a.pagination-btn").get_attribute("href")
+                self.load_page(url, By.CSS_SELECTOR, "a.productLink")
             else:
                 break
-        return links
+        return product_urls
 
-    def get_value_from_spec_row(self, rows, param_name):
-        for row in rows:
-            if row.find_element(By.CLASS_NAME, "specification__name").text == param_name:
-                return row.find_element(By.CLASS_NAME, "specification__value").text
-        return ""
-
-    def check_if_available(self):
+    def expand_description(self):
+        """
+        Metoda ta próbuje znaleźć przycisk do rozwijania opisu na stronie i jeśli ten istnieje, klika w niego,
+        po czym czeka sekundę, dając tym samym czas na zakończenie animacji rozwijania opisu.
+        """
         try:
-            self.driver.find_element(By.CLASS_NAME, "product-price")
-            return True
-        except:
-            return False
-
-    def is_digit(self, c: chr):
-        try:
-            int(c)
-            return True
-        except:
-            return False
-
-    def extract_float(self, s: str):
-        res = ""
-        s = s.replace(",", ".")
-        point_found = False
-        for char in s:
-            if self.is_digit(char):
-                res = res + char
-                continue
-            elif char == "." and not point_found:
-                res = res + char
-                point_found = True
-                continue
-            elif point_found and not self.is_digit(char):
-                break
-        if len(res) > 0:
-            return float(res)
-        return 0.0
-
-    def parse_to_html(self, element: WebElement):
-        return "<" + element.tag_name + ">" + element.text + "</" + element.tag_name + ">"
-
-    def add_par_and_list(self, paragraphs: list[WebElement], lists: list[WebElement]):
-        res = ""
-        position = {}
-        for p in paragraphs:
-            position[p.location['y']] = p
-        for l in lists:
-            position[l.location['y']] = l
-
-        position = OrderedDict(sorted(position.items()))
-
-        for line in position.values():
-            if line.tag_name == "p":
-                res += self.parse_to_html(line)
-            elif line.tag_name == "ul":
-                res += "<" + line.tag_name + ">"
-                for li in line.find_elements(By.TAG_NAME, "li"):
-                    res += self.parse_to_html(li)
-                res += "</" + line.tag_name + ">"
-        return res
+            self.driver.find_element(By.CSS_SELECTOR, "toggle-btn.collapsible-description__btn.btn").click()
+            sleep(1)
+        except NoSuchElementException:
+            return
 
     def get_description(self, row: WebElement, product_name: str):
-        content = ""
-        try:
-            header = WebDriverWait(row, 10).until(expected_conditions.presence_of_element_located((By.TAG_NAME, "h3")))
-            content = self.parse_to_html(header)
-        except:
-            print("Description row without header")
+        """
+        Pobiera opis ze strony i buduje z niego kod HTML
+        :param row: Pole wiersza opisu
+        :param product_name: Nazwa produktu, dodawana jako nagłówek, jeśli w danym wierszu nie znaleziono nagłówka
+        :return: Ciąg znaków będący kodem HTML opisu produktu
+        """
+        header = self.get_element(By.TAG_NAME, "h3", row)
+        if header is None:
             content = "<h3>" + product_name + "</h3>"
-        paragraphs = row.find_elements(By.TAG_NAME, "p")
-        lists = row.find_elements(By.TAG_NAME, "ul")
+        else:
+            content = CommonUtils.parse_to_html(header)
+
+        paragraphs = self.get_elements(By.TAG_NAME, "p", row)
+        lists = self.get_elements(By.TAG_NAME, "ul", row)
         if len(paragraphs) > 0 and len(lists) > 0:
-            self.add_par_and_list(paragraphs, lists)
+            CommonUtils.add_par_and_list(paragraphs, lists)
         elif len(paragraphs) > 0:
             for p in paragraphs:
-                content += self.parse_to_html(p)
+                content = content + CommonUtils.parse_to_html(p)
         elif len(lists) > 0:
             for ul in lists:
                 content += "<" + ul.tag_name + ">"
-                for li in ul.find_elements(By.TAG_NAME, "li"):
-                    content += self.parse_to_html(li)
+                for li in self.get_elements(By.TAG_NAME, "li", ul):
+                    content += CommonUtils.parse_to_html(li)
                 content += "</" + ul.tag_name + ">"
         return content
-
-    def translate_to_bool(self, s: str):
-        if re.search(s, "tak", re.IGNORECASE):
-            return True
-        return False
-
-    def extract_int(self, s: str):
-        res = ""
-        num_found = False
-        for char in s:
-            if self.is_digit(char):
-                num_found = True
-                res = res + char
-            elif not num_found:
-                continue
-            else:
-                break
-        if len(res) > 0:
-            return int(res)
-        return 0
-
-

@@ -32,7 +32,6 @@ class JsonUtil:
     def load_saved_products(self):
         products: dict[str:Product] = {}
         if not os.path.exists(self.json_path):
-            print("File", self.json_path, "does not exists")
             return {}
         with open(self.json_path, encoding="utf-8") as json_file:
             data = json.load(json_file)

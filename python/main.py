@@ -1,5 +1,6 @@
 from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
+
 from utils.JsonUtil import JsonUtil
 from utils.ProductParser import ProductParser
 from product.Product import Product
@@ -30,7 +31,7 @@ if __name__ == "__main__":
         else:
             products[prod.producer_code] = prod
             json.save_product(link, prod)
-            print("SUCCESS: Parsed and saved to JSON file ", prod.name)
+            print("SUCCESS: Parsed and saved to JSON file", prod.name)
     for prod in products.values():
         prod.print_product_specs()
 
