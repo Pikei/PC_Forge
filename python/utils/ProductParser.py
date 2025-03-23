@@ -8,10 +8,10 @@ from utils.CommonUtils import CommonUtils
 from utils.WebUtil import WebUtil
 
 class ProductParser:
-    def __init__(self, driver: webdriver.Chrome):
+    def __init__(self, driver: webdriver.Chrome, web_util: WebUtil):
         self.url = "https://www.morele.net/"
         self.driver = driver
-        self.util = WebUtil(self.driver)
+        self.util = web_util
         CommonUtils.directory_exists("images")
 
     def parse_cpu(self, product: Product, rows):
@@ -40,7 +40,6 @@ class ProductParser:
                          frequency, max_frequency, integrated_graphics_unit, tdp, cooler_included, pack)
 
     def parse_product(self, url: str):
-        # TODO zoptymalizować czas pobierania danych
         print("Parsing:", url)
         if not self.util.load_page(url, By.CLASS_NAME, "product-specification__table"):
             print("FAIL: product does not have specification table")
@@ -99,12 +98,7 @@ class ProductParser:
                 self.driver.execute_script("arguments[0].style.display = 'none';", el)
 
     def save_images(self, producer_code: str):
-        self.util.get_element(By.CSS_SELECTOR, "div.prod-gallery-video-btn")
-        self.hide_element_if_exists(By.CSS_SELECTOR, "button.btn-shopping-lists")
-        self.hide_element_if_exists(By.CSS_SELECTOR, "button.btn-share-link")
-        self.hide_element_if_exists(By.CSS_SELECTOR, "div.prod-gallery-video-btn")
-        images = self.driver.find_elements(By.CSS_SELECTOR, "picture img")
-        for img in images:
-            if producer_code in img.accessible_name:
-                img.screenshot("images\\" + producer_code + ".png")
-                break
+        self.util.get_element(By.CSS_SELECTOR, "picture img").click()
+        img = self.util.get_element(By.CSS_SELECTOR, "img.mobx-img.mobx-media-loaded")
+        img.screenshot("images\\" + producer_code + ".png")
+        self.util.get_element(By.CSS_SELECTOR, "button.mobx-close").click()

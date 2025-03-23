@@ -1,5 +1,6 @@
 from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 
 from utils.JsonUtil import JsonUtil
 from utils.ProductParser import ProductParser
@@ -14,11 +15,11 @@ if __name__ == "__main__":
     options.add_argument("--headless")
     options.add_argument("--window-size=1920,1080")
     driver = webdriver.Chrome(options=options)
-    parser = ProductParser(driver)
-    util = WebUtil(driver)
+    web_util = WebUtil(driver)
+    parser = ProductParser(driver, web_util)
     all_links = []
     for url in UrlCategory:
-        for link in util.find_products(url):
+        for link in web_util.find_products(url):
             all_links.append(link)
 
     for link in all_links:

@@ -1,6 +1,7 @@
 from time import sleep
 from selenium import webdriver
-from selenium.common import TimeoutException, NoSuchElementException
+from selenium.common import NoSuchElementException, ElementNotInteractableException
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.ui import WebDriverWait
@@ -13,6 +14,7 @@ class WebUtil:
     """
     Klasa zawierająca metody odpowiedzialne za pobieranie i interakcję z elementami na stronie
     """
+
     def __init__(self, driver: webdriver.Chrome):
         """
         Konstruktor klasy ``WebUtil``
@@ -22,12 +24,13 @@ class WebUtil:
         self.__cookies_accepted = False
         self.all_links = []
 
-    def get_element(self, by: By, selector: str, driver=None):
+    def get_element(self, by: By, selector: str, driver=None, mandatory=True, timeout=60):
         """
-        Próbuje zlokalizować element na załadowanej stronie, czekając do 60 sekund, jeśli to konieczne.
-        Metoda ta zastępuje ``WebDriver.find_element()`` dodając czas oczekiwania na załadowanie elementu.
-        Metoda ``WebDriver.find_element()`` próbuje pobrać element od razu, co może sprawić,
-        że zostanie wyrzucony wyjątek, jeśli strona się jeszcze w pełni nie załadowała.
+        Metoda ta zastępuje ``WebDriver.find_element()``.
+        Próbuje zlokalizować element na załadowanej stronie, czekając przez określony czas,
+        jeśli poszukiwany element jest wymagany (przykładowo nazwa produktu). Jednocześnie optymalizuje czas wykonania
+        podczas poszukiwania elementu, który może się pojawić na stronie opcjonalnie (przykładowo przycisk akceptacji plików cookie),
+        dzięki czemu program nie czeka na znalezienie elementu na stronie, jeśli ten nie jest wymagany.
         Rozwiązanie to jest przydatne w przypadku niestabilnego łącza internetowego.
         Przy wywołaniu należy jednak pamiętać, że jeśli element nie istnieje na załadowanej stronie,
         to metoda zwróci **None**, co spowoduje wyrzucenie wyjątku ``AttributeError``
@@ -37,39 +40,74 @@ class WebUtil:
         :param driver: Jest to argument opcjonalny, przekazywany obiekt klasy ``WebDriver`` lub ``WebElement``.
             Służy do zawężenia obszaru poszukiwań elementu. Jeśli nie podano tego parametru przy wywołaniu metody,
             używana jest główna instancja ``WebDriver`` w tej klasie
+        :param mandatory: Parametr określający czy poszukiwany element jest kluczowy i
+            zawsze powinien znaleźć się na w pełni załadowanej stronie.
+            Określa czy metoda ma oczekiwać na pojawienie się elementu. Domyślna wartość to **True**
+        :param timeout: Czas oczekiwania na załadowanie wymaganego elementu (domyślnie 60 sek.)
         :return: Obiekt klasy ``WebElement`` jeśli został on zlokalizowany, **None** w przeciwnym razie
         """
         if driver is None:
             driver = self.driver
+
+        actions = ActionChains(driver)
+        if mandatory is True:
+            try:
+                element = WebDriverWait(driver, timeout, poll_frequency=0.2).until(
+                    ec.presence_of_element_located((by, selector)))
+                actions.move_to_element(element).perform()
+                return element
+            except NoSuchElementException:
+                print(f"Mandatory element {selector} not found")
+                return None
+
         try:
-            element = WebDriverWait(driver, 60, poll_frequency=0.2).until(
-                ec.visibility_of_element_located((by, selector)))
-            return element
-        except TimeoutException:
+            element = driver.find_element(by, selector)
+            try:
+                actions.move_to_element(element).perform()
+                return element
+            except AttributeError:
+                return element
+        except NoSuchElementException:
             return None
 
-    def get_elements(self, by: By, selector: str, driver=None):
+    def get_elements(self, by: By, selector: str, driver=None, mandatory=True, timeout=60):
         """
-        Próbuje zlokalizować wszystkie elementy na załadowanej stronie, czekając do 60 sekund, jeśli to konieczne.
-        Metoda ta zastępuje ``WebDriver.find_elements()`` dodając czas oczekiwania na załadowanie elementów.
-        Metoda ``WebDriver.find_elements()`` próbuje pobrać listę elementów od razu, co może sprawić,
-        że zostanie wyrzucony wyjątek, jeśli strona się jeszcze w pełni nie załadowała.
+        Metoda ``WebDriver.find_elements()``.
+        Próbuje zlokalizować elementy na załadowanej stronie, czekając przez określony czas,
+        jeśli poszukiwane elementy są wymagane (przykładowo wiersze specyfikacji produktu).
+        Jednocześnie optymalizuje czas wykonania podczas poszukiwania elementów,
+        które mogą się pojawić na stronie opcjonalnie (przykładowo listy w opisie),
+        dzięki czemu program nie czeka na znalezienie wszystkich elementów na stronie, jeśli te nie są wymagane.
         Rozwiązanie to jest przydatne w przypadku niestabilnego łącza internetowego.
         :param by: Strategia lokalizowania elementów, np.: ``By.CLASS_NAME``, ``By.CSS_SELECTOR``, ``By.XPATH``
         :param selector: Selektor wykorzystywany do zlokalizowania elementów dla konkretnej strategii
         :param driver: Jest to argument opcjonalny, przekazywany obiekt klasy ``WebDriver`` lub ``WebElement``.
             Służy do zawężenia obszaru poszukiwań elementów. Jeśli nie podano tego parametru przy wywołaniu metody,
             używana jest główna instancja ``WebDriver`` w tej klasie
+        :param mandatory: Parametr określający czy poszukiwane elementy są kluczowy i
+            zawsze powinny znaleźć się na w pełni załadowanej stronie.
+            Określa czy metoda ma oczekiwać na pojawienie się wszystkich elementów. Domyślna wartość to **True**
+        :param timeout: Czas oczekiwania na załadowanie wymaganych elementów (domyślnie 60 sek.)
         :return: Lista obiektów klasy ``WebElement`` jeśli wszystkie zostały zlokalizowane.
             W przeciwnym razie zwracana jest pusta lista
         """
         if driver is None:
             driver = self.driver
+
+        if mandatory is True:
+            try:
+                elements = WebDriverWait(driver, timeout, poll_frequency=0.2).until(
+                    ec.presence_of_all_elements_located((by, selector)))
+                return elements
+            except NoSuchElementException:
+                print(f"Mandatory elements {selector} not found")
+                return None
+
         try:
-            elements = WebDriverWait(driver, 60, poll_frequency=0.2).until(
-                ec.presence_of_all_elements_located((by, selector)))
-            return elements if elements else []
-        except TimeoutException:
+            elements = driver.find_elements(by, selector)
+            return elements
+        except NoSuchElementException:
+            print(f"Optional elements {selector} not found")
             return []
 
     def load_page(self, url: str, by: By, selector: str):
@@ -97,10 +135,11 @@ class WebUtil:
         Znajduje przycisk odpowiedzialny za akceptację plików cookie,
         po czym go klika i ustawia flagę ``self.__cookies_accepted`` na **True**
         """
-        cookie_btn = self.get_element(By.CSS_SELECTOR, "button.btn.btn-primary.w-100.btn--save-all")
+        cookie_btn = self.get_element(By.CSS_SELECTOR, "button.btn.btn-primary.w-100.btn--save-all", timeout=5)
         if cookie_btn is not None:
             cookie_btn.click()
             self.__cookies_accepted = True
+            print("Cookies accepted")
         else:
             return
 
@@ -136,9 +175,12 @@ class WebUtil:
         po czym czeka sekundę, dając tym samym czas na zakończenie animacji rozwijania opisu.
         """
         try:
-            self.driver.find_element(By.CSS_SELECTOR, "toggle-btn.collapsible-description__btn.btn").click()
-            sleep(1)
-        except NoSuchElementException:
+            expand_btn = self.get_element(By.CSS_SELECTOR, "toggle-btn.collapsible-description__btn.btn",
+                                          mandatory=False)
+            if expand_btn is not None:
+                expand_btn.click()
+                sleep(1)
+        except ElementNotInteractableException:
             return
 
     def get_description(self, row: WebElement, product_name: str):
@@ -148,14 +190,14 @@ class WebUtil:
         :param product_name: Nazwa produktu, dodawana jako nagłówek, jeśli w danym wierszu nie znaleziono nagłówka
         :return: Ciąg znaków będący kodem HTML opisu produktu
         """
-        header = self.get_element(By.TAG_NAME, "h3", row)
+        header = self.get_element(By.TAG_NAME, "h3", row, mandatory=False)
         if header is None:
             content = "<h3>" + product_name + "</h3>"
         else:
             content = CommonUtils.parse_to_html(header)
 
-        paragraphs = self.get_elements(By.TAG_NAME, "p", row)
-        lists = self.get_elements(By.TAG_NAME, "ul", row)
+        paragraphs = self.get_elements(By.TAG_NAME, "p", row, False)
+        lists = self.get_elements(By.TAG_NAME, "ul", row, False)
         if len(paragraphs) > 0 and len(lists) > 0:
             CommonUtils.add_par_and_list(paragraphs, lists)
         elif len(paragraphs) > 0:
