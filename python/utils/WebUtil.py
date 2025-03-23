@@ -1,3 +1,4 @@
+import os
 from time import sleep
 from selenium import webdriver
 from selenium.common import NoSuchElementException, ElementNotInteractableException
@@ -32,6 +33,8 @@ class WebUtil:
         podczas poszukiwania elementu, który może się pojawić na stronie opcjonalnie (przykładowo przycisk akceptacji plików cookie),
         dzięki czemu program nie czeka na znalezienie elementu na stronie, jeśli ten nie jest wymagany.
         Rozwiązanie to jest przydatne w przypadku niestabilnego łącza internetowego.
+        Po zlokalizowaniu elementu na stronie przewija witrynę tak, aby zlokalizowany element był widoczny,
+        co minimalizuje ryzyko ukrycia tego elementu pod innym w razie potrzeby późniejszej interakcji z nim.
         Przy wywołaniu należy jednak pamiętać, że jeśli element nie istnieje na załadowanej stronie,
         to metoda zwróci **None**, co spowoduje wyrzucenie wyjątku ``AttributeError``
         w przypadku próby odwołania się do tego elementu.
@@ -183,7 +186,7 @@ class WebUtil:
         except ElementNotInteractableException:
             return
 
-    def get_description(self, row: WebElement, product_name: str):
+    def get_description_row(self, row: WebElement, product_name: str):
         """
         Pobiera opis ze strony i buduje z niego kod HTML
         :param row: Pole wiersza opisu
@@ -210,3 +213,16 @@ class WebUtil:
                     content += CommonUtils.parse_to_html(li)
                 content += "</" + ul.tag_name + ">"
         return content
+
+    def save_image(self, producer_code: str):
+        """
+        Klika w galerię zdjęć produktów, co pozwala na wykonanie zrzutu ekranu bez dodatkowych elementów,
+        takich jak przycisk porównania, czy dodania do listy. Zrzut ekranu jest następnie zapisywany w katalogu zdjęć,
+        pod nazwą taką samą jak kod producenta. Zapis jest w formacie PNG.
+        :param producer_code: Kod producenta, będący nazwą, pod jaką ma zostać zapisany zrzut ekranu
+        """
+        self.get_element(By.CSS_SELECTOR, "picture img").click()
+        img = self.get_element(By.CSS_SELECTOR, "img.mobx-img.mobx-media-loaded")
+        path = os.path.join(os.getcwd(), "images", f"{producer_code}.png")
+        img.screenshot(path)
+        self.get_element(By.CSS_SELECTOR, "button.mobx-close").click()

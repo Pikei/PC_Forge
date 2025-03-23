@@ -45,7 +45,8 @@ class JsonUtil:
             case ProductCategory.CPU:
                 return self.parse_json_to_cpu(product_json)
 
-    def parse_json_to_cpu(self, product_json):
+    @staticmethod
+    def parse_json_to_cpu(product_json):
         return Processor(product_json["name"], product_json["producer"], product_json["category"],
                          product_json["description"], product_json["price"], product_json["producer_code"],
                          product_json["line"], product_json["model"], product_json["cores"],
@@ -58,7 +59,8 @@ class JsonUtil:
         if isinstance(product, Processor):
             return self.parse_cpu_to_json(product)
 
-    def parse_cpu_to_json(self, cpu: Processor):
+    @staticmethod
+    def parse_cpu_to_json(cpu: Processor):
         return {"name": cpu.name, "producer": cpu.producer, "category": cpu.category, "description": cpu.description,
                 "price": cpu.price, "producer_code": cpu.producer_code, "line": cpu.line, "model": cpu.model,
                 "cores": cpu.cores, "threads": cpu.threads, "socket": cpu.socket, "unlocked": cpu.unlocked,

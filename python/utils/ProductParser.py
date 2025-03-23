@@ -7,12 +7,38 @@ from product.ProductCategory import UrlCategory, ProductCategory
 from utils.CommonUtils import CommonUtils
 from utils.WebUtil import WebUtil
 
+
 class ProductParser:
     def __init__(self, driver: webdriver.Chrome, web_util: WebUtil):
         self.url = "https://www.morele.net/"
         self.driver = driver
         self.util = web_util
         CommonUtils.directory_exists("images")
+
+    def parse_product(self, url: str):
+        print("Parsing:", url)
+        if not self.util.load_page(url, By.CLASS_NAME, "product-specification__table"):
+            print("FAIL: product does not have specification table")
+            return None
+        if self.util.get_elements(By.CLASS_NAME, "product-price") is None:
+            print("FAIL: Product is unavailable")
+            return None
+
+        spec_rows = self.util.get_elements(By.CLASS_NAME, "specification__row")
+        producer_code = CommonUtils.get_value_from_spec_row(spec_rows, "Kod producenta")
+        if producer_code == "":
+            print("FAIL: Unknown producer code")
+            return None
+
+        name = self.get_product_name()
+        producer = CommonUtils.get_value_from_spec_row(spec_rows, "Producent")
+        product_category = self.get_product_category()
+        description = self.get_product_description(name)
+        price = CommonUtils.extract_float(self.driver.find_element(By.CLASS_NAME, "product-price").text)
+        self.util.save_image(producer_code)
+
+        product = Product(name, producer, product_category, description, price, producer_code)
+        return self.parse_exact_product(product, spec_rows)
 
     def parse_cpu(self, product: Product, rows):
         pack = str(CommonUtils.get_value_from_spec_row(rows, "Wersja opakowania"))
@@ -39,35 +65,25 @@ class ProductParser:
                          product.producer_code, line, model, num_of_cores, num_of_threads, socket, unlocked,
                          frequency, max_frequency, integrated_graphics_unit, tdp, cooler_included, pack)
 
-    def parse_product(self, url: str):
-        print("Parsing:", url)
-        if not self.util.load_page(url, By.CLASS_NAME, "product-specification__table"):
-            print("FAIL: product does not have specification table")
-            return None
-        if self.util.get_elements(By.CLASS_NAME, "product-price") is None:
-            print("FAIL: Product is unavailable")
-            return None
+    def get_product_category(self):
+        match self.util.get_elements(By.CSS_SELECTOR, "a.main-breadcrumb")[-1].get_attribute("href"):
+            case UrlCategory.CPU:
+                return str(ProductCategory.CPU)
 
-        rows = self.driver.find_elements(By.CLASS_NAME, "specification__row")
-        producer_code = CommonUtils.get_value_from_spec_row(rows, "Kod producenta")
-        if producer_code == "":
-            print("FAIL: Unknown producer code")
-            return None
-        name = self.driver.find_element(By.CSS_SELECTOR, "h1.prod-name").text
-        name = name[:name.find(",")]
-        producer = CommonUtils.get_value_from_spec_row(rows, "Producent")
-        cat_url = self.driver.find_elements(By.CSS_SELECTOR, "a.main-breadcrumb")[-1].get_attribute("href")
-        product_category = str(self.product_category(cat_url))
+    def get_product_name(self):
+        name = self.util.get_element(By.CSS_SELECTOR, "h1.prod-name").text
+        return name[:name.find(",")]
+
+    def get_product_description(self, product_name):
         self.util.expand_description()
-        desc = self.driver.find_element(By.CLASS_NAME, "panel-description")
+        desc = self.util.get_element(By.CLASS_NAME, "panel-description")
         description = ""
-        for row in desc.find_elements(By.CSS_SELECTOR, "div.row div.text1"):
-            description += self.util.get_description(row, name)
-        price = CommonUtils.extract_float(self.driver.find_element(By.CLASS_NAME, "product-price").text)
-        self.save_images(producer_code)
+        for row in self.util.get_elements(By.CSS_SELECTOR, "div.row div.text1", desc):
+            description += self.util.get_description_row(row, product_name)
+        return description
 
-        product = Product(name, producer, product_category, description, price, producer_code)
-        match product_category:
+    def parse_exact_product(self, product, spec_rows):
+        match product.category:
             case ProductCategory.CASE:
                 pass
             case ProductCategory.GPU:
@@ -81,24 +97,6 @@ class ProductParser:
             case ProductCategory.POWER_SUPPLY:
                 pass
             case ProductCategory.CPU:
-                return self.parse_cpu(product, rows)
+                return self.parse_cpu(product, spec_rows)
             case ProductCategory.RAM:
                 pass
-
-    @staticmethod
-    def product_category(category_url):
-        match category_url:
-            case UrlCategory.CPU:
-                return ProductCategory.CPU
-
-    def hide_element_if_exists(self, by: By, locator: str):
-        elements_to_hide = self.driver.find_elements(by, locator)
-        if len(elements_to_hide) > 0:
-            for el in elements_to_hide:
-                self.driver.execute_script("arguments[0].style.display = 'none';", el)
-
-    def save_images(self, producer_code: str):
-        self.util.get_element(By.CSS_SELECTOR, "picture img").click()
-        img = self.util.get_element(By.CSS_SELECTOR, "img.mobx-img.mobx-media-loaded")
-        img.screenshot("images\\" + producer_code + ".png")
-        self.util.get_element(By.CSS_SELECTOR, "button.mobx-close").click()
