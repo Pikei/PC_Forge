@@ -9,13 +9,27 @@ from utils.WebUtil import WebUtil
 
 
 class ProductParser:
+    """
+    Klasa pobierająca i przetwarzająca dane z adresu URL na obiekty klas produktów
+    """
     def __init__(self, driver: webdriver.Chrome, web_util: WebUtil):
+        """
+        Konstruktor klasy ProductParser
+        :param driver: obiekt klasy ``WebDriver``
+        :param web_util: obiekt klasy ``WebUtil``
+        """
         self.url = "https://www.morele.net/"
         self.driver = driver
         self.util = web_util
         CommonUtils.directory_exists("images")
 
     def parse_product(self, url: str):
+        """
+        Pobiera dane wspólne dla wszystkich produktów z podanego adresu URL.
+        :param url: Adres URL do produktu
+        :return: obiekt odpowiedniej klasy rozszerzającej ``Product`` lub **None** jeśli nie znaleziono
+        kluczowych elementów na stronie (tabela specyfikacji, cena, kod producenta)
+        """
         print("Parsing:", url)
         if not self.util.load_page(url, By.CLASS_NAME, "product-specification__table"):
             print("FAIL: product does not have specification table")
@@ -40,41 +54,58 @@ class ProductParser:
         product = Product(name, producer, product_category, description, price, producer_code)
         return self.parse_exact_product(product, spec_rows)
 
-    def parse_cpu(self, product: Product, rows):
-        pack = str(CommonUtils.get_value_from_spec_row(rows, "Wersja opakowania"))
+    def parse_cpu(self, product: Product, spec_rows):
+        """
+        Pobiera i przetwarza dane z adresu URL na obiekt klasy ``Processor``
+        :return: obiekt klasy ``Processor`` lub **None** jeśli pakowanie jest inne niż OEM, lub BOX
+        """
+        pack = str(CommonUtils.get_value_from_spec_row(spec_rows, "Wersja opakowania"))
         if pack != "BOX" and pack != "OEM":
             print("Unknown Packaging")
             return None
-        line = CommonUtils.get_value_from_spec_row(rows, "Linia")
+        line = CommonUtils.get_value_from_spec_row(spec_rows, "Linia")
         model = product.name.split().pop(-1)
-        num_of_cores = CommonUtils.extract_int(CommonUtils.get_value_from_spec_row(rows, "Liczba rdzeni"))
-        num_of_threads = CommonUtils.extract_int(CommonUtils.get_value_from_spec_row(rows, "Liczba wątków"))
-        socket = CommonUtils.get_value_from_spec_row(rows, "Typ gniazda")
-        unlocked = CommonUtils.translate_to_bool(CommonUtils.get_value_from_spec_row(rows, "Odblokowany mnożnik"))
+        num_of_cores = CommonUtils.extract_int(CommonUtils.get_value_from_spec_row(spec_rows, "Liczba rdzeni"))
+        num_of_threads = CommonUtils.extract_int(CommonUtils.get_value_from_spec_row(spec_rows, "Liczba wątków"))
+        socket = CommonUtils.get_value_from_spec_row(spec_rows, "Typ gniazda")
+        unlocked = CommonUtils.translate_to_bool(CommonUtils.get_value_from_spec_row(spec_rows, "Odblokowany mnożnik"))
         frequency = CommonUtils.extract_float(
-            CommonUtils.get_value_from_spec_row(rows, "Częstotliwość taktowania procesora"))
+            CommonUtils.get_value_from_spec_row(spec_rows, "Częstotliwość taktowania procesora"))
         max_frequency = CommonUtils.extract_float(
-            CommonUtils.get_value_from_spec_row(rows, "Częstotliwość maksymalna Turbo"))
-        integrated_graphics_unit = CommonUtils.get_value_from_spec_row(rows, "Zintegrowany układ graficzny")
+            CommonUtils.get_value_from_spec_row(spec_rows, "Częstotliwość maksymalna Turbo"))
+        integrated_graphics_unit = CommonUtils.get_value_from_spec_row(spec_rows, "Zintegrowany układ graficzny")
         if integrated_graphics_unit == "Nie posiada":
             integrated_graphics_unit = None
-        tdp = CommonUtils.extract_int(CommonUtils.get_value_from_spec_row(rows, "TDP"))
+        tdp = CommonUtils.extract_int(CommonUtils.get_value_from_spec_row(spec_rows, "TDP"))
         cooler_included = CommonUtils.translate_to_bool(
-            CommonUtils.get_value_from_spec_row(rows, "Załączone chłodzenie"))
+            CommonUtils.get_value_from_spec_row(spec_rows, "Załączone chłodzenie"))
         return Processor(product.name, product.producer, product.category, product.description, product.price,
                          product.producer_code, line, model, num_of_cores, num_of_threads, socket, unlocked,
                          frequency, max_frequency, integrated_graphics_unit, tdp, cooler_included, pack)
 
     def get_product_category(self):
+        """
+        Porównuje link do kategorii znaleziony na stronie z tym zapisanym w ``ProductCategory``
+        :return: Ciąg znaków kategorii produktu
+        """
         match self.util.get_elements(By.CSS_SELECTOR, "a.main-breadcrumb")[-1].get_attribute("href"):
             case UrlCategory.CPU:
                 return str(ProductCategory.CPU)
 
     def get_product_name(self):
+        """
+        Pobiera nazwę produktu z załadowanej witryny.
+        :return: Nazwa produktu do wyznaczonego miejsca
+        """
         name = self.util.get_element(By.CSS_SELECTOR, "h1.prod-name").text
-        return name[:name.find(",")]
+        return name[:name.find(" (")]
 
     def get_product_description(self, product_name):
+        """
+        Pobiera wiersze opisu produktu przekształcając je na kod HTML
+        :param product_name: Nazwa produktu będąca alternatywnym nagłówkiem w przypadku jego braku w danym wierszu opisu
+        :return: Kod HTML opisu produktu
+        """
         self.util.expand_description()
         desc = self.util.get_element(By.CLASS_NAME, "panel-description")
         description = ""
@@ -83,6 +114,12 @@ class ProductParser:
         return description
 
     def parse_exact_product(self, product, spec_rows):
+        """
+        Służy do wywołania metody parsującej na obiekt odpowiedniej klasy dziedziczącej z ``Product``
+        :param product: obiekt klasy ``Product``
+        :param spec_rows: wiersze tabeli specyfikacji
+        :return: obiekt odpowiedniej klasy dziedziczącej z ``Product``
+        """
         match product.category:
             case ProductCategory.CASE:
                 pass
