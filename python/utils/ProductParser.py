@@ -31,74 +31,91 @@ class ProductParser:
         kluczowych elementów na stronie (tabela specyfikacji, cena, kod producenta)
         """
         print("Parsing:", url)
+
         if not self.util.load_page(url, By.CLASS_NAME, "product-specification__table"):
             print("FAIL: product does not have specification table")
             return None
-        if self.util.get_elements(By.CLASS_NAME, "product-price") is None:
+
+        price = self.util.get_element(By.CLASS_NAME, "product-price")
+        if price is None:
             print("FAIL: Product is unavailable")
             return None
 
         spec_rows = self.util.get_elements(By.CLASS_NAME, "specification__row")
-        producer_code = CommonUtils.get_value_from_spec_row(spec_rows, "Kod producenta")
+
+        producer_code: str = CommonUtils.get_value_from_spec_row(spec_rows, "Kod producenta")
         if producer_code == "":
             print("FAIL: Unknown producer code")
             return None
 
-        name = self.get_product_name()
-        producer = CommonUtils.get_value_from_spec_row(spec_rows, "Producent")
-        product_category = self.get_product_category()
-        description = self.get_product_description(name)
-        price = CommonUtils.extract_float(self.driver.find_element(By.CLASS_NAME, "product-price").text)
-        self.util.save_image(producer_code)
+        product_price: float = CommonUtils.extract_float(price.text)
+        name: str = self.util.get_element(By.CSS_SELECTOR, "h1.prod-name").text
+        producer: str = CommonUtils.get_value_from_spec_row(spec_rows, "Producent")
+        description: str = self.get_product_description(name)
 
-        product = Product(name, producer, product_category, description, price, producer_code)
-        return self.parse_exact_product(product, spec_rows)
+        product = Product(name, producer, "", description, product_price, producer_code)
+
+        match self.util.get_elements(By.CSS_SELECTOR, "a.main-breadcrumb")[-1].get_attribute("href"):
+            case UrlCategory.CPU:
+                product = self.parse_cpu(product, spec_rows)
+
+        if product is not None:
+            self.util.save_image(producer_code)
+            print("Parsed:", product.name)
+        return product
 
     def parse_cpu(self, product: Product, spec_rows):
         """
         Pobiera i przetwarza dane z adresu URL na obiekt klasy ``Processor``
+        :param product: obiekt klasy ``Product``, zawierający uniwersalne dane dla wszystkich typów produktów
+        :param spec_rows: wiersze tabeli specyfikacji
         :return: obiekt klasy ``Processor`` lub **None** jeśli pakowanie jest inne niż OEM, lub BOX
         """
         pack = str(CommonUtils.get_value_from_spec_row(spec_rows, "Wersja opakowania"))
         if pack != "BOX" and pack != "OEM":
             print("Unknown Packaging")
             return None
+
+        product.name = product.name[:product.name.find(",")]
+
+        product.category = str(ProductCategory.CPU)
+
         line = CommonUtils.get_value_from_spec_row(spec_rows, "Linia")
+
         model = product.name.split().pop(-1)
-        num_of_cores = CommonUtils.extract_int(CommonUtils.get_value_from_spec_row(spec_rows, "Liczba rdzeni"))
-        num_of_threads = CommonUtils.extract_int(CommonUtils.get_value_from_spec_row(spec_rows, "Liczba wątków"))
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Liczba rdzeni")
+        num_of_cores = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Liczba wątków")
+        num_of_threads = CommonUtils.extract_int(spec_value)
+
         socket = CommonUtils.get_value_from_spec_row(spec_rows, "Typ gniazda")
-        unlocked = CommonUtils.translate_to_bool(CommonUtils.get_value_from_spec_row(spec_rows, "Odblokowany mnożnik"))
-        frequency = CommonUtils.extract_float(
-            CommonUtils.get_value_from_spec_row(spec_rows, "Częstotliwość taktowania procesora"))
-        max_frequency = CommonUtils.extract_float(
-            CommonUtils.get_value_from_spec_row(spec_rows, "Częstotliwość maksymalna Turbo"))
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Odblokowany mnożnik")
+        unlocked = CommonUtils.translate_to_bool(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Częstotliwość taktowania procesora")
+        frequency = CommonUtils.extract_float(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Częstotliwość maksymalna Turbo")
+
+        max_frequency = CommonUtils.extract_float(spec_value)
+
         integrated_graphics_unit = CommonUtils.get_value_from_spec_row(spec_rows, "Zintegrowany układ graficzny")
         if integrated_graphics_unit == "Nie posiada":
             integrated_graphics_unit = None
-        tdp = CommonUtils.extract_int(CommonUtils.get_value_from_spec_row(spec_rows, "TDP"))
-        cooler_included = CommonUtils.translate_to_bool(
-            CommonUtils.get_value_from_spec_row(spec_rows, "Załączone chłodzenie"))
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "TDP")
+        tdp = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Załączone chłodzenie")
+        cooler_included = CommonUtils.translate_to_bool(spec_value)
+
         return Processor(product.name, product.producer, product.category, product.description, product.price,
                          product.producer_code, line, model, num_of_cores, num_of_threads, socket, unlocked,
                          frequency, max_frequency, integrated_graphics_unit, tdp, cooler_included, pack)
 
-    def get_product_category(self):
-        """
-        Porównuje link do kategorii znaleziony na stronie z tym zapisanym w ``ProductCategory``
-        :return: Ciąg znaków kategorii produktu
-        """
-        match self.util.get_elements(By.CSS_SELECTOR, "a.main-breadcrumb")[-1].get_attribute("href"):
-            case UrlCategory.CPU:
-                return str(ProductCategory.CPU)
-
-    def get_product_name(self):
-        """
-        Pobiera nazwę produktu z załadowanej witryny.
-        :return: Nazwa produktu do wyznaczonego miejsca
-        """
-        name = self.util.get_element(By.CSS_SELECTOR, "h1.prod-name").text
-        return name[:name.find(" (")]
 
     def get_product_description(self, product_name):
         """
@@ -112,28 +129,3 @@ class ProductParser:
         for row in self.util.get_elements(By.CSS_SELECTOR, "div.row div.text1", desc):
             description += self.util.get_description_row(row, product_name)
         return description
-
-    def parse_exact_product(self, product, spec_rows):
-        """
-        Służy do wywołania metody parsującej na obiekt odpowiedniej klasy dziedziczącej z ``Product``
-        :param product: obiekt klasy ``Product``
-        :param spec_rows: wiersze tabeli specyfikacji
-        :return: obiekt odpowiedniej klasy dziedziczącej z ``Product``
-        """
-        match product.category:
-            case ProductCategory.CASE:
-                pass
-            case ProductCategory.GPU:
-                pass
-            case ProductCategory.SSD:
-                pass
-            case ProductCategory.HDD:
-                pass
-            case ProductCategory.MB:
-                pass
-            case ProductCategory.POWER_SUPPLY:
-                pass
-            case ProductCategory.CPU:
-                return self.parse_cpu(product, spec_rows)
-            case ProductCategory.RAM:
-                pass
