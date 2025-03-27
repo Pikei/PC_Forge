@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from product.Processor import Processor
 from product.Product import Product
 from product.ProductCategory import UrlCategory, ProductCategory
+from product.RAM import RAM
 from utils.CommonUtils import CommonUtils
 from utils.WebUtil import WebUtil
 
@@ -12,6 +13,7 @@ class ProductParser:
     """
     Klasa pobierająca i przetwarzająca dane z adresu URL na obiekty klas produktów
     """
+
     def __init__(self, driver: webdriver.Chrome, web_util: WebUtil):
         """
         Konstruktor klasy ProductParser
@@ -22,6 +24,27 @@ class ProductParser:
         self.driver = driver
         self.util = web_util
         CommonUtils.directory_exists("images")
+
+    def get_product_description(self, product_name):
+        """
+        Pobiera wiersze opisu produktu przekształcając je na kod HTML
+        :param product_name: Nazwa produktu będąca alternatywnym nagłówkiem w przypadku jego braku w danym wierszu opisu
+        :return: Kod HTML opisu produktu
+        """
+        description = ""
+        self.util.expand_description()
+
+        desc_rows = self.util.get_elements(By.CSS_SELECTOR, "div.panel-description div.row div.text1", timeout=15)
+        if len(desc_rows) == 0:
+            desc_rows = self.util.get_elements(By.CSS_SELECTOR, "div.auto-description div.desc-items div.row",
+                                               timeout=15)
+        if len(desc_rows) == 0:
+            description += self.util.get_description_row(self.util.get_element(By.CLASS_NAME, "panel-description"),
+                                                         product_name)
+        else:
+            for row in desc_rows:
+                description += self.util.get_description_row(row, product_name)
+        return description
 
     def parse_product(self, url: str):
         """
@@ -51,17 +74,18 @@ class ProductParser:
         product_price: float = CommonUtils.extract_float(price.text)
         name: str = self.util.get_element(By.CSS_SELECTOR, "h1.prod-name").text
         producer: str = CommonUtils.get_value_from_spec_row(spec_rows, "Producent")
-        description: str = self.get_product_description(name)
 
-        product = Product(name, producer, "", description, product_price, producer_code)
+        product = Product(name, producer, "", "", product_price, producer_code)
 
         match self.util.get_elements(By.CSS_SELECTOR, "a.main-breadcrumb")[-1].get_attribute("href"):
             case UrlCategory.CPU:
                 product = self.parse_cpu(product, spec_rows)
+            case UrlCategory.RAM:
+                product = self.parse_ram(product, spec_rows)
 
         if product is not None:
             self.util.save_image(producer_code)
-            print("Parsed:", product.name)
+            print("Parsed:", product.get_name())
         return product
 
     def parse_cpu(self, product: Product, spec_rows):
@@ -76,13 +100,15 @@ class ProductParser:
             print("Unknown Packaging")
             return None
 
-        product.name = product.name[:product.name.find(",")]
+        product.set_name(product.get_name()[:product.get_name().find(",")])
 
-        product.category = str(ProductCategory.CPU)
+        product.set_description(self.get_product_description(product.get_name()))
+
+        product.set_category(str(ProductCategory.CPU))
 
         line = CommonUtils.get_value_from_spec_row(spec_rows, "Linia")
 
-        model = product.name.split().pop(-1)
+        model = product.get_name().split().pop(-1)
 
         spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Liczba rdzeni")
         num_of_cores = CommonUtils.extract_int(spec_value)
@@ -112,20 +138,43 @@ class ProductParser:
         spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Załączone chłodzenie")
         cooler_included = CommonUtils.translate_to_bool(spec_value)
 
-        return Processor(product.name, product.producer, product.category, product.description, product.price,
-                         product.producer_code, line, model, num_of_cores, num_of_threads, socket, unlocked,
-                         frequency, max_frequency, integrated_graphics_unit, tdp, cooler_included, pack)
+        return Processor(product.get_name(), product.get_producer(), product.get_category(), product.get_description(),
+                         product.get_price(), product.get_producer_code(), line, model, num_of_cores, num_of_threads,
+                         socket, unlocked, frequency, max_frequency, integrated_graphics_unit, tdp, cooler_included,
+                         pack)
 
+    def parse_ram(self, product, spec_rows):
+        """
+        Pobiera i przetwarza dane z adresu URL na obiekt klasy ``RAM``
+        :param product: obiekt klasy ``Product``, zawierający uniwersalne dane dla wszystkich typów produktów
+        :param spec_rows: wiersze tabeli specyfikacji
+        :return: obiekt klasy ``RAM``
+        """
+        product.set_name(product.get_name()[:product.get_name().find(",")])
+        line = CommonUtils.get_value_from_spec_row(spec_rows, "Linia")
+        memory_type = CommonUtils.get_value_from_spec_row(spec_rows, "Liczba modułów")
 
-    def get_product_description(self, product_name):
-        """
-        Pobiera wiersze opisu produktu przekształcając je na kod HTML
-        :param product_name: Nazwa produktu będąca alternatywnym nagłówkiem w przypadku jego braku w danym wierszu opisu
-        :return: Kod HTML opisu produktu
-        """
-        self.util.expand_description()
-        desc = self.util.get_element(By.CLASS_NAME, "panel-description")
-        description = ""
-        for row in self.util.get_elements(By.CSS_SELECTOR, "div.row div.text1", desc):
-            description += self.util.get_description_row(row, product_name)
-        return description
+        # Pojemność łączna na stronie wylistowana jest w Gigabajtach [GB].
+        # Jednak w bardzo rzadkich przypadkach jest to jednostka Megabajtów [MB]. Aby uniknąć zapisu wszystkich wartości
+        # w jednostkach MB, co by oznaczało, że każdą wartość powyżej 1GB należałoby pomnożyć przez 1024,
+        # oraz przechowywania danych jako liczb zmiennoprzecinkowych, np. 0.512 [GB]
+        # pojemności pamięci wylistowane w jednostkach [MB] zapisywane są jako liczby ujemne
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Pojemność łączna")
+        total_capacity = CommonUtils.extract_int(spec_value)
+        if "MB" in spec_value:
+            total_capacity = total_capacity * (-1)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Liczba modułów")
+        number_of_modules = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Częstotliwość pracy [MHz]")
+        frequency = CommonUtils.extract_int(spec_value)
+
+        latency = CommonUtils.get_value_from_spec_row(spec_rows, "Opóźnienie")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Częstotliwość pracy [MHz]")
+        lighting = CommonUtils.translate_to_bool(spec_value)
+
+        return RAM(product.get_name(), product.get_producer(), product.get_category(), product.get_description(),
+                   product.get_price(), product.get_producer_code(), line, memory_type, total_capacity,
+                   number_of_modules, frequency, latency, lighting)

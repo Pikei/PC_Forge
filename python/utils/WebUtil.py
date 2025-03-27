@@ -1,7 +1,7 @@
 import os
 from time import sleep
 from selenium import webdriver
-from selenium.common import NoSuchElementException, ElementNotInteractableException
+from selenium.common import NoSuchElementException, ElementNotInteractableException, TimeoutException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -59,7 +59,7 @@ class WebUtil:
                     ec.presence_of_element_located((by, selector)))
                 actions.move_to_element(element).perform()
                 return element
-            except NoSuchElementException:
+            except TimeoutException:
                 print(f"Mandatory element {selector} not found")
                 return None
 
@@ -102,9 +102,9 @@ class WebUtil:
                 elements = WebDriverWait(driver, timeout, poll_frequency=0.2).until(
                     ec.presence_of_all_elements_located((by, selector)))
                 return elements
-            except NoSuchElementException:
+            except TimeoutException:
                 print(f"Mandatory elements {selector} not found")
-                return None
+                return []
 
         try:
             elements = driver.find_elements(by, selector)
@@ -124,9 +124,7 @@ class WebUtil:
             **False** jeśli nie udało się zlokalizować kluczowego elementu
         """
         self.driver.get(url)
-        if self.get_element(by, selector) is None:
-            print("element: ", selector, " does not exist on this page.")
-            return False
+        if self.get_element(by, selector) is None: return False
 
         if not self.__cookies_accepted:
             self.accept_cookies()
@@ -138,7 +136,8 @@ class WebUtil:
         Znajduje przycisk odpowiedzialny za akceptację plików cookie,
         po czym go klika i ustawia flagę ``self.__cookies_accepted`` na **True**
         """
-        cookie_btn = self.get_element(By.CSS_SELECTOR, "button.btn.btn-primary.w-100.btn--save-all", timeout=5)
+        cookie_btn = self.get_element(By.CSS_SELECTOR,
+                                      'button[data-action="cookie-consent#onApproveAll"].btn--save-all', timeout=5)
         if cookie_btn is not None:
             cookie_btn.click()
             self.__cookies_accepted = True
@@ -193,6 +192,8 @@ class WebUtil:
         :param product_name: Nazwa produktu, dodawana jako nagłówek, jeśli w danym wierszu nie znaleziono nagłówka
         :return: Ciąg znaków będący kodem HTML opisu produktu
         """
+        if row.text == "":
+            return ""
         header = self.get_element(By.TAG_NAME, "h3", row, mandatory=False)
         if header is None:
             content = "<h3>" + product_name + "</h3>"
@@ -221,7 +222,9 @@ class WebUtil:
         pod nazwą taką samą jak kod producenta. Zapis jest w formacie PNG.
         :param producer_code: Kod producenta, będący nazwą, pod jaką ma zostać zapisany zrzut ekranu
         """
-        self.get_element(By.CSS_SELECTOR, "picture img").click()
+        img_box = self.get_element(By.CSS_SELECTOR, "picture img")
+        self.driver.execute_script("return arguments[0].scrollIntoView(true);", img_box)
+        img_box.click()
         img = self.get_element(By.CSS_SELECTOR, "img.mobx-img.mobx-media-loaded")
         path = os.path.join(os.getcwd(), "images", f"{producer_code}.png")
         img.screenshot(path)
