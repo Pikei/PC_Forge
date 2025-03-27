@@ -60,7 +60,6 @@ class WebUtil:
                 actions.move_to_element(element).perform()
                 return element
             except TimeoutException:
-                print(f"Mandatory element {selector} not found")
                 return None
 
         try:
@@ -103,7 +102,6 @@ class WebUtil:
                     ec.presence_of_all_elements_located((by, selector)))
                 return elements
             except TimeoutException:
-                print(f"Mandatory elements {selector} not found")
                 return []
 
         try:
