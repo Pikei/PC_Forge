@@ -16,7 +16,8 @@ class Product:
         print("-- DESCRIPTION --")
         print(self.description.replace("<", "\n<").replace("\n</", "</"))
 
-    def print_end(self):
+    @staticmethod
+    def print_end():
         print("---------------------------------------\n")
 
     def print_product_specs(self):

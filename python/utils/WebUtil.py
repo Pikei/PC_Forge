@@ -57,7 +57,7 @@ class WebUtil:
             try:
                 element = WebDriverWait(driver, timeout, poll_frequency=0.2).until(
                     ec.presence_of_element_located((by, selector)))
-                actions.move_to_element(element).perform()
+                actions.scroll_to_element(element).perform()
                 return element
             except TimeoutException:
                 return None
@@ -65,7 +65,7 @@ class WebUtil:
         try:
             element = driver.find_element(by, selector)
             try:
-                actions.move_to_element(element).perform()
+                actions.scroll_to_element(element).perform()
                 return element
             except AttributeError:
                 return element
@@ -213,17 +213,24 @@ class WebUtil:
                 content += "</" + ul.tag_name + ">"
         return content
 
-    def save_image(self, producer_code: str):
+    def save_image(self, category: str, producer: str, producer_code: str):
         """
         Klika w galerię zdjęć produktów, co pozwala na wykonanie zrzutu ekranu bez dodatkowych elementów,
         takich jak przycisk porównania, czy dodania do listy. Zrzut ekranu jest następnie zapisywany w katalogu zdjęć,
         pod nazwą taką samą jak kod producenta. Zapis jest w formacie PNG.
+        :param category: Kategoria produktu potrzebna do zapisania zdjęcia w odpowiednim folderze
+        :param producer: Nazwa producenta produktu potrzebna do zapisania zdjęcia w odpowiednim folderze
         :param producer_code: Kod producenta, będący nazwą, pod jaką ma zostać zapisany zrzut ekranu
         """
+        path = os.path.join(os.getcwd(), "images", category)
+        CommonUtils.directory_exists(path)
+
+        path = os.path.join(path, producer)
+        CommonUtils.directory_exists(path)
+
         img_box = self.get_element(By.CSS_SELECTOR, "picture img")
-        self.driver.execute_script("return arguments[0].scrollIntoView(true);", img_box)
         img_box.click()
         img = self.get_element(By.CSS_SELECTOR, "img.mobx-img.mobx-media-loaded")
-        path = os.path.join(os.getcwd(), "images", f"{producer_code}.png")
+        path = os.path.join(path, f"{producer_code}.png")
         img.screenshot(path)
         self.get_element(By.CSS_SELECTOR, "button.mobx-close").click()

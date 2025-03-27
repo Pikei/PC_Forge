@@ -6,6 +6,7 @@ from product.Product import Product
 from product.ProductCategory import UrlCategory, ProductCategory
 from product.RAM import RAM
 from utils.CommonUtils import CommonUtils
+from utils.ProductValidator import ProductValidator
 from utils.WebUtil import WebUtil
 
 
@@ -83,22 +84,20 @@ class ProductParser:
             case UrlCategory.RAM:
                 product = self.parse_ram(product, spec_rows)
 
-        if product is not None:
-            self.util.save_image(producer_code)
+        if ProductValidator.validate(product):
+            self.util.save_image(product.get_category(), product.get_producer(), product.get_producer_code())
             print("Parsed:", product.get_name())
-        return product
+            return product
+        return None
 
     def parse_cpu(self, product: Product, spec_rows):
         """
         Pobiera i przetwarza dane z adresu URL na obiekt klasy ``Processor``
         :param product: obiekt klasy ``Product``, zawierający uniwersalne dane dla wszystkich typów produktów
         :param spec_rows: wiersze tabeli specyfikacji
-        :return: obiekt klasy ``Processor`` lub **None** jeśli pakowanie jest inne niż OEM, lub BOX
+        :return: obiekt klasy ``Processor``
         """
         pack = str(CommonUtils.get_value_from_spec_row(spec_rows, "Wersja opakowania"))
-        if pack != "BOX" and pack != "OEM":
-            print("Unknown Packaging")
-            return None
 
         product.set_name(product.get_name()[:product.get_name().find(",")])
 
@@ -150,7 +149,9 @@ class ProductParser:
         :param spec_rows: wiersze tabeli specyfikacji
         :return: obiekt klasy ``RAM``
         """
+        product.set_category(str(ProductCategory.RAM))
         product.set_name(product.get_name()[:product.get_name().find(",")])
+        product.set_description(self.get_product_description(product.get_name()))
         line = CommonUtils.get_value_from_spec_row(spec_rows, "Linia")
         memory_type = CommonUtils.get_value_from_spec_row(spec_rows, "Liczba modułów")
 

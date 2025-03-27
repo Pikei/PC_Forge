@@ -6,6 +6,16 @@ from product.Product import Product
 from product.ProductCategory import UrlCategory
 from utils.WebUtil import WebUtil
 
+
+def log_duplicate():
+    print("=============================================")
+    print("WARNING: Duplicate", prod.get_producer_code())
+    print("------------------- SAVED -------------------")
+    products[prod.get_producer_code()].print_product_specs()
+    print("------------------- PARSED -------------------")
+    prod.print_product_specs()
+    print("=============================================")
+
 if __name__ == "__main__":
     json = JsonUtil()
     products: dict[str:Product] = json.load_saved_products()
@@ -20,15 +30,19 @@ if __name__ == "__main__":
         for link in web_util.find_products(url):
             all_links.append(link)
 
-    for link in all_links:
+    for i in range(0, len(all_links)):
+        link = all_links[i]
+        print(f"[{i + 1}/{len(all_links) + 1}] ", end="")
         if link in json.parsed_urls:
             print("SKIPPED: product", json.parsed_urls[link], "already exists")
             continue
         prod = parser.parse_product(link)
         if prod is None:
             continue
+        elif prod.get_producer_code() in products.keys():
+            log_duplicate()
         else:
-            products[prod.producer_code] = prod
+            products[prod.get_producer_code()] = prod
             json.save_product(link, prod)
     for prod in products.values():
         prod.print_product_specs()

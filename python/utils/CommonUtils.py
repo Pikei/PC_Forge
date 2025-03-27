@@ -9,6 +9,7 @@ class CommonUtils:
     """
     Klasa zawierająca statyczne metody, które dostarczają konkretne funkcjonalności
     """
+
     @staticmethod
     def directory_exists(directory_name: str):
         """
@@ -21,7 +22,6 @@ class CommonUtils:
             print(f"Directory '{directory_name}' created successfully.")
             return True
         except FileExistsError:
-            print(f"Directory '{directory_name}' already exists.")
             return True
         except Exception as e:
             print(f"An error occurred: {e}")
@@ -139,7 +139,7 @@ class CommonUtils:
     @staticmethod
     def translate_to_bool(s: str):
         """
-        Metoda sprawdzająca, czy w podanym ciągu znaków znajduje się słowo kluczowe "Tak", "Nie" lub "N ignorując przy tym wielkość liter.
+        Metoda sprawdzająca, czy w podanym ciągu znaków znajduje się słowo kluczowe "Tak", "Nie" lub "Brak" ignorując przy tym wielkość liter.
         :param s: Ciąg znaków do sprawdzenia, czy zawiera słowo "Tak"
         :return: **True** jeśli w ciągu znaków znajduje się słowo "Tak", **False** w przeciwnym razie
         """
