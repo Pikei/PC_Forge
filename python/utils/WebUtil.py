@@ -1,7 +1,8 @@
 import os
 from time import sleep
 from selenium import webdriver
-from selenium.common import NoSuchElementException, ElementNotInteractableException, TimeoutException
+from selenium.common import NoSuchElementException, ElementNotInteractableException, TimeoutException, \
+    ElementClickInterceptedException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -58,6 +59,7 @@ class WebUtil:
                 element = WebDriverWait(driver, timeout, poll_frequency=0.2).until(
                     ec.presence_of_element_located((by, selector)))
                 actions.scroll_to_element(element).perform()
+                actions.move_to_element(element).perform()
                 return element
             except TimeoutException:
                 return None
@@ -224,12 +226,14 @@ class WebUtil:
         """
         path = os.path.join(os.getcwd(), "images", category)
         CommonUtils.directory_exists(path)
-
         path = os.path.join(path, producer)
         CommonUtils.directory_exists(path)
-
         img_box = self.get_element(By.CSS_SELECTOR, "picture img")
-        img_box.click()
+        try:
+            img_box.click()
+        except ElementClickInterceptedException:
+            self.driver.execute_script("window.scrollTo(0, 0)")
+            img_box.click()
         img = self.get_element(By.CSS_SELECTOR, "img.mobx-img.mobx-media-loaded")
         path = os.path.join(path, f"{producer_code}.png")
         img.screenshot(path)

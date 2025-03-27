@@ -57,21 +57,12 @@ class ProductParser:
         print("Parsing:", url)
 
         if not self.util.load_page(url, By.CLASS_NAME, "product-specification__table"):
-            print("FAIL: product does not have specification table")
+            print("FAIL: Could not load page or product does not have specification table")
             return None
 
         price = self.util.get_element(By.CLASS_NAME, "product-price")
-        if price is None:
-            print("FAIL: Product is unavailable")
-            return None
-
         spec_rows = self.util.get_elements(By.CLASS_NAME, "specification__row")
-
         producer_code: str = CommonUtils.get_value_from_spec_row(spec_rows, "Kod producenta")
-        if producer_code == "":
-            print("FAIL: Unknown producer code")
-            return None
-
         product_price: float = CommonUtils.extract_float(price.text)
         name: str = self.util.get_element(By.CSS_SELECTOR, "h1.prod-name").text
         producer: str = CommonUtils.get_value_from_spec_row(spec_rows, "Producent")
