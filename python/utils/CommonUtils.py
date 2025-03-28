@@ -148,18 +148,20 @@ class CommonUtils:
         return res
 
     @staticmethod
-    def translate_to_bool(s: str):
+    def translate_to_bool(s: str, custom_str_key: str = None):
         """
         Metoda sprawdzająca, czy w podanym ciągu znaków znajduje się słowo kluczowe "Tak", "Nie" lub "Brak" ignorując przy tym wielkość liter.
         :param s: Ciąg znaków do sprawdzenia, czy zawiera słowo "Tak"
+        :param custom_str_key: Poszukiwane słowo kluczowe. Jeśli w podanym ciągu znaków znajduje się podane słowo kluczowe,
+            zostanie zwrócone **True**. Domyślnie ustawione na None
         :return: **True** jeśli w ciągu znaków znajduje się słowo "Tak", **False** w przeciwnym razie
         """
-        if s is None:
-            return None
-        if re.search(s, "tak", re.IGNORECASE):
+        if s is None: return None
+        if custom_str_key is None:
+            if re.search(s, "tak", re.IGNORECASE): return True
+            if re.search(s, "nie", re.IGNORECASE): return False
+            if re.search(s, "brak", re.IGNORECASE): return False
             return True
-        if re.search(s, "nie", re.IGNORECASE):
+        else:
+            if re.search(s, custom_str_key, re.IGNORECASE): return True
             return False
-        if re.search(s, "brak", re.IGNORECASE):
-            return False
-        return True

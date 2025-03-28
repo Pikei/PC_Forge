@@ -1,3 +1,4 @@
+from product.Motherboard import Motherboard
 from product.Processor import Processor
 from product.Product import Product
 from product.ProductCategory import ProductCategory
@@ -33,6 +34,8 @@ class ProductValidator:
                 return ProductValidator.validate_cpu(product)
             case str(ProductCategory.RAM):
                 return ProductValidator.validate_ram(product)
+            case str(ProductCategory.MB):
+                return ProductValidator.validate_motherboard(product)
         return False
 
     @staticmethod
@@ -87,4 +90,46 @@ class ProductValidator:
         else:
             return ProductValidator.log_error(
                 f"Could not parse product of category '{ram.get_category()}' to object of matching class.")
+        return True
+
+    @staticmethod
+    def validate_motherboard(mb: Product):
+        if isinstance(mb, Motherboard):
+            if mb.get_standard() is None or mb.get_standard() == "":
+                return ProductValidator.log_error("Could not find motherboard standard")
+            if mb.get_chipset() is None or mb.get_chipset() == "":
+                return ProductValidator.log_error("Could not find chipset")
+            if mb.get_cpu_socket() is None or mb.get_cpu_socket() == "":
+                return ProductValidator.log_error("Could not find CPU socket")
+            if mb.get_memory_standard() is None or mb.get_memory_standard() == "":
+                return ProductValidator.log_error("Could not find memory standard")
+            if mb.get_number_of_memory_slots() is None or mb.get_number_of_memory_slots() <= 0:
+                return ProductValidator.log_error("Could not find number of memory slots")
+            if mb.get_supported_memory_frequencies() is None or len(mb.get_supported_memory_frequencies()) == 0:
+                return ProductValidator.log_error("Could not find supported memory frequencies")
+            if mb.get_max_memory_capacity() is None or mb.get_max_memory_capacity() <= 0:
+                return ProductValidator.log_error("Could not find max memory capacity")
+            if mb.get_integrated_audio_card() is None or mb.get_integrated_audio_card() == "":
+                return ProductValidator.log_error("Could not find integrated audio card")
+            if mb.get_audio_channels() is None or mb.get_audio_channels() <= 0.0:
+                return ProductValidator.log_error("Could not find audio channels")
+            if mb.get_integrated_network_card() is None or mb.get_integrated_network_card() == "":
+                return ProductValidator.log_error("Could not find integrated network card")
+            if mb.get_bluetooth() is None:
+                return ProductValidator.log_error("Could not find if motherboard has bluetooth or not")
+            if mb.get_wifi() is None:
+                return ProductValidator.log_error("Could not find if motherboard has Wi-Fi or not")
+            if mb.get_expansion_slots() is None or len(mb.get_expansion_slots()) == 0:
+                return ProductValidator.log_error("Could not find expansion slots")
+            if mb.get_drive_interfaces() is None or len(mb.get_drive_interfaces()) == 0:
+                return ProductValidator.log_error("Could not find drive interfaces")
+            if mb.get_outside_connectors() is None or len(mb.get_outside_connectors()) == 0:
+                return ProductValidator.log_error("Could not find outside connectors")
+            if mb.get_width() is None or mb.get_width() <= 0.0:
+                return ProductValidator.log_error("Could not find width")
+            if mb.get_depth() is None or mb.get_depth() <= 0.0:
+                return ProductValidator.log_error("Could not find depth")
+        else:
+            return ProductValidator.log_error(
+                f"Could not parse product of category '{mb.get_category()}' to object of matching class.")
         return True

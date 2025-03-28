@@ -26,7 +26,7 @@ class WebUtil:
         self.__cookies_accepted = False
         self.all_links = []
 
-    def get_element(self, by: By, selector: str, driver=None, mandatory=True, timeout=60):
+    def get_element(self, by: By, selector: str, driver=None, mandatory=True, timeout=10):
         """
         Metoda ta zastępuje ``WebDriver.find_element()``.
         Próbuje zlokalizować element na załadowanej stronie, czekając przez określony czas,
@@ -74,7 +74,7 @@ class WebUtil:
         except NoSuchElementException:
             return None
 
-    def get_elements(self, by: By, selector: str, driver=None, mandatory=True, timeout=60):
+    def get_elements(self, by: By, selector: str, driver=None, mandatory=True, timeout=10):
         """
         Metoda ``WebDriver.find_elements()``.
         Próbuje zlokalizować elementy na załadowanej stronie, czekając przez określony czas,

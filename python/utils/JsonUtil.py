@@ -1,6 +1,7 @@
 import json
 import os
 
+from product.Motherboard import Motherboard
 from product.Processor import Processor
 from product.Product import Product
 from product.ProductCategory import ProductCategory
@@ -48,6 +49,8 @@ class JsonUtil:
                 return self.parse_json_to_cpu(product_json)
             case ProductCategory.RAM:
                 return self.parse_json_to_ram(product_json)
+            case ProductCategory.MB:
+                return self.parse_json_to_motherboard(product_json)
 
     @staticmethod
     def parse_json_to_cpu(product_json):
@@ -86,11 +89,39 @@ class JsonUtil:
                    product_json["latency"],
                    product_json["lighting"])
 
+    @staticmethod
+    def parse_json_to_motherboard(product_json):
+        return Motherboard(product_json["name"],
+                           product_json["producer"],
+                           product_json["category"],
+                           product_json["description"],
+                           product_json["price"],
+                           product_json["producer_code"],
+                           product_json["standard"],
+                           product_json["chipset"],
+                           product_json["cpu_socket"],
+                           product_json["memory_standard"],
+                           product_json["number_of_memory_slots"],
+                           product_json["supported_memory_frequencies"],
+                           product_json["max_memory_capacity"],
+                           product_json["integrated_audio_card"],
+                           product_json["audio_channels"],
+                           product_json["integrated_network_card"],
+                           product_json["bluetooth"],
+                           product_json["wifi"],
+                           product_json["expansion_slots"],
+                           product_json["drive_interfaces"],
+                           product_json["outside_connectors"],
+                           product_json["width"],
+                           product_json["depth"])
+
     def parse_product_to_json(self, product: Product):
         if isinstance(product, Processor):
             return self.parse_cpu_to_json(product)
         if isinstance(product, RAM):
             return self.parse_ram_to_json(product)
+        if isinstance(product, Motherboard):
+            return self.parse_motherboard_to_json(product)
 
     @staticmethod
     def parse_cpu_to_json(cpu: Processor):
@@ -131,4 +162,32 @@ class JsonUtil:
             "frequency": ram.get_frequency(),
             "latency": ram.get_latency(),
             "lighting": ram.get_lighting()
+        }
+
+    @staticmethod
+    def parse_motherboard_to_json(mb: Motherboard):
+        return {
+            "name": mb.get_name(),
+            "producer": mb.get_producer(),
+            "category": mb.get_category(),
+            "description": mb.get_description(),
+            "price": mb.get_price(),
+            "producer_code": mb.get_producer_code(),
+            "standard": mb.get_standard(),
+            "chipset": mb.get_chipset(),
+            "cpu_socket": mb.get_cpu_socket(),
+            "memory_standard": mb.get_memory_standard(),
+            "number_of_memory_slots": mb.get_number_of_memory_slots(),
+            "supported_memory_frequencies": mb.get_supported_memory_frequencies(),
+            "max_memory_capacity": mb.get_max_memory_capacity(),
+            "integrated_audio_card": mb.get_integrated_audio_card(),
+            "audio_channels": mb.get_audio_channels(),
+            "integrated_network_card": mb.get_integrated_network_card(),
+            "bluetooth": mb.get_bluetooth(),
+            "wifi": mb.get_wifi(),
+            "expansion_slots": mb.get_expansion_slots(),
+            "drive_interfaces": mb.get_drive_interfaces(),
+            "outside_connectors": mb.get_outside_connectors(),
+            "width": mb.get_width(),
+            "depth": mb.get_depth()
         }

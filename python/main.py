@@ -32,7 +32,7 @@ if __name__ == "__main__":
 
     for i in range(0, len(all_links)):
         link = all_links[i]
-        print(f"[{i + 1}/{len(all_links) + 1}] ", end="")
+        print(f"[{i + 1}/{len(all_links)}] ", end="")
         if link in json.parsed_urls:
             print("SKIPPED: product", json.parsed_urls[link], "already exists")
             continue
@@ -41,6 +41,8 @@ if __name__ == "__main__":
             continue
         elif prod.get_producer_code() in products.keys():
             log_duplicate()
+            if len(prod.get_description()) > len(products[prod.get_producer_code()].get_description()):
+                products[prod.get_producer_code()] = prod
         else:
             products[prod.get_producer_code()] = prod
             json.save_product(link, prod)

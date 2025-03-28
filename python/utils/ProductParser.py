@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
+from product.Motherboard import Motherboard
 from product.Processor import Processor
 from product.Product import Product
 from product.ProductCategory import UrlCategory, ProductCategory
@@ -60,9 +61,11 @@ class ProductParser:
             print("FAIL: Could not load page or product does not have specification table")
             return None
 
+        spec_rows = self.util.get_elements(By.CLASS_NAME, "specification__row")
+        if spec_rows is None or len(spec_rows) == 0: return None
+
         name: str = ""
         price: float = 0.0
-        spec_rows = self.util.get_elements(By.CLASS_NAME, "specification__row")
         producer_code: str = CommonUtils.get_value_from_spec_row(spec_rows, "Kod producenta")
         web_price = self.util.get_element(By.CLASS_NAME, "product-price")
         web_name = self.util.get_element(By.CSS_SELECTOR, "h1.prod-name")
@@ -78,10 +81,12 @@ class ProductParser:
         product = Product(name, producer, "", "", price, producer_code)
 
         match self.util.get_elements(By.CSS_SELECTOR, "a.main-breadcrumb")[-1].get_attribute("href"):
-            case UrlCategory.CPU:
-                product = self.parse_cpu(product, spec_rows)
-            case UrlCategory.RAM:
-                product = self.parse_ram(product, spec_rows)
+            # case UrlCategory.CPU:
+            #     product = self.parse_cpu(product, spec_rows)
+            # case UrlCategory.RAM:
+            #     product = self.parse_ram(product, spec_rows)
+            case UrlCategory.MB:
+                product = self.parse_motherboard(product, spec_rows)
 
         if ProductValidator.validate(product):
             self.util.save_image(product.get_category(), product.get_producer(), product.get_producer_code())
@@ -161,7 +166,7 @@ class ProductParser:
         # pojemności pamięci wylistowane w jednostkach [MB] zapisywane są jako liczby ujemne
         spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Pojemność łączna")
         total_capacity = CommonUtils.extract_int(spec_value)
-        if "MB" in spec_value:
+        if spec_value is not None and "MB" in spec_value:
             total_capacity = total_capacity * (-1)
 
         spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Liczba modułów")
@@ -178,3 +183,72 @@ class ProductParser:
         return RAM(product.get_name(), product.get_producer(), product.get_category(), product.get_description(),
                    product.get_price(), product.get_producer_code(), line, memory_type, total_capacity,
                    number_of_modules, frequency, latency, lighting)
+
+    def parse_motherboard(self, product, spec_rows):
+        """
+        Pobiera i przetwarza dane z adresu URL na obiekt klasy ``Motherboard``
+        :param product: obiekt klasy ``Product``, zawierający uniwersalne dane dla wszystkich typów produktów
+        :param spec_rows: wiersze tabeli specyfikacji
+        :return: obiekt klasy ``Motherboard``
+        """
+        product.set_category(str(ProductCategory.MB))
+        product.set_description(self.get_product_description(product.get_name()))
+        standard = CommonUtils.get_value_from_spec_row(spec_rows, "Standard płyty")
+        chipset = CommonUtils.get_value_from_spec_row(spec_rows, "Chipset płyty")
+        cpu_socket = CommonUtils.get_value_from_spec_row(spec_rows, "Gniazdo procesora")
+        memory_standard = CommonUtils.get_value_from_spec_row(spec_rows, "Standard pamięci")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Liczba slotów pamięci")
+        number_of_memory_slots = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Częstotliwości pracy pamięci")
+        str_freq_list = []
+        frequencies: list[int] = []
+        if spec_value is not None:
+            str_freq_list = spec_value.replace("\n", "").split(",")
+        if len(str_freq_list) > 0:
+            for freq in str_freq_list:
+                frequencies.append(CommonUtils.extract_int(freq))
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Maksymalna ilość pamięci")
+        max_memory_capacity = CommonUtils.extract_int(spec_value)
+
+        integrated_audio_card = CommonUtils.get_value_from_spec_row(spec_rows, "Chipset dźwiękowy")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Kanały audio")
+        audio_channels = CommonUtils.extract_float(spec_value)
+
+        integrated_network_card = CommonUtils.get_value_from_spec_row(spec_rows, "Zintegrowana karta sieciowa")
+        wireless = CommonUtils.get_value_from_spec_row(spec_rows, "Praca bezprzewodowa")
+        bluetooth = False
+        wifi = False
+        if CommonUtils.translate_to_bool(wireless):
+            bluetooth = CommonUtils.translate_to_bool(wireless, custom_str_key="Bluetooth")
+            wifi = CommonUtils.translate_to_bool(wireless, custom_str_key="Wi-Fi")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Gniazda rozszerzeń")
+        expansion_slots = []
+        if spec_value is not None:
+            expansion_slots = spec_value.replace("\n", "").split(",")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Złącza napędów")
+        drive_interfaces = []
+        if spec_value is not None:
+            drive_interfaces = spec_value.replace("\n", "").split(",")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Panel tylny")
+        outside_connectors = []
+        if spec_value is not None:
+            outside_connectors = spec_value.replace("\n", "").split(",")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Szerokość [mm]")
+        width = CommonUtils.extract_float(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Głębokość [mm]")
+        depth = CommonUtils.extract_float(spec_value)
+
+        return Motherboard(product.get_name(), product.get_producer(), product.get_category(),
+                           product.get_description(), product.get_price(), product.get_producer_code(),
+                           standard, chipset, cpu_socket, memory_standard, number_of_memory_slots, frequencies,
+                           max_memory_capacity, integrated_audio_card, audio_channels, integrated_network_card,
+                           bluetooth, wifi, expansion_slots, drive_interfaces, outside_connectors, width, depth)
