@@ -8,7 +8,7 @@ class ProductValidator:
 
     @staticmethod
     def log_error(message):
-        print("ERROR: An error occurred while parsing product.", message)
+        print("ERROR:", message)
         return False
 
     @staticmethod

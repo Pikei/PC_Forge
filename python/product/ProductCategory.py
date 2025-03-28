@@ -15,7 +15,7 @@ class ProductCategory(StrEnum):
 
 class UrlCategory(StrEnum):
     CPU = "https://www.morele.net/kategoria/procesory-45/"
-    RAM = "https://www.morele.net/kategoria/pamieci-ram-38/"
+    # RAM = "https://www.morele.net/kategoria/pamieci-ram-38/"
 
     # CASE = "kategoria/obudowy-33/"
     # # COOLER =

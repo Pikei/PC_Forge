@@ -1,6 +1,8 @@
 import os
 import re
 from collections import OrderedDict
+
+from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
@@ -35,10 +37,15 @@ class CommonUtils:
         :param param_name: Nazwa pożądanego parametru ze specyfikacji
         :return: Wartość w tabeli specyfikacji w wierszu gdzie nazwa parametru jest taka sama jak przekazany parametr **param_name**
         """
+        if len(rows) == 0:
+            return None
         for row in rows:
-            if row.find_element(By.CLASS_NAME, "specification__name").text == param_name:
-                return row.find_element(By.CLASS_NAME, "specification__value").text
-        return ""
+            try:
+                if row.find_element(By.CLASS_NAME, "specification__name").text == param_name:
+                    return row.find_element(By.CLASS_NAME, "specification__value").text
+            except NoSuchElementException:
+                return None
+        return None
 
     @staticmethod
     def is_digit(c: chr):
@@ -61,6 +68,8 @@ class CommonUtils:
         :return: Jeśli w przekazanym ciągu znaków znaleziono liczbę zmiennoprzecinkową, zwraca ją.
         W przeciwnym razie zwraca 0,0
         """
+        if s is None:
+            return 0.0
         res = ""
         s = s.replace(",", ".")
         point_found = False
@@ -85,6 +94,8 @@ class CommonUtils:
         :param s: Ciąg znaków, z którego ma być pobrana liczba całkowita.
         :return: Jeśli w przekazanym ciągu znaków znaleziono liczbę całkowitą, zwraca ją w przeciwnym razie zwraca 0
         """
+        if s is None:
+            return 0
         res = ""
         num_found = False
         for char in s:
@@ -143,6 +154,8 @@ class CommonUtils:
         :param s: Ciąg znaków do sprawdzenia, czy zawiera słowo "Tak"
         :return: **True** jeśli w ciągu znaków znajduje się słowo "Tak", **False** w przeciwnym razie
         """
+        if s is None:
+            return None
         if re.search(s, "tak", re.IGNORECASE):
             return True
         if re.search(s, "nie", re.IGNORECASE):

@@ -60,14 +60,22 @@ class ProductParser:
             print("FAIL: Could not load page or product does not have specification table")
             return None
 
-        price = self.util.get_element(By.CLASS_NAME, "product-price")
+        name: str = ""
+        price: float = 0.0
         spec_rows = self.util.get_elements(By.CLASS_NAME, "specification__row")
         producer_code: str = CommonUtils.get_value_from_spec_row(spec_rows, "Kod producenta")
-        product_price: float = CommonUtils.extract_float(price.text)
-        name: str = self.util.get_element(By.CSS_SELECTOR, "h1.prod-name").text
+        web_price = self.util.get_element(By.CLASS_NAME, "product-price")
+        web_name = self.util.get_element(By.CSS_SELECTOR, "h1.prod-name")
+
+        if web_price is not None:
+            price: float = CommonUtils.extract_float(web_price.text)
+
+        if web_name is not None:
+            name: str = web_name.text
+
         producer: str = CommonUtils.get_value_from_spec_row(spec_rows, "Producent")
 
-        product = Product(name, producer, "", "", product_price, producer_code)
+        product = Product(name, producer, "", "", price, producer_code)
 
         match self.util.get_elements(By.CSS_SELECTOR, "a.main-breadcrumb")[-1].get_attribute("href"):
             case UrlCategory.CPU:
