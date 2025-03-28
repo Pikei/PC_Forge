@@ -158,10 +158,10 @@ class CommonUtils:
         """
         if s is None: return None
         if custom_str_key is None:
-            if re.search(s, "tak", re.IGNORECASE): return True
-            if re.search(s, "nie", re.IGNORECASE): return False
-            if re.search(s, "brak", re.IGNORECASE): return False
+            if re.search(re.escape(s), "tak", re.IGNORECASE): return True
+            if re.search(re.escape(s), "nie", re.IGNORECASE): return False
+            if re.search(re.escape(s), "brak", re.IGNORECASE): return False
             return True
         else:
-            if re.search(s, custom_str_key, re.IGNORECASE): return True
+            if re.search(re.escape(custom_str_key), s, re.IGNORECASE): return True
             return False
