@@ -84,12 +84,12 @@ class ProductParser:
         product = Product(name, producer, "", "", price, producer_code)
 
         match self.util.get_elements(By.CSS_SELECTOR, "a.main-breadcrumb")[-1].get_attribute("href"):
-            # case UrlCategory.CPU:
-            #     product = self.parse_cpu(product, spec_rows)
-            # case UrlCategory.RAM:
-            #     product = self.parse_ram(product, spec_rows)
-            # case UrlCategory.MB:
-            #     product = self.parse_motherboard(product, spec_rows)
+            case UrlCategory.CPU:
+                product = self.parse_cpu(product, spec_rows)
+            case UrlCategory.RAM:
+                product = self.parse_ram(product, spec_rows)
+            case UrlCategory.MB:
+                product = self.parse_motherboard(product, spec_rows)
             case UrlCategory.GPU:
                 product = self.parse_gpu(product, spec_rows)
 
