@@ -3,6 +3,7 @@ import os
 
 from product.GraphicsCard import GraphicsCard
 from product.Motherboard import Motherboard
+from product.PowerSuppy import PowerSupply
 from product.Processor import Processor
 from product.Product import Product
 from product.ProductCategory import ProductCategory
@@ -54,6 +55,8 @@ class JsonUtil:
                 return self.parse_json_to_motherboard(product_json)
             case ProductCategory.GPU:
                 return self.parse_json_to_graphics_card(product_json)
+            case ProductCategory.POWER_SUPPLY:
+                return self.parse_json_to_power_supply(product_json)
 
     @staticmethod
     def parse_json_to_cpu(product_json):
@@ -147,6 +150,35 @@ class JsonUtil:
                             product_json["memory_freq"],
                             product_json["cooling_type"],
                             product_json["number_of_fans"])
+
+    @staticmethod
+    def parse_json_to_power_supply(product_json):
+        return PowerSupply(product_json["name"],
+                           product_json["producer"],
+                           product_json["category"],
+                           product_json["description"],
+                           product_json["price"],
+                           product_json["producer_code"],
+                           product_json["standard"],
+                           product_json["power"],
+                           product_json["efficiency_certificate"],
+                           product_json["efficiency"],
+                           product_json["cooling_type"],
+                           product_json["fan_diameter"],
+                           product_json["protections"],
+                           product_json["modular_cabling"],
+                           product_json["atx24"],
+                           product_json["pcie16"],
+                           product_json["pcie8"],
+                           product_json["pcie6"],
+                           product_json["cpu8"],
+                           product_json["cpu4"],
+                           product_json["sata"],
+                           product_json["molex"],
+                           product_json["height"],
+                           product_json["width"],
+                           product_json["depth"],
+                           product_json["lightning"])
     
     def parse_product_to_json(self, product: Product):
         if isinstance(product, Processor):
@@ -157,6 +189,8 @@ class JsonUtil:
             return self.parse_motherboard_to_json(product)
         if isinstance(product, GraphicsCard):
             return self.parse_graphics_card_to_json(product)
+        if isinstance(product, PowerSupply):
+            return self.parse_power_supply_to_json(product)
 
     @staticmethod
     def parse_cpu_to_json(cpu: Processor):
@@ -257,4 +291,35 @@ class JsonUtil:
             "memory_freq": gpu.get_memory_freq(),
             "cooling_type": gpu.get_cooling_type(),
             "number_of_fans": gpu.get_number_of_fans()
+        }
+
+    @staticmethod
+    def parse_power_supply_to_json(ps: PowerSupply):
+        return {
+            "name": ps.get_name(),
+            "producer": ps.get_producer(),
+            "category": ps.get_category(),
+            "description": ps.get_description(),
+            "price": ps.get_price(),
+            "producer_code": ps.get_producer_code(),
+            "standard": ps.get_standard(),
+            "power": ps.get_power(),
+            "efficiency_certificate": ps.get_efficiency_certificate(),
+            "efficiency": ps.get_efficiency(),
+            "cooling_type": ps.get_cooling_type(),
+            "fan_diameter": ps.get_fan_diameter(),
+            "protections": ps.get_protections(),
+            "modular_cabling": ps.get_modular_cabling(),
+            "atx24": ps.get_atx24(),
+            "pcie16": ps.get_pcie16(),
+            "pcie8": ps.get_pcie8(),
+            "pcie6": ps.get_pcie6(),
+            "cpu8": ps.get_cpu8(),
+            "cpu4": ps.get_cpu4(),
+            "sata": ps.get_sata(),
+            "molex": ps.get_molex(),
+            "height": ps.get_height(),
+            "width": ps.get_width(),
+            "depth": ps.get_depth(),
+            "lightning": ps.get_lightning()
         }

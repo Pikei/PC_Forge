@@ -1,5 +1,6 @@
 from product.GraphicsCard import GraphicsCard
 from product.Motherboard import Motherboard
+from product.PowerSuppy import PowerSupply
 from product.Processor import Processor
 from product.Product import Product
 from product.ProductCategory import ProductCategory
@@ -39,6 +40,8 @@ class ProductValidator:
                 return ProductValidator.validate_motherboard(product)
             case str(ProductCategory.GPU):
                 return ProductValidator.validate_gpu(product)
+            case str(ProductCategory.POWER_SUPPLY):
+                return ProductValidator.validate_power_supply(product)
         return False
 
     @staticmethod
@@ -185,4 +188,50 @@ class ProductValidator:
         else:
             return ProductValidator.log_error(
                 f"Could not parse product of category '{gpu.get_category()}' to object of matching class.")
+        return True
+
+    @staticmethod
+    def validate_power_supply(ps: Product):
+        if isinstance(ps, PowerSupply):
+            if ps.get_standard() is None or ps.get_standard() == "":
+                return ProductValidator.log_error("Could not find standard")
+            if ps.get_power() is None or ps.get_power() <= 0:
+                return ProductValidator.log_error("Could not find power")
+            if ps.get_efficiency() is None:
+                return ProductValidator.log_error("Could not find efficiency")
+            if ps.get_cooling_type() is None or ps.get_cooling_type() == "":
+                return ProductValidator.log_error("Could not find cooling type")
+            if ps.get_fan_diameter() is None:
+                return ProductValidator.log_error("Could not find fan diameter")
+            if ps.get_protections() is None:
+                return ProductValidator.log_error("Could not find protections")
+            if ps.get_modular_cabling() is None:
+                return ProductValidator.log_error("Could not find if cabling is modular or not")
+            if ps.get_atx24() is None:
+                return ProductValidator.log_error("Could not find number of ATX 24pin connectors")
+            if ps.get_pcie16() is None:
+                return ProductValidator.log_error("Could not find number of PCI-E 16pin connectors")
+            if ps.get_pcie8() is None:
+                return ProductValidator.log_error("Could not find number of PCI-E 8pin connectors")
+            if ps.get_pcie6() is None:
+                return ProductValidator.log_error("Could not find number of PCI-E 6pin connectors")
+            if ps.get_cpu8() is None:
+                return ProductValidator.log_error("Could not find number of CPU 8pin connectors")
+            if ps.get_cpu4() is None:
+                return ProductValidator.log_error("Could not find number of CPU 4pin connectors")
+            if ps.get_sata() is None:
+                return ProductValidator.log_error("Could not find number of SATA connectors")
+            if ps.get_molex() is None:
+                return ProductValidator.log_error("Could not find number of Molex connectors")
+            if ps.get_height() is None or ps.get_height() <= 0:
+                return ProductValidator.log_error("Could not find height")
+            if ps.get_width() is None or ps.get_width() <= 0:
+                return ProductValidator.log_error("Could not find width")
+            if ps.get_depth() is None or ps.get_depth() <= 0:
+                return ProductValidator.log_error("Could not find depth")
+            if ps.get_lightning() is None:
+                return ProductValidator.log_error("Could not find lightning")
+        else:
+            return ProductValidator.log_error(
+                f"Could not parse product of category '{ps.get_category()}' to object of matching class.")
         return True

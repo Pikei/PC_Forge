@@ -1,8 +1,10 @@
+from regex import split
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 from product.GraphicsCard import GraphicsCard
 from product.Motherboard import Motherboard
+from product.PowerSuppy import PowerSupply
 from product.Processor import Processor
 from product.Product import Product
 from product.ProductCategory import UrlCategory, ProductCategory
@@ -83,18 +85,20 @@ class ProductParser:
 
         product = Product(name, producer, "", "", price, producer_code)
 
-        match self.util.get_elements(By.CSS_SELECTOR, "a.main-breadcrumb")[-1].get_attribute("href"):
-            case UrlCategory.CPU:
-                product = self.parse_cpu(product, spec_rows)
-            case UrlCategory.RAM:
-                product = self.parse_ram(product, spec_rows)
-            case UrlCategory.MB:
-                product = self.parse_motherboard(product, spec_rows)
-            case UrlCategory.GPU:
-                product = self.parse_gpu(product, spec_rows)
+        cat_url = self.util.get_elements(By.CSS_SELECTOR, "a.main-breadcrumb")[-1].get_attribute("href")
+        if cat_url in UrlCategory.CPU:
+            product = self.parse_cpu(product, spec_rows)
+        elif cat_url in UrlCategory.RAM:
+            product = self.parse_ram(product, spec_rows)
+        elif cat_url in UrlCategory.MB:
+            product = self.parse_motherboard(product, spec_rows)
+        elif cat_url in UrlCategory.GPU:
+            product = self.parse_gpu(product, spec_rows)
+        elif cat_url in UrlCategory.POWER_SUPPLY:
+            product = self.parse_power_supply(product, spec_rows)
 
         if ProductValidator.validate(product):
-            # self.util.save_image(product.get_category(), product.get_producer(), product.get_producer_code())
+            self.util.save_image(product.get_category(), product.get_producer(), product.get_producer_code())
             print("Parsed:", product.get_name())
             return product
         return None
@@ -338,3 +342,92 @@ class ProductParser:
                             stream_processors, rop_units, texturing_units, rt_cores, tensor_cores,
                             dlss, connector, card_length, resolution, recommended_ps, lightning,
                             ram, ram_type, data_bus, memory_freq, cooling_type, number_of_fans)
+
+    def parse_power_supply(self, product, spec_rows):
+        """
+       Pobiera i przetwarza dane z adresu URL na obiekt klasy ``GraphicsCard``
+       :param product: obiekt klasy ``Product``, zawierający uniwersalne dane dla wszystkich typów produktów
+       :param spec_rows: wiersze tabeli specyfikacji
+       :return: obiekt klasy ``GraphicsCard``
+       """
+        product.set_category(str(ProductCategory.POWER_SUPPLY))
+        temp_name_list = product.get_name().split(" ")
+        product.set_name("")
+        if len(temp_name_list) > 0:
+            for word in temp_name_list:
+                if "W" in word and word[0].isdigit():
+                    break
+                else:
+                    product.set_name(product.get_name() + " " + word)
+        product.set_name(product.get_name().strip())
+
+        product.set_description(self.get_product_description(product.get_name()))
+
+        standard: str = CommonUtils.get_value_from_spec_row(spec_rows, "Standard/Format")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Moc")
+        power: int = CommonUtils.extract_int(spec_value)
+
+        efficiency_certificate: str = CommonUtils.get_value_from_spec_row(spec_rows, "Certyfikat sprawności")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Sprawność")
+        efficiency: int = CommonUtils.extract_int(spec_value)
+
+        cooling_type: str = CommonUtils.get_value_from_spec_row(spec_rows, "Typ chłodzenia")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Średnica wentylatora")
+        fan_diameter: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Zabezpieczenia").strip().replace("\n", "")
+        protections: list[str] = []
+        if CommonUtils.translate_to_bool(spec_value):
+            protections = spec_value.split(",")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Modularne okablowanie")
+        modular_cabling: bool = CommonUtils.translate_to_bool(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "ATX 24-pin (20+4)")
+        atx24: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "PCI-E 16-pin (12+4)")
+        pcie16: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "PCI-E 8-pin (6+2)")
+        pcie8: int = CommonUtils.extract_int(spec_value)
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "PCI-E 8-pin")
+        pcie8 = pcie8 + CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "PCI-E 6-pin")
+        pcie6: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "CPU 8-pin (4+4)")
+        cpu8: int = CommonUtils.extract_int(spec_value)
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "CPU 8-pin")
+        cpu8 = cpu8 + CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "CPU 4-pin")
+        cpu4: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "SATA")
+        sata: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Molex")
+        molex: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Wysokość [mm]")
+        height: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Szerokość [mm]")
+        width: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Głębokość [mm]")
+        depth: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Podświetlenie")
+        lightning: bool = CommonUtils.translate_to_bool(spec_value)
+
+        return PowerSupply(product.get_name(), product.get_producer(), product.get_category(),
+                           product.get_description(), product.get_price(), product.get_producer_code(),
+                           standard, power, efficiency_certificate, efficiency, cooling_type, fan_diameter, protections,
+                           modular_cabling, atx24, pcie16, pcie8, pcie6, cpu8, cpu4, sata, molex, height, width, depth,
+                           lightning)
