@@ -1,6 +1,7 @@
 import json
 import os
 
+from product.GraphicsCard import GraphicsCard
 from product.Motherboard import Motherboard
 from product.Processor import Processor
 from product.Product import Product
@@ -51,6 +52,8 @@ class JsonUtil:
                 return self.parse_json_to_ram(product_json)
             case ProductCategory.MB:
                 return self.parse_json_to_motherboard(product_json)
+            case ProductCategory.GPU:
+                return self.parse_json_to_graphics_card(product_json)
 
     @staticmethod
     def parse_json_to_cpu(product_json):
@@ -115,6 +118,36 @@ class JsonUtil:
                            product_json["width"],
                            product_json["depth"])
 
+    @staticmethod
+    def parse_json_to_graphics_card(product_json):
+        return GraphicsCard(product_json["name"],
+                            product_json["producer"],
+                            product_json["category"],
+                            product_json["description"],
+                            product_json["price"],
+                            product_json["producer_code"],
+                            product_json["chipset_producer"],
+                            product_json["chipset"],
+                            product_json["core_frequency"],
+                            product_json["max_core_frequency"],
+                            product_json["stream_processors"],
+                            product_json["rop_units"],
+                            product_json["texturing_units"],
+                            product_json["rt_cores"],
+                            product_json["tensor_cores"],
+                            product_json["dlss"],
+                            product_json["connector"],
+                            product_json["card_length"],
+                            product_json["resolution"],
+                            product_json["recommended_ps"],
+                            product_json["lightning"],
+                            product_json["ram"],
+                            product_json["ram_type"],
+                            product_json["data_bus"],
+                            product_json["memory_freq"],
+                            product_json["cooling_type"],
+                            product_json["number_of_fans"])
+    
     def parse_product_to_json(self, product: Product):
         if isinstance(product, Processor):
             return self.parse_cpu_to_json(product)
@@ -122,6 +155,8 @@ class JsonUtil:
             return self.parse_ram_to_json(product)
         if isinstance(product, Motherboard):
             return self.parse_motherboard_to_json(product)
+        if isinstance(product, GraphicsCard):
+            return self.parse_graphics_card_to_json(product)
 
     @staticmethod
     def parse_cpu_to_json(cpu: Processor):
@@ -190,4 +225,36 @@ class JsonUtil:
             "outside_connectors": mb.get_outside_connectors(),
             "width": mb.get_width(),
             "depth": mb.get_depth()
+        }
+
+    @staticmethod
+    def parse_graphics_card_to_json(gpu: GraphicsCard):
+        return {
+            "name": gpu.get_name(),
+            "producer": gpu.get_producer(),
+            "category": gpu.get_category(),
+            "description": gpu.get_description(),
+            "price": gpu.get_price(),
+            "producer_code": gpu.get_producer_code(),
+            "chipset_producer": gpu.get_chipset_producer(),
+            "chipset": gpu.get_chipset(),
+            "core_frequency": gpu.get_core_frequency(),
+            "max_core_frequency": gpu.get_max_core_frequency(),
+            "stream_processors": gpu.get_stream_processors(),
+            "rop_units": gpu.get_rop_units(),
+            "texturing_units": gpu.get_texturing_units(),
+            "rt_cores": gpu.get_rt_cores(),
+            "tensor_cores": gpu.get_tensor_cores(),
+            "dlss": gpu.get_dlss(),
+            "connector": gpu.get_connector(),
+            "card_length": gpu.get_card_length(),
+            "resolution": gpu.get_resolution(),
+            "recommended_ps": gpu.get_recommended_ps(),
+            "lightning": gpu.get_lightning(),
+            "ram": gpu.get_ram(),
+            "ram_type": gpu.get_ram_type(),
+            "data_bus": gpu.get_data_bus(),
+            "memory_freq": gpu.get_memory_freq(),
+            "cooling_type": gpu.get_cooling_type(),
+            "number_of_fans": gpu.get_number_of_fans()
         }

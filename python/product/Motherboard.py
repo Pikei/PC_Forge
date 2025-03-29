@@ -35,8 +35,8 @@ class Motherboard(Product):
         print("CPU socket:", self.cpu_socket)
         print("Memory standard:", self.memory_standard)
         print("Number of memory slots:", self.number_of_memory_slots)
-        print("Supported memory frequencies:", self.supported_memory_frequencies)
-        print("Max memory capacity:", self.max_memory_capacity)
+        print("Supported memory frequencies [MHz]:", self.supported_memory_frequencies)
+        print("Max memory capacity:", self.max_memory_capacity, "GB")
         print("Integrated audio card:", self.integrated_audio_card)
         print("Audio channels:", self.audio_channels)
         print("Integrated network card:", self.integrated_network_card)
@@ -45,8 +45,8 @@ class Motherboard(Product):
         print("Expansion slots:", self.expansion_slots)
         print("Drive interfaces:", self.drive_interfaces)
         print("Outside connectors:", self.outside_connectors)
-        print("Width [mm]:", self.width)
-        print("Depth [mm]:", self.depth)
+        print("Width:", self.width, "mm")
+        print("Depth:", self.depth, "mm")
         super().print_end()
 
     def get_standard(self):

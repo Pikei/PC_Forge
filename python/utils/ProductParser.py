@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
+from product.GraphicsCard import GraphicsCard
 from product.Motherboard import Motherboard
 from product.Processor import Processor
 from product.Product import Product
@@ -67,6 +68,8 @@ class ProductParser:
         name: str = ""
         price: float = 0.0
         producer_code: str = CommonUtils.get_value_from_spec_row(spec_rows, "Kod producenta")
+        if producer_code is not None and producer_code != "":
+            producer_code = producer_code.replace("\\", "-").replace("/", "-")
         web_price = self.util.get_element(By.CLASS_NAME, "product-price")
         web_name = self.util.get_element(By.CSS_SELECTOR, "h1.prod-name")
 
@@ -85,11 +88,13 @@ class ProductParser:
             #     product = self.parse_cpu(product, spec_rows)
             # case UrlCategory.RAM:
             #     product = self.parse_ram(product, spec_rows)
-            case UrlCategory.MB:
-                product = self.parse_motherboard(product, spec_rows)
+            # case UrlCategory.MB:
+            #     product = self.parse_motherboard(product, spec_rows)
+            case UrlCategory.GPU:
+                product = self.parse_gpu(product, spec_rows)
 
         if ProductValidator.validate(product):
-            self.util.save_image(product.get_category(), product.get_producer(), product.get_producer_code())
+            # self.util.save_image(product.get_category(), product.get_producer(), product.get_producer_code())
             print("Parsed:", product.get_name())
             return product
         return None
@@ -252,3 +257,84 @@ class ProductParser:
                            standard, chipset, cpu_socket, memory_standard, number_of_memory_slots, frequencies,
                            max_memory_capacity, integrated_audio_card, audio_channels, integrated_network_card,
                            bluetooth, wifi, expansion_slots, drive_interfaces, outside_connectors, width, depth)
+
+    def parse_gpu(self, product, spec_rows):
+        """
+        Pobiera i przetwarza dane z adresu URL na obiekt klasy ``GraphicsCard``
+        :param product: obiekt klasy ``Product``, zawierający uniwersalne dane dla wszystkich typów produktów
+        :param spec_rows: wiersze tabeli specyfikacji
+        :return: obiekt klasy ``GraphicsCard``
+        """
+        product.set_category(str(ProductCategory.GPU))
+        temp_name_list = product.get_name().split(" ")
+        product.set_name("")
+        if len(temp_name_list) > 0:
+            for word in temp_name_list:
+                if "GB" in word or "MB" in word:
+                    break
+                else:
+                    product.set_name(product.get_name() + " " + word)
+        product.set_name(product.get_name().strip())
+
+        product.set_description(self.get_product_description(product.get_name()))
+
+        chipset_producer: str = CommonUtils.get_value_from_spec_row(spec_rows, "Producent chipsetu")
+        chipset: str = CommonUtils.get_value_from_spec_row(spec_rows, "Rodzaj chipsetu")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Taktowanie rdzenia")
+        core_frequency: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Taktowanie rdzenia w trybie boost")
+        max_core_frequency: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Procesory strumieniowe")
+        stream_processors: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Jednostki ROP")
+        rop_units: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Jednostki teksturujące")
+        texturing_units: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Rdzenie RT")
+        rt_cores: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Rdzenie Tensor")
+        tensor_cores: int = CommonUtils.extract_int(spec_value)
+
+        dlss: str = CommonUtils.get_value_from_spec_row(spec_rows, "DLSS")
+        connector: str = CommonUtils.get_value_from_spec_row(spec_rows, "Typ złącza")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Długość karty")
+        card_length: int = CommonUtils.extract_int(spec_value)
+
+        resolution: str = CommonUtils.get_value_from_spec_row(spec_rows, "Rozdzielczość")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Rekomendowana moc zasilacza")
+        recommended_ps: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Podświetlenie LED")
+        lightning: bool = CommonUtils.translate_to_bool(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Ilość pamięci RAM")
+        ram: int = CommonUtils.extract_int(spec_value)
+
+        ram_type: str = CommonUtils.get_value_from_spec_row(spec_rows, "Rodzaj pamięci RAM")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Szyna danych")
+        data_bus: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Taktowanie pamięci")
+        memory_freq: int = CommonUtils.extract_int(spec_value)
+
+        cooling_type: str = CommonUtils.get_value_from_spec_row(spec_rows, "Typ chłodzenia")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Ilość wentylatorów")
+        number_of_fans: int = CommonUtils.extract_int(spec_value)
+
+        return GraphicsCard(product.get_name(), product.get_producer(), product.get_category(),
+                            product.get_description(), product.get_price(), product.get_producer_code(),
+                            chipset_producer, chipset, core_frequency, max_core_frequency,
+                            stream_processors, rop_units, texturing_units, rt_cores, tensor_cores,
+                            dlss, connector, card_length, resolution, recommended_ps, lightning,
+                            ram, ram_type, data_bus, memory_freq, cooling_type, number_of_fans)

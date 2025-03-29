@@ -19,9 +19,12 @@ class RAM(Product):
         print("--- SPECS ---")
         print("Line:", self.line)
         print("Memory type:", self.memory_type)
-        print("Total capacity:", self.total_capacity)
+        if self.total_capacity > 0:
+            print("Total capacity:", self.total_capacity, "GB")
+        else:
+            print("Total capacity:", ((-1) * self.total_capacity), "MB")
         print("Number of modules:", self.number_of_modules)
-        print("Frequency:", self.frequency)
+        print("Frequency:", self.frequency, "MHz")
         print("Latency:", self.latency)
         print("Lighting:", self.lighting)
         super().print_end()

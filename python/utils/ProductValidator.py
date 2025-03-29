@@ -1,3 +1,4 @@
+from product.GraphicsCard import GraphicsCard
 from product.Motherboard import Motherboard
 from product.Processor import Processor
 from product.Product import Product
@@ -36,6 +37,8 @@ class ProductValidator:
                 return ProductValidator.validate_ram(product)
             case str(ProductCategory.MB):
                 return ProductValidator.validate_motherboard(product)
+            case str(ProductCategory.GPU):
+                return ProductValidator.validate_gpu(product)
         return False
 
     @staticmethod
@@ -132,4 +135,54 @@ class ProductValidator:
         else:
             return ProductValidator.log_error(
                 f"Could not parse product of category '{mb.get_category()}' to object of matching class.")
+        return True
+
+    @staticmethod
+    def validate_gpu(gpu: Product):
+        if isinstance(gpu, GraphicsCard):
+            if gpu.get_chipset_producer() is None or gpu.get_chipset_producer() == "":
+                return ProductValidator.log_error("Could not find Chipset producer")
+            if gpu.get_chipset() is None or gpu.get_chipset() == "":
+                return ProductValidator.log_error("Could not find Chipset")
+            if gpu.get_core_frequency() is None or gpu.get_core_frequency() <= 0:
+                return ProductValidator.log_error("Could not find Core frequency")
+            if gpu.get_max_core_frequency() is None:
+                return ProductValidator.log_error("Could not find Max core frequency")
+            if gpu.get_stream_processors() is None or gpu.get_stream_processors() <= 0:
+                return ProductValidator.log_error("Could not find Stream processors")
+            if gpu.get_rop_units() is None or gpu.get_rop_units() <= 0:
+                return ProductValidator.log_error("Could not find ROP units")
+            if gpu.get_texturing_units() is None or gpu.get_texturing_units() <= 0:
+                return ProductValidator.log_error("Could not find Texturing units")
+            if gpu.get_rt_cores() is None:
+                return ProductValidator.log_error("Could not find RT cores")
+            if gpu.get_tensor_cores() is None:
+                return ProductValidator.log_error("Could not find Tensor cores")
+            if gpu.get_dlss() is None or gpu.get_dlss() == "":
+                return ProductValidator.log_error("Could not find DLSS")
+            if gpu.get_connector() is None or gpu.get_connector() == "":
+                return ProductValidator.log_error("Could not find Connector")
+            if gpu.get_card_length() is None or gpu.get_card_length() <= 0:
+                return ProductValidator.log_error("Could not find Card length")
+            if gpu.get_resolution() is None or gpu.get_resolution() == "":
+                return ProductValidator.log_error("Could not find Resolution")
+            if gpu.get_recommended_ps() is None or gpu.get_recommended_ps() <= 0:
+                return ProductValidator.log_error("Could not find Recommended power of power supply")
+            if gpu.get_lightning() is None:
+                return ProductValidator.log_error("Could not find Lightning")
+            if gpu.get_ram() is None or gpu.get_ram() == 0:
+                return ProductValidator.log_error("Could not find RAM")
+            if gpu.get_ram_type() is None or gpu.get_ram_type() == "":
+                return ProductValidator.log_error("Could not find RAM type")
+            if gpu.get_data_bus() is None or gpu.get_data_bus() <= 0:
+                return ProductValidator.log_error("Could not find Data bus")
+            if gpu.get_memory_freq() is None or gpu.get_memory_freq() <= 0:
+                return ProductValidator.log_error("Could not find Memory frequency")
+            if gpu.get_cooling_type() is None or gpu.get_cooling_type() == "":
+                return ProductValidator.log_error("Could not find Cooling type")
+            if gpu.get_number_of_fans() is None:
+                return ProductValidator.log_error("Could not find Number of fans")
+        else:
+            return ProductValidator.log_error(
+                f"Could not parse product of category '{gpu.get_category()}' to object of matching class.")
         return True

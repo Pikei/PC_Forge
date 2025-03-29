@@ -1,3 +1,4 @@
+
 from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 from utils.JsonUtil import JsonUtil
@@ -5,7 +6,6 @@ from utils.ProductParser import ProductParser
 from product.Product import Product
 from product.ProductCategory import UrlCategory
 from utils.WebUtil import WebUtil
-
 
 def log_duplicate():
     print("=============================================")
@@ -25,6 +25,7 @@ if __name__ == "__main__":
     driver = webdriver.Chrome(options=options)
     web_util = WebUtil(driver)
     parser = ProductParser(driver, web_util)
+
     all_links = []
     for url in UrlCategory:
         for link in web_util.find_products(url):
