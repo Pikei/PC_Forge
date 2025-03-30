@@ -82,19 +82,21 @@ class ProductParser:
             name: str = web_name.text
 
         producer: str = CommonUtils.get_value_from_spec_row(spec_rows, "Producent")
+        if producer is not None:
+            producer.replace("/", "-").replace("\\", "-")
 
         product = Product(name, producer, "", "", price, producer_code)
 
         cat_url = self.util.get_elements(By.CSS_SELECTOR, "a.main-breadcrumb")[-1].get_attribute("href")
-        if cat_url in UrlCategory.CPU:
-            product = self.parse_cpu(product, spec_rows)
-        elif cat_url in UrlCategory.RAM:
-            product = self.parse_ram(product, spec_rows)
-        elif cat_url in UrlCategory.MB:
-            product = self.parse_motherboard(product, spec_rows)
-        elif cat_url in UrlCategory.GPU:
-            product = self.parse_gpu(product, spec_rows)
-        elif cat_url in UrlCategory.POWER_SUPPLY:
+        # if cat_url in UrlCategory.CPU:
+        #     product = self.parse_cpu(product, spec_rows)
+        # elif cat_url in UrlCategory.RAM:
+        #     product = self.parse_ram(product, spec_rows)
+        # elif cat_url in UrlCategory.MB:
+        #     product = self.parse_motherboard(product, spec_rows)
+        # elif cat_url in UrlCategory.GPU:
+        #     product = self.parse_gpu(product, spec_rows)
+        if cat_url in UrlCategory.POWER_SUPPLY:
             product = self.parse_power_supply(product, spec_rows)
 
         if ProductValidator.validate(product):
@@ -378,7 +380,9 @@ class ProductParser:
         spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Średnica wentylatora")
         fan_diameter: int = CommonUtils.extract_int(spec_value)
 
-        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Zabezpieczenia").strip().replace("\n", "")
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Zabezpieczenia")
+        if spec_value is not None:
+            spec_value.strip().replace("\n", "")
         protections: list[str] = []
         if CommonUtils.translate_to_bool(spec_value):
             protections = spec_value.split(",")

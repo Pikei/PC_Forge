@@ -126,6 +126,8 @@ class WebUtil:
         self.driver.get(url)
         if self.get_element(by, selector) is None: return False
 
+        if self.get_element(By.CSS_SELECTOR, "div.overlay", mandatory=False) is not None:
+            self.__cookies_accepted = False
         if not self.__cookies_accepted:
             self.accept_cookies()
 

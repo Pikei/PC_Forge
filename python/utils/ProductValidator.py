@@ -1,3 +1,4 @@
+from product.Case import Case
 from product.GraphicsCard import GraphicsCard
 from product.Motherboard import Motherboard
 from product.PowerSuppy import PowerSupply
@@ -42,6 +43,8 @@ class ProductValidator:
                 return ProductValidator.validate_gpu(product)
             case str(ProductCategory.POWER_SUPPLY):
                 return ProductValidator.validate_power_supply(product)
+            case str(ProductCategory.CASE):
+                return ProductValidator.validate_case(product)
         return False
 
     @staticmethod
@@ -234,4 +237,72 @@ class ProductValidator:
         else:
             return ProductValidator.log_error(
                 f"Could not parse product of category '{ps.get_category()}' to object of matching class.")
+        return True
+
+    @staticmethod
+    def validate_case(case: Product):
+        if isinstance(case, Case):
+            if case.get_color() is None or case.get_color() == "":
+                return ProductValidator.log_error("Could not find color")
+            if case.get_lightning() is None:
+                return ProductValidator.log_error("Could not find if case has lightning or not")
+            if case.get_height() is None or case.get_height() <= 0.0:
+                return ProductValidator.log_error("Could not find height")
+            if case.get_width() is None or case.get_width() <= 0.0:
+                return ProductValidator.log_error("Could not find width")
+            if case.get_depth() is None or case.get_depth() <= 0.0:
+                return ProductValidator.log_error("Could not find depth")
+            if case.get_weight() is None or case.get_weight() <= 0.0:
+                return ProductValidator.log_error("Could not find weight")
+            if case.get_case_type() is None or case.get_case_type() == "":
+                return ProductValidator.log_error("Could not find case type")
+            if case.get_mb_compatibility() is None or len(case.get_mb_compatibility()) == 0:
+                return ProductValidator.log_error("Could not find motherboard standards compatibility")
+            if case.get_window() is None:
+                return ProductValidator.log_error("Could not find if case has window or not")
+            if case.get_max_gpu_length() is None or case.get_max_gpu_length() <= 0.0:
+                return ProductValidator.log_error("Could not find max GPU length")
+            if case.get_max_cpu_cooler_height() is None or case.get_max_cpu_cooler_height() <= 0.0:
+                return ProductValidator.log_error("Could not find max COU cooler height")
+            if case.get_usb20() is None:
+                return ProductValidator.log_error("Could not find number of USB 2.0 ports")
+            if case.get_usb30() is None:
+                return ProductValidator.log_error("Could not find number of USB 3.0 ports")
+            if case.get_usb31() is None:
+                return ProductValidator.log_error("Could not find number of USB 3.1 ports")
+            if case.get_usb32() is None:
+                return ProductValidator.log_error("Could not find number of USB 3.2 ports")
+            if case.get_usbc() is None:
+                return ProductValidator.log_error("Could not find number of USB-C ports")
+            if case.get_card_reader() is None:
+                return ProductValidator.log_error("Could not find card reader")
+            if case.get_headphones_connector() is None:
+                return ProductValidator.log_error("Could not find if case has headphones connector or not")
+            if case.get_microphone_connector() is None:
+                return ProductValidator.log_error("Could not find if case has microphone connector or not")
+            if case.get_num_of_internal_25_bays() is None:
+                return ProductValidator.log_error("Could not find number of internal 2.5 inch. bays")
+            if case.get_num_of_internal_35_bays() is None:
+                return ProductValidator.log_error("Could not find number of internal 3.5 inch. bays")
+            if case.get_num_of_external_35_bays() is None:
+                return ProductValidator.log_error("Could not find number of external 3.5 inch. bays")
+            if case.get_num_of_external_525_bays() is None:
+                return ProductValidator.log_error("Could not find number of external 5.2 inch. bays")
+            if case.get_num_of_extension_slot() is None:
+                return ProductValidator.log_error("Could not find number of extension slots")
+            if case.get_front_fans() is None or case.get_front_fans() == "":
+                return ProductValidator.log_error("Could not find front panel fans")
+            if case.get_side_fans() is None or case.get_side_fans() == "":
+                return ProductValidator.log_error("Could not find side panel fans")
+            if case.get_bottom_fans() is None or case.get_bottom_fans() == "":
+                return ProductValidator.log_error("Could not find bottom panel fans")
+            if case.get_top_fans() is None or case.get_top_fans() == "":
+                return ProductValidator.log_error("Could not find top panel fans")
+            if case.get_power_supply() is None:
+                return ProductValidator.log_error("Could not find if case has power supply or not")
+            if case.get_ps_power() is None:
+                return ProductValidator.log_error("Could not find PS power")
+        else:
+            return ProductValidator.log_error(
+                f"Could not parse product of category '{case.get_category()}' to object of matching class.")
         return True
