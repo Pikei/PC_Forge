@@ -1,4 +1,3 @@
-
 from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 from utils.JsonUtil import JsonUtil
@@ -7,14 +6,16 @@ from product.Product import Product
 from product.ProductCategory import UrlCategory
 from utils.WebUtil import WebUtil
 
+
 def log_duplicate():
     print("=============================================")
-    print("WARNING: Duplicate", prod.get_producer_code())
+    print("WARNING: Duplicate", prod.get_ean())
     print("------------------- SAVED -------------------")
-    products[prod.get_producer_code()].print_product_specs()
+    products[prod.get_ean()].print_product_specs()
     print("------------------- PARSED -------------------")
     prod.print_product_specs()
     print("=============================================")
+
 
 if __name__ == "__main__":
     json = JsonUtil()
@@ -40,13 +41,14 @@ if __name__ == "__main__":
         prod = parser.parse_product(link)
         if prod is None:
             continue
-        elif prod.get_producer_code() in products.keys():
+        elif prod.get_ean() in products.keys():
             log_duplicate()
-            if len(prod.get_description()) > len(products[prod.get_producer_code()].get_description()):
-                products[prod.get_producer_code()] = prod
-        else:
-            products[prod.get_producer_code()] = prod
-            json.save_product(link, prod)
+            if len(prod.get_description()) > len(products[prod.get_ean()].get_description()):
+                products[prod.get_ean()] = prod
+            else:
+                products[prod.get_ean()] = prod
+                json.save_product(link, prod)
+
     for prod in products.values():
         prod.print_product_specs()
 

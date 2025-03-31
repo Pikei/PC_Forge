@@ -3,9 +3,10 @@ from product.Product import Product
 
 class Processor(Product):
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
+                 ean: int,
                  line: str, model: str, cores: int, threads: int, socket: str, unlocked: bool, frequency: float,
                  max_frequency: float, integrated_graphics_unit: bool, tdp: int, cooler_included: bool, packaging: str):
-        super().__init__(name, producer, category, description, price, producer_code)
+        super().__init__(name, producer, category, description, price, producer_code, ean)
         self.line: str = line
         self.model: str = model
         self.cores: int = cores

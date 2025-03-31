@@ -3,9 +3,10 @@ from product.Product import Product
 
 class Cooler(Product):
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
+                 ean: int,
                  socket_compatibility: list[str], lightning: bool, num_of_fans: int, fan_diameter: int, fan_speed: int,
                  noise_level: float):
-        super().__init__(name, producer, category, description, price, producer_code)
+        super().__init__(name, producer, category, description, price, producer_code, ean)
         self.socket_compatibility: list[str] = socket_compatibility
         self.lightning: bool = lightning
         self.num_of_fans: int = num_of_fans
@@ -62,11 +63,13 @@ class Cooler(Product):
 class AirCooler(Cooler):
 
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
+                 ean: int,
                  socket_compatibility: list[str], lightning: bool, num_of_fans: int, fan_diameter: int, fan_speed: int,
                  noise_level: float, vertical_installation: bool, height: int, width: int, depth: int,
                  base_material: str,
                  num_of_heat_pipes: int, heat_pipe_diameter: int):
-        super().__init__(name, producer, category, description, price, producer_code, socket_compatibility, lightning,
+        super().__init__(name, producer, category, description, price, producer_code, ean, socket_compatibility,
+                         lightning,
                          num_of_fans, fan_diameter, fan_speed, noise_level)
         self.vertical_installation: bool = vertical_installation
         self.height: int = height
@@ -132,9 +135,11 @@ class AirCooler(Cooler):
 
 class LiquidCooler(Cooler):
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
+                 ean: int,
                  socket_compatibility: list[str], lightning: bool, num_of_fans: int, fan_diameter: int, fan_speed: int,
                  noise_level: float, cooler_size: int):
-        super().__init__(name, producer, category, description, price, producer_code, socket_compatibility, lightning,
+        super().__init__(name, producer, category, description, price, producer_code, ean, socket_compatibility,
+                         lightning,
                          num_of_fans, fan_diameter, fan_speed, noise_level)
         self.cooler_size: int = cooler_size
 

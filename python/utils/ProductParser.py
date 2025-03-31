@@ -1,9 +1,8 @@
-from regex import split
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-
 from product.Case import Case
 from product.Cooler import Cooler, AirCooler, LiquidCooler
+from product.Drive import Drive, SolidStateDrive, HardDiskDrive
 from product.GraphicsCard import GraphicsCard
 from product.Motherboard import Motherboard
 from product.PowerSuppy import PowerSupply
@@ -41,16 +40,26 @@ class ProductParser:
         description = ""
         self.util.expand_description()
 
-        desc_rows = self.util.get_elements(By.CSS_SELECTOR, "div.panel-description div.row div.text1", timeout=15)
-        if len(desc_rows) == 0:
-            desc_rows = self.util.get_elements(By.CSS_SELECTOR, "div.auto-description div.desc-items div.row",
-                                               timeout=15)
-        if len(desc_rows) == 0:
-            description += self.util.get_description_row(self.util.get_element(By.CLASS_NAME, "panel-description"),
-                                                         product_name)
+        desc_rows = []
+        panel_description_rows = self.util.get_elements(By.CSS_SELECTOR, "div.panel-description div.row div.text1",
+                                                        mandatory=False)
+        auto_description_rows = self.util.get_elements(By.CSS_SELECTOR, "div.auto-description div.desc-items div.row",
+                                                       mandatory=False)
+        if len(panel_description_rows) > 0 and len(auto_description_rows) > 0:
+            if panel_description_rows[0].location["y"] < auto_description_rows[0].location["y"]:
+                desc_rows = panel_description_rows + auto_description_rows
+            else:
+                desc_rows = auto_description_rows + panel_description_rows
+        elif len(panel_description_rows) > 0:
+            desc_rows = panel_description_rows
+        elif len(auto_description_rows) > 0:
+            desc_rows = auto_description_rows
         else:
-            for row in desc_rows:
-                description += self.util.get_description_row(row, product_name)
+            return self.util.get_description_row(self.util.get_element(By.CLASS_NAME, "panel-description"),
+                                                 product_name)
+
+        for row in desc_rows:
+            description += self.util.get_description_row(row, product_name)
         return description
 
     def parse_product(self, url: str):
@@ -87,26 +96,31 @@ class ProductParser:
         if producer is not None:
             producer = producer.replace("/", "-").replace("\\", "-")
 
-        product = Product(name, producer, "", "", price, producer_code)
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "EAN")
+        ean: int = CommonUtils.extract_int(spec_value)
+
+        product = Product(name, producer, "", "", price, producer_code, ean)
 
         cat_url = self.util.get_elements(By.CSS_SELECTOR, "a.main-breadcrumb")[-1].get_attribute("href")
-        # if cat_url in UrlCategory.CPU:
-        #     product = self.parse_cpu(product, spec_rows)
-        # elif cat_url in UrlCategory.RAM:
-        #     product = self.parse_ram(product, spec_rows)
-        # elif cat_url in UrlCategory.MB:
-        #     product = self.parse_motherboard(product, spec_rows)
-        # elif cat_url in UrlCategory.GPU:
-        #     product = self.parse_gpu(product, spec_rows)
-        # elif cat_url in UrlCategory.POWER_SUPPLY:
-        #     product = self.parse_power_supply(product, spec_rows)
-        if cat_url in UrlCategory.CASE:
+        if cat_url in UrlCategory.CPU:
+            product = self.parse_cpu(product, spec_rows)
+        elif cat_url in UrlCategory.RAM:
+            product = self.parse_ram(product, spec_rows)
+        elif cat_url in UrlCategory.MB:
+            product = self.parse_motherboard(product, spec_rows)
+        elif cat_url in UrlCategory.GPU:
+            product = self.parse_gpu(product, spec_rows)
+        elif cat_url in UrlCategory.POWER_SUPPLY:
+            product = self.parse_power_supply(product, spec_rows)
+        elif cat_url in UrlCategory.CASE:
             product = self.parse_case(product, spec_rows)
         elif cat_url in UrlCategory.AIR_COOLER or cat_url in UrlCategory.LIQUID_COOLER:
             product = self.parse_cooler(product, spec_rows)
+        if cat_url in UrlCategory.SSD or cat_url in UrlCategory.HDD:
+            product = self.parse_drive(product, spec_rows)
 
         if ProductValidator.validate(product):
-            self.util.save_image(product.get_category(), product.get_producer(), product.get_producer_code())
+            self.util.save_image(product.get_category(), product.get_producer(), product.get_ean())
             print("Parsed:", product.get_name())
             return product
         return None
@@ -161,7 +175,8 @@ class ProductParser:
         cooler_included = CommonUtils.translate_to_bool(spec_value)
 
         return Processor(product.get_name(), product.get_producer(), product.get_category(), product.get_description(),
-                         product.get_price(), product.get_producer_code(), line, model, num_of_cores, num_of_threads,
+                         product.get_price(), product.get_producer_code(), product.get_ean(), line, model, num_of_cores,
+                         num_of_threads,
                          socket, unlocked, frequency, max_frequency, integrated_graphics_unit, tdp, cooler_included,
                          pack)
 
@@ -200,7 +215,8 @@ class ProductParser:
         lighting = CommonUtils.translate_to_bool(spec_value)
 
         return RAM(product.get_name(), product.get_producer(), product.get_category(), product.get_description(),
-                   product.get_price(), product.get_producer_code(), line, memory_type, total_capacity,
+                   product.get_price(), product.get_producer_code(), product.get_ean(), line, memory_type,
+                   total_capacity,
                    number_of_modules, frequency, latency, lighting)
 
     def parse_motherboard(self, product, spec_rows):
@@ -215,6 +231,8 @@ class ProductParser:
         standard = CommonUtils.get_value_from_spec_row(spec_rows, "Standard płyty")
         chipset = CommonUtils.get_value_from_spec_row(spec_rows, "Chipset płyty")
         cpu_socket = CommonUtils.get_value_from_spec_row(spec_rows, "Gniazdo procesora")
+        if cpu_socket is not None:
+            cpu_socket = cpu_socket.split(",")[1]
         memory_standard = CommonUtils.get_value_from_spec_row(spec_rows, "Standard pamięci")
 
         spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Liczba slotów pamięci")
@@ -268,6 +286,7 @@ class ProductParser:
 
         return Motherboard(product.get_name(), product.get_producer(), product.get_category(),
                            product.get_description(), product.get_price(), product.get_producer_code(),
+                           product.get_ean(),
                            standard, chipset, cpu_socket, memory_standard, number_of_memory_slots, frequencies,
                            max_memory_capacity, integrated_audio_card, audio_channels, integrated_network_card,
                            bluetooth, wifi, expansion_slots, drive_interfaces, outside_connectors, width, depth)
@@ -348,6 +367,7 @@ class ProductParser:
 
         return GraphicsCard(product.get_name(), product.get_producer(), product.get_category(),
                             product.get_description(), product.get_price(), product.get_producer_code(),
+                            product.get_ean(),
                             chipset_producer, chipset, core_frequency, max_core_frequency,
                             stream_processors, rop_units, texturing_units, rt_cores, tensor_cores,
                             dlss, connector, card_length, resolution, recommended_ps, lightning,
@@ -440,6 +460,7 @@ class ProductParser:
 
         return PowerSupply(product.get_name(), product.get_producer(), product.get_category(),
                            product.get_description(), product.get_price(), product.get_producer_code(),
+                           product.get_ean(),
                            standard, power, efficiency_certificate, efficiency, cooling_type, fan_diameter, protections,
                            modular_cabling, atx24, pcie16, pcie8, pcie6, cpu8, cpu4, sata, molex, height, width, depth,
                            lightning)
@@ -564,7 +585,7 @@ class ProductParser:
         ps_power: int = CommonUtils.extract_int(spec_value)
 
         return Case(product.get_name(), product.get_producer(), product.get_category(),
-                    product.get_description(), product.get_price(), product.get_producer_code(),
+                    product.get_description(), product.get_price(), product.get_producer_code(), product.get_ean(),
                     color, lightning, height, width, depth, weight, case_type, mb_compatibility, window, max_gpu_length,
                     max_cpu_cooler_height, usb20, usb30, usb31, usb32, usbc, card_reader, headphones_connector,
                     microphone_connector, num_of_internal_25_bays, num_of_internal_35_bays, num_of_external_35_bays,
@@ -598,7 +619,7 @@ class ProductParser:
             noise_level = None
 
         cooler = Cooler(product.get_name(), product.get_producer(), product.get_category(),
-                        product.get_description(), product.get_price(), product.get_producer_code(),
+                        product.get_description(), product.get_price(), product.get_producer_code(), product.get_ean(),
                         [], lightning, 0, fan_diameter, fan_speed, noise_level)
         cat_url = self.util.get_elements(By.CSS_SELECTOR, "a.main-breadcrumb")[-1].get_attribute("href")
         if cat_url in UrlCategory.AIR_COOLER:
@@ -642,7 +663,7 @@ class ProductParser:
         heat_pipe_diameter: int = CommonUtils.extract_int(spec_value)
 
         return AirCooler(cooler.get_name(), cooler.get_producer(), cooler.get_category(),
-                         cooler.get_description(), cooler.get_price(), cooler.get_producer_code(),
+                         cooler.get_description(), cooler.get_price(), cooler.get_producer_code(), cooler.get_ean(),
                          cooler.get_socket_compatibility(), cooler.get_lightning(), cooler.get_num_of_fans(),
                          cooler.get_fan_diameter(), cooler.get_fan_speed(), cooler.get_noise_level(),
                          vertical_installation, height, width, depth, base_material, num_of_heat_pipes,
@@ -675,6 +696,80 @@ class ProductParser:
         cooler_size: int = CommonUtils.extract_int(spec_value)
 
         return LiquidCooler(cooler.get_name(), cooler.get_producer(), cooler.get_category(),
-                            cooler.get_description(), cooler.get_price(), cooler.get_producer_code(),
+                            cooler.get_description(), cooler.get_price(), cooler.get_producer_code(), cooler.get_ean(),
                             cooler.get_socket_compatibility(), cooler.get_lightning(), cooler.get_num_of_fans(),
                             cooler.get_fan_diameter(), cooler.get_fan_speed(), cooler.get_noise_level(), cooler_size)
+
+    def parse_drive(self, product, spec_rows):
+        """
+        Pobiera i przetwarza dane z adresu URL na obiekt klas rozszerzających ``Drive``
+        :param product: obiekt klasy ``Product``, zawierający uniwersalne dane dla wszystkich typów produktów
+        :param spec_rows: wiersze tabeli specyfikacji
+        :return: obiekt klasy ``SolidStateDrive`` lub ``HardDiskDrive``
+        """
+        temp_name_list = product.get_name().split(" ")
+        product.set_name("")
+        if len(temp_name_list) > 0:
+            for word in temp_name_list:
+                if "GB" in word or "TB" in word:
+                    product.set_name(product.get_name() + " " + word)
+                    break
+                else:
+                    product.set_name(product.get_name() + " " + word)
+        product.set_name(product.get_name().strip())
+
+        product.set_description(self.get_product_description(product.get_name()))
+
+        drive_format: str = CommonUtils.get_value_from_spec_row(spec_rows, "Format dysku")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Pojemność dysku")
+        storage: int = CommonUtils.extract_int(spec_value)
+        if "TB" in spec_value:
+            storage = storage * 1024
+
+        interface: str = CommonUtils.get_value_from_spec_row(spec_rows, "Interfejs")
+        drive = Drive(product.get_name(), product.get_producer(), product.get_category(),
+                      product.get_description(), product.get_price(), product.get_producer_code(), product.get_ean(),
+                      drive_format, storage, interface)
+
+        cat_url = self.util.get_elements(By.CSS_SELECTOR, "a.main-breadcrumb")[-1].get_attribute("href")
+        if cat_url in UrlCategory.SSD:
+            return self.parse_ssd(drive, spec_rows)
+        elif cat_url in UrlCategory.HDD:
+            return self.parse_hdd(drive, spec_rows)
+
+    def parse_ssd(self, drive: Drive, spec_rows):
+        """
+        Pobiera i przetwarza dane z adresu URL na obiekt klasy ``SolidStateDrive``
+        :param drive: obiekt klasy ``Drive``, zawierający uniwersalne dane dla wszystkich typów chłodzeń komputerowych
+        :param spec_rows: wiersze tabeli specyfikacji
+        :return: obiekt klasy ``SolidStateDrive``
+        """
+        drive.set_category(str(ProductCategory.SSD))
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Szybkość odczytu")
+        read_speed: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Szybkość zapisu")
+        write_speed: int = CommonUtils.extract_int(spec_value)
+
+        return SolidStateDrive(drive.get_name(), drive.get_producer(), drive.get_category(),
+                               drive.get_description(), drive.get_price(), drive.get_producer_code(), drive.get_ean(),
+                               drive.get_drive_format(), drive.get_storage(), drive.get_interface(), read_speed,
+                               write_speed)
+
+    def parse_hdd(self, drive: Drive, spec_rows):
+        """
+        Pobiera i przetwarza dane z adresu URL na obiekt klasy ``HardDiskDrive``
+        :param drive: obiekt klasy ``Drive``, zawierający uniwersalne dane dla wszystkich typów chłodzeń komputerowych
+        :param spec_rows: wiersze tabeli specyfikacji
+        :return: obiekt klasy ``HardDiskDrive``
+        """
+        drive.set_category(str(ProductCategory.HDD))
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Prędkość obrotowa")
+        rotational_speed: int = CommonUtils.extract_int(spec_value)
+
+        return HardDiskDrive(drive.get_name(), drive.get_producer(), drive.get_category(),
+                             drive.get_description(), drive.get_price(), drive.get_producer_code(), drive.get_ean(),
+                             drive.get_drive_format(), drive.get_storage(), drive.get_interface(), rotational_speed)

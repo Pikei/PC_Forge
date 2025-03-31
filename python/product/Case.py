@@ -3,6 +3,7 @@ from product.Product import Product
 
 class Case(Product):
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
+                 ean: int,
                  color: str, lightning: bool, height: float, width: float, depth: float, weight: float, case_type: str,
                  mb_compatibility: list[str], window: bool, max_gpu_length: float, max_cpu_cooler_height: float,
                  usb20: int, usb30: int, usb31: int, usb32: int, usbc: int, card_reader: bool,
@@ -12,7 +13,7 @@ class Case(Product):
                  num_of_extension_slot: int, front_fans: str, back_fans: str, side_fans: str, bottom_fans: str,
                  top_fans: str,
                  power_supply: bool, ps_power: int):
-        super().__init__(name, producer, category, description, price, producer_code)
+        super().__init__(name, producer, category, description, price, producer_code, ean)
         self.color: str = color
         self.lightning: bool = lightning
         self.height: float = height

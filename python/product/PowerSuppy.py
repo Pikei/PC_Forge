@@ -3,11 +3,12 @@ from product.Product import Product
 
 class PowerSupply(Product):
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
+                 ean: int,
                  standard: str, power: int, efficiency_certificate: str, efficiency: int, cooling_type: str,
                  fan_diameter: int, protections: list[str], modular_cabling: bool,
                  atx24: int, pcie16: int, pcie8: int, pcie6: int, cpu8: int, cpu4: int,
                  sata: int, molex: int, height: int, width: int, depth: int, lightning: bool):
-        super().__init__(name, producer, category, description, price, producer_code)
+        super().__init__(name, producer, category, description, price, producer_code, ean)
         self.standard: str = standard
         self.power: int = power
         self.efficiency_certificate: str = efficiency_certificate

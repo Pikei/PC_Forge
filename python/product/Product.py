@@ -1,14 +1,17 @@
 class Product:
-    def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str):
+    def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
+                 ean: int):
         self.name: str = name
         self.producer: str = producer
         self.category: str = category
         self.description: str = description
         self.price: float = price
         self.producer_code: str = producer_code
+        self.ean: int = ean
 
-    @staticmethod
-    def print_end():
+    def print_end(self):
+        print("-- DESCRIPTION --")
+        print(self.description.replace("<", "\n<").replace("\n</", "</"))
         print("---------------------------------------\n")
 
     def print_product_specs(self):
@@ -16,9 +19,8 @@ class Product:
         print("Product type:", self.category)
         print("Producer:", self.producer)
         print("Producer code:", self.producer_code)
+        print("EAN:", self.ean)
         print("Price [PLN]:", self.price)
-        print("-- DESCRIPTION --")
-        print(self.description.replace("<", "\n<").replace("\n</", "</"))
         print("--- SPECS ---")
 
 
@@ -57,3 +59,9 @@ class Product:
 
     def set_producer_code(self, producer_code: str):
         self.producer_code = producer_code
+
+    def get_ean(self):
+        return self.ean
+
+    def set_ean(self, ean: int):
+        self.ean = ean

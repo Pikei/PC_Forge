@@ -120,27 +120,33 @@ class CommonUtils:
         return "<" + element.tag_name + ">" + element.text + "</" + element.tag_name + ">"
 
     @staticmethod
-    def add_par_and_list(paragraphs: list[WebElement], lists: list[WebElement]):
+    def sort_elements_in_desc_row_by_position(paragraphs: list[WebElement], unordered_lists: list[WebElement],
+                                              ordered_lists: list[WebElement]):
         """
         Metoda służąca do pozyskiwania list i paragrafów w opisie na stronie, w odpowiedniej kolejności.
         Kolejność elementów determinowana jest na podstawie pozycji w osi Y na stronie.
         :param paragraphs: Lista paragrafów w kodzie HTML w danym wierszu opisu
-        :param lists: Lista list w kodzie HTML w danym wierszu opisu
+        :param unordered_lists: Lista list w kodzie HTML w danym wierszu opisu
         :return: Ciąg znaków w zapisie HTML z elementami zapisanymi w odpowiedniej kolejności.
         """
         res = ""
         position = {}
-        for p in paragraphs:
-            position[p.location['y']] = p
-        for l in lists:
-            position[l.location['y']] = l
+        if len(paragraphs) > 0:
+            for p in paragraphs:
+                position[p.location['y']] = p
+        if len(unordered_lists) > 0:
+            for ul in unordered_lists:
+                position[ul.location['y']] = ul
+        if len(ordered_lists) > 0:
+            for ol in ordered_lists:
+                position[ol.location['y']] = ol
 
         position = OrderedDict(sorted(position.items()))
 
         for line in position.values():
             if line.tag_name == "p":
                 res += CommonUtils.parse_to_html(line)
-            elif line.tag_name == "ul":
+            elif line.tag_name == "ul" or line.tag_name == "ol":
                 res += "<" + line.tag_name + ">"
                 for li in line.find_elements(By.TAG_NAME, "li"):
                     res += CommonUtils.parse_to_html(li)

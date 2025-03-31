@@ -3,6 +3,7 @@ import os
 
 from product.Case import Case
 from product.Cooler import AirCooler, LiquidCooler
+from product.Drive import HardDiskDrive, SolidStateDrive
 from product.GraphicsCard import GraphicsCard
 from product.Motherboard import Motherboard
 from product.PowerSuppy import PowerSupply
@@ -65,6 +66,10 @@ class JsonUtil:
                 return self.parse_json_to_air_cooler(product_json)
             case ProductCategory.LIQUID_COOLER:
                 return self.parse_json_to_liquid_cooler(product_json)
+            case ProductCategory.HDD:
+                return self.parse_json_to_hdd(product_json)
+            case ProductCategory.SSD:
+                return self.parse_json_to_ssd(product_json)
 
     @staticmethod
     def parse_json_to_cpu(product_json):
@@ -74,6 +79,7 @@ class JsonUtil:
                          product_json["description"],
                          product_json["price"],
                          product_json["producer_code"],
+                         product_json["EAN"],
                          product_json["line"],
                          product_json["model"],
                          product_json["cores"],
@@ -95,6 +101,7 @@ class JsonUtil:
                    product_json["description"],
                    product_json["price"],
                    product_json["producer_code"],
+                   product_json["EAN"],
                    product_json["line"],
                    product_json["memory_type"],
                    product_json["total_capacity"],
@@ -111,6 +118,7 @@ class JsonUtil:
                            product_json["description"],
                            product_json["price"],
                            product_json["producer_code"],
+                           product_json["EAN"],
                            product_json["standard"],
                            product_json["chipset"],
                            product_json["cpu_socket"],
@@ -137,6 +145,7 @@ class JsonUtil:
                             product_json["description"],
                             product_json["price"],
                             product_json["producer_code"],
+                            product_json["EAN"],
                             product_json["chipset_producer"],
                             product_json["chipset"],
                             product_json["core_frequency"],
@@ -167,6 +176,7 @@ class JsonUtil:
                            product_json["description"],
                            product_json["price"],
                            product_json["producer_code"],
+                           product_json["EAN"],
                            product_json["standard"],
                            product_json["power"],
                            product_json["efficiency_certificate"],
@@ -196,6 +206,7 @@ class JsonUtil:
                     product_json["description"],
                     product_json["price"],
                     product_json["producer_code"],
+                    product_json["EAN"],
                     product_json["color"],
                     product_json["lightning"],
                     product_json["height"],
@@ -236,6 +247,7 @@ class JsonUtil:
                          product_json["description"],
                          product_json["price"],
                          product_json["producer_code"],
+                         product_json["EAN"],
                          product_json["socket_compatibility"],
                          product_json["lightning"],
                          product_json["num_of_fans"],
@@ -258,6 +270,7 @@ class JsonUtil:
                             product_json["description"],
                             product_json["price"],
                             product_json["producer_code"],
+                            product_json["EAN"],
                             product_json["socket_compatibility"],
                             product_json["lightning"],
                             product_json["num_of_fans"],
@@ -265,6 +278,35 @@ class JsonUtil:
                             product_json["fan_speed"],
                             product_json["noise_level"],
                             product_json["cooler_size"])
+
+    @staticmethod
+    def parse_json_to_hdd(product_json):
+        return HardDiskDrive(product_json["name"],
+                             product_json["producer"],
+                             product_json["category"],
+                             product_json["description"],
+                             product_json["price"],
+                             product_json["producer_code"],
+                             product_json["EAN"],
+                             product_json["drive_format"],
+                             product_json["storage"],
+                             product_json["interface"],
+                             product_json["rotational_speed"])
+
+    @staticmethod
+    def parse_json_to_ssd(product_json):
+        return SolidStateDrive(product_json["name"],
+                               product_json["producer"],
+                               product_json["category"],
+                               product_json["description"],
+                               product_json["price"],
+                               product_json["producer_code"],
+                               product_json["EAN"],
+                               product_json["drive_format"],
+                               product_json["storage"],
+                               product_json["interface"],
+                               product_json["read_speed"],
+                               product_json["write_speed"])
 
     def parse_product_to_json(self, product: Product):
         if isinstance(product, Processor):
@@ -283,6 +325,10 @@ class JsonUtil:
             return self.parse_air_cooler_to_json(product)
         if isinstance(product, LiquidCooler):
             return self.parse_liquid_cooler_to_json(product)
+        if isinstance(product, HardDiskDrive):
+            return self.parse_hdd_to_json(product)
+        if isinstance(product, SolidStateDrive):
+            return self.parse_ssd_to_json(product)
 
     @staticmethod
     def parse_cpu_to_json(cpu: Processor):
@@ -293,6 +339,7 @@ class JsonUtil:
             "description": cpu.get_description(),
             "price": cpu.get_price(),
             "producer_code": cpu.get_producer_code(),
+            "EAN": cpu.get_ean(),
             "line": cpu.get_line(),
             "model": cpu.get_model(),
             "cores": cpu.get_cores(),
@@ -316,6 +363,7 @@ class JsonUtil:
             "description": ram.get_description(),
             "price": ram.get_price(),
             "producer_code": ram.get_producer_code(),
+            "EAN": ram.get_ean(),
             "line": ram.get_line(),
             "memory_type": ram.get_memory_type(),
             "total_capacity": ram.get_total_capacity(),
@@ -334,6 +382,7 @@ class JsonUtil:
             "description": mb.get_description(),
             "price": mb.get_price(),
             "producer_code": mb.get_producer_code(),
+            "EAN": mb.get_ean(),
             "standard": mb.get_standard(),
             "chipset": mb.get_chipset(),
             "cpu_socket": mb.get_cpu_socket(),
@@ -363,6 +412,7 @@ class JsonUtil:
             "price": gpu.get_price(),
             "producer_code": gpu.get_producer_code(),
             "chipset_producer": gpu.get_chipset_producer(),
+            "EAN": gpu.get_ean(),
             "chipset": gpu.get_chipset(),
             "core_frequency": gpu.get_core_frequency(),
             "max_core_frequency": gpu.get_max_core_frequency(),
@@ -394,6 +444,7 @@ class JsonUtil:
             "description": ps.get_description(),
             "price": ps.get_price(),
             "producer_code": ps.get_producer_code(),
+            "EAN": ps.get_ean(),
             "standard": ps.get_standard(),
             "power": ps.get_power(),
             "efficiency_certificate": ps.get_efficiency_certificate(),
@@ -425,6 +476,7 @@ class JsonUtil:
             "description": case.get_description(),
             "price": case.get_price(),
             "producer_code": case.get_producer_code(),
+            "EAN": case.get_ean(),
             "color": case.get_color(),
             "lightning": case.get_lightning(),
             "height": case.get_height(),
@@ -491,6 +543,7 @@ class JsonUtil:
             "description": cooler.get_description(),
             "price": cooler.get_price(),
             "producer_code": cooler.get_producer_code(),
+            "EAN": cooler.get_ean(),
             "socket_compatibility": cooler.get_socket_compatibility(),
             "lightning": cooler.get_lightning(),
             "num_of_fans": cooler.get_num_of_fans(),
@@ -498,4 +551,31 @@ class JsonUtil:
             "fan_speed": cooler.get_fan_speed(),
             "noise_level": cooler.get_noise_level(),
             "cooler_size": cooler.get_cooler_size(),
+        }
+
+    @staticmethod
+    def parse_hdd_to_json(hdd: HardDiskDrive):
+        return {
+            "name": hdd.get_name(),
+            "producer": hdd.get_producer(),
+            "category": hdd.get_category(),
+            "description": hdd.get_description(),
+            "price": hdd.get_price(),
+            "producer_code": hdd.get_producer_code(),
+            "EAN": hdd.get_ean(),
+            "rotational_speed": hdd.get_rotational_speed(),
+        }
+
+    @staticmethod
+    def parse_ssd_to_json(ssd: SolidStateDrive):
+        return {
+            "name": ssd.get_name(),
+            "producer": ssd.get_producer(),
+            "category": ssd.get_category(),
+            "description": ssd.get_description(),
+            "price": ssd.get_price(),
+            "producer_code": ssd.get_producer_code(),
+            "EAN": ssd.get_ean(),
+            "read_speed": ssd.get_read_speed(),
+            "write_speed": ssd.get_write_speed()
         }

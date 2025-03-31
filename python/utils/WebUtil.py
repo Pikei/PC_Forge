@@ -47,7 +47,7 @@ class WebUtil:
         :param mandatory: Parametr określający czy poszukiwany element jest kluczowy i
             zawsze powinien znaleźć się na w pełni załadowanej stronie.
             Określa czy metoda ma oczekiwać na pojawienie się elementu. Domyślna wartość to **True**
-        :param timeout: Czas oczekiwania na załadowanie wymaganego elementu (domyślnie 60 sek.)
+        :param timeout: Czas oczekiwania na załadowanie wymaganego elementu (domyślnie 10 sek.)
         :return: Obiekt klasy ``WebElement`` jeśli został on zlokalizowany, **None** w przeciwnym razie
         """
         if driver is None:
@@ -91,7 +91,7 @@ class WebUtil:
         :param mandatory: Parametr określający czy poszukiwane elementy są kluczowy i
             zawsze powinny znaleźć się na w pełni załadowanej stronie.
             Określa czy metoda ma oczekiwać na pojawienie się wszystkich elementów. Domyślna wartość to **True**
-        :param timeout: Czas oczekiwania na załadowanie wymaganych elementów (domyślnie 60 sek.)
+        :param timeout: Czas oczekiwania na załadowanie wymaganych elementów (domyślnie 10 sek.)
         :return: Lista obiektów klasy ``WebElement`` jeśli wszystkie zostały zlokalizowane.
             W przeciwnym razie zwracana jest pusta lista
         """
@@ -198,33 +198,23 @@ class WebUtil:
             return ""
         header = self.get_element(By.TAG_NAME, "h3", row, mandatory=False)
         if header is None:
-            content = "<h3>" + product_name + "</h3>"
+            header = "<h3>" + product_name + "</h3>"
         else:
-            content = CommonUtils.parse_to_html(header)
+            header = CommonUtils.parse_to_html(header)
 
         paragraphs = self.get_elements(By.TAG_NAME, "p", row, False)
-        lists = self.get_elements(By.TAG_NAME, "ul", row, False)
-        if len(paragraphs) > 0 and len(lists) > 0:
-            CommonUtils.add_par_and_list(paragraphs, lists)
-        elif len(paragraphs) > 0:
-            for p in paragraphs:
-                content = content + CommonUtils.parse_to_html(p)
-        elif len(lists) > 0:
-            for ul in lists:
-                content += "<" + ul.tag_name + ">"
-                for li in self.get_elements(By.TAG_NAME, "li", ul):
-                    content += CommonUtils.parse_to_html(li)
-                content += "</" + ul.tag_name + ">"
-        return content
+        unordered_lists = self.get_elements(By.TAG_NAME, "ul", row, False)
+        ordered_lists = self.get_elements(By.TAG_NAME, "ol", row, False)
+        return header + CommonUtils.sort_elements_in_desc_row_by_position(paragraphs, unordered_lists, ordered_lists)
 
-    def save_image(self, category: str, producer: str, producer_code: str):
+    def save_image(self, category: str, producer: str, ean: str):
         """
         Klika w galerię zdjęć produktów, co pozwala na wykonanie zrzutu ekranu bez dodatkowych elementów,
         takich jak przycisk porównania, czy dodania do listy. Zrzut ekranu jest następnie zapisywany w katalogu zdjęć,
         pod nazwą taką samą jak kod producenta. Zapis jest w formacie PNG.
         :param category: Kategoria produktu potrzebna do zapisania zdjęcia w odpowiednim folderze
         :param producer: Nazwa producenta produktu potrzebna do zapisania zdjęcia w odpowiednim folderze
-        :param producer_code: Kod producenta, będący nazwą, pod jaką ma zostać zapisany zrzut ekranu
+        :param ean: European Article Number, będący nazwą, pod jaką ma zostać zapisany zrzut ekranu
         """
         path = os.path.join(os.getcwd(), "images", category)
         CommonUtils.directory_exists(path)
@@ -237,6 +227,6 @@ class WebUtil:
             self.driver.execute_script("window.scrollTo(0, 0)")
             img_box.click()
         img = self.get_element(By.CSS_SELECTOR, "img.mobx-img.mobx-media-loaded")
-        path = os.path.join(path, f"{producer_code}.png")
+        path = os.path.join(path, f"{ean}.png")
         img.screenshot(path)
         self.get_element(By.CSS_SELECTOR, "button.mobx-close").click()

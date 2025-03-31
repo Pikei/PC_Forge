@@ -1,5 +1,6 @@
 from product.Case import Case
 from product.Cooler import AirCooler, LiquidCooler
+from product.Drive import SolidStateDrive, HardDiskDrive
 from product.GraphicsCard import GraphicsCard
 from product.Motherboard import Motherboard
 from product.PowerSuppy import PowerSupply
@@ -32,6 +33,8 @@ class ProductValidator:
             return ProductValidator.log_error("Could not find product price")
         if product.get_producer_code() is None or product.get_producer_code() == '':
             return ProductValidator.log_error("Could not find producer code")
+        if product.get_ean() is None or product.get_ean() <= 0:
+            return ProductValidator.log_error("Could not find European Article Number")
 
         match product.get_category():
             case str(ProductCategory.CPU):
@@ -50,6 +53,10 @@ class ProductValidator:
                 return ProductValidator.validate_air_cooler(product)
             case str(ProductCategory.LIQUID_COOLER):
                 return ProductValidator.validate_liquid_cooler(product)
+            case str(ProductCategory.SSD):
+                return ProductValidator.validate_ssd(product)
+            case str(ProductCategory.HDD):
+                return ProductValidator.validate_hdd(product)
         return False
 
     @staticmethod
@@ -360,4 +367,38 @@ class ProductValidator:
         else:
             return ProductValidator.log_error(
                 f"Could not parse product of category '{cooler.get_category()}' to object of matching class.")
+        return True
+
+    @staticmethod
+    def validate_ssd(ssd):
+        if isinstance(ssd, SolidStateDrive):
+            if ssd.get_drive_format() is None or ssd.get_drive_format() == "":
+                return ProductValidator.log_error("Could not find drive format")
+            if ssd.get_storage() is None or ssd.get_storage() <= 0:
+                return ProductValidator.log_error("Could not find storage")
+            if ssd.get_interface() is None or ssd.get_interface() == "":
+                return ProductValidator.log_error("Could not find interface")
+            if ssd.get_read_speed() is None or ssd.get_read_speed() <= 0:
+                return ProductValidator.log_error("Could not find read speed")
+            if ssd.get_write_speed() is None or ssd.get_write_speed() <= 0:
+                return ProductValidator.log_error("Could not find write speed")
+        else:
+            return ProductValidator.log_error(
+                f"Could not parse product of category '{ssd.get_category()}' to object of matching class.")
+        return True
+
+    @staticmethod
+    def validate_hdd(hdd):
+        if isinstance(hdd, HardDiskDrive):
+            if hdd.get_drive_format() is None or hdd.get_drive_format() == "":
+                return ProductValidator.log_error("Could not find drive format")
+            if hdd.get_storage() is None or hdd.get_storage() <= 0:
+                return ProductValidator.log_error("Could not find storage")
+            if hdd.get_interface() is None or hdd.get_interface() == "":
+                return ProductValidator.log_error("Could not find interface")
+            if hdd.get_rotational_speed() is None or hdd.get_rotational_speed() <= 0:
+                return ProductValidator.log_error("Could not find rotational speed")
+        else:
+            return ProductValidator.log_error(
+                f"Could not parse product of category '{hdd.get_category()}' to object of matching class.")
         return True

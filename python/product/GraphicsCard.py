@@ -3,11 +3,12 @@ from product.Product import Product
 
 class GraphicsCard(Product):
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
+                 ean: int,
                  chipset_producer: str, chipset: str, core_frequency: int, max_core_frequency: int,
                  stream_processors: int, rop_units: int, texturing_units: int, rt_cores: int, tensor_cores: int,
                  dlss: str, connector: str, card_length: int, resolution: str, recommended_ps: int, lightning: bool,
                  ram: int, ram_type: str, data_bus: int, memory_freq: int, cooling_type: str, number_of_fans: int):
-        super().__init__(name, producer, category, description, price, producer_code)
+        super().__init__(name, producer, category, description, price, producer_code, ean)
         self.chipset_producer: str = chipset_producer
         self.chipset: str = chipset
         self.core_frequency: int = core_frequency

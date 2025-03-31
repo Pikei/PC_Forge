@@ -3,9 +3,10 @@ from product.Product import Product
 
 class RAM(Product):
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
+                 ean: int,
                  line: str, memory_type: str, total_capacity: int, number_of_modules: int, frequency: int, latency: str,
                  lighting: bool):
-        super().__init__(name, producer, category, description, price, producer_code)
+        super().__init__(name, producer, category, description, price, producer_code, ean)
         self.line = line
         self.memory_type = memory_type
         self.total_capacity = total_capacity

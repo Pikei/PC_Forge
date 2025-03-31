@@ -3,12 +3,13 @@ from product.Product import Product
 
 class Motherboard(Product):
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
+                 ean: int,
                  standard: str, chipset: str, cpu_socket: str, memory_standard: str, number_of_memory_slots: int,
                  supported_memory_frequencies: list[int], max_memory_capacity: int, integrated_audio_card: str,
                  audio_channels: float, integrated_network_card: str, bluetooth: bool, wifi: bool,
                  expansion_slots: list[str],
                  drive_interfaces: list[str], outside_connectors: list[str], width: float, depth: float):
-        super().__init__(name, producer, category, description, price, producer_code)
+        super().__init__(name, producer, category, description, price, producer_code, ean)
         self.standard: str = standard
         self.chipset: str = chipset
         self.cpu_socket: str = cpu_socket
