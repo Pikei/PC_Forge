@@ -31,8 +31,7 @@ class GraphicsCard(Product):
         self.number_of_fans: int = number_of_fans
 
     def print_product_specs(self):
-        super().print_common()
-        print("--- SPECS ---")
+        super().print_product_specs()
         print("Chipset producer:", self.chipset_producer)
         print("Chipset:", self.chipset)
         print("Core frequency:", self.core_frequency, "MHz")

@@ -15,8 +15,7 @@ class RAM(Product):
         self.lighting = lighting
 
     def print_product_specs(self):
-        super().print_common()
-        print("--- SPECS ---")
+        super().print_product_specs()
         print("Line:", self.line)
         print("Memory type:", self.memory_type)
         if self.total_capacity > 0:

@@ -7,7 +7,11 @@ class Product:
         self.price: float = price
         self.producer_code: str = producer_code
 
-    def print_common(self):
+    @staticmethod
+    def print_end():
+        print("---------------------------------------\n")
+
+    def print_product_specs(self):
         print("--------------- ", self.name, " ---------------")
         print("Product type:", self.category)
         print("Producer:", self.producer)
@@ -15,13 +19,8 @@ class Product:
         print("Price [PLN]:", self.price)
         print("-- DESCRIPTION --")
         print(self.description.replace("<", "\n<").replace("\n</", "</"))
+        print("--- SPECS ---")
 
-    @staticmethod
-    def print_end():
-        print("---------------------------------------\n")
-
-    def print_product_specs(self):
-        pass
 
     def get_name(self):
         return self.name

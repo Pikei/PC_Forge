@@ -30,8 +30,7 @@ class PowerSupply(Product):
         self.lightning: bool = lightning
 
     def print_product_specs(self):
-        super().print_common()
-        print("--- SPECS ---")
+        super().print_product_specs()
         print("Standard:", self.standard)
         print("Power:", self.power)
         print("Efficiency certificate:", self.efficiency_certificate)

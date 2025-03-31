@@ -1,4 +1,5 @@
 from product.Case import Case
+from product.Cooler import AirCooler, LiquidCooler
 from product.GraphicsCard import GraphicsCard
 from product.Motherboard import Motherboard
 from product.PowerSuppy import PowerSupply
@@ -45,6 +46,10 @@ class ProductValidator:
                 return ProductValidator.validate_power_supply(product)
             case str(ProductCategory.CASE):
                 return ProductValidator.validate_case(product)
+            case str(ProductCategory.AIR_COOLER):
+                return ProductValidator.validate_air_cooler(product)
+            case str(ProductCategory.LIQUID_COOLER):
+                return ProductValidator.validate_liquid_cooler(product)
         return False
 
     @staticmethod
@@ -252,7 +257,7 @@ class ProductValidator:
                 return ProductValidator.log_error("Could not find width")
             if case.get_depth() is None or case.get_depth() <= 0.0:
                 return ProductValidator.log_error("Could not find depth")
-            if case.get_weight() is None or case.get_weight() <= 0.0:
+            if case.get_weight() is None:
                 return ProductValidator.log_error("Could not find weight")
             if case.get_case_type() is None or case.get_case_type() == "":
                 return ProductValidator.log_error("Could not find case type")
@@ -290,13 +295,15 @@ class ProductValidator:
                 return ProductValidator.log_error("Could not find number of external 5.2 inch. bays")
             if case.get_num_of_extension_slot() is None:
                 return ProductValidator.log_error("Could not find number of extension slots")
-            if case.get_front_fans() is None or case.get_front_fans() == "":
+            if case.get_front_fans() is None:
                 return ProductValidator.log_error("Could not find front panel fans")
-            if case.get_side_fans() is None or case.get_side_fans() == "":
+            if case.get_back_fans() is None:
+                return ProductValidator.log_error("Could not find back panel fans")
+            if case.get_side_fans() is None:
                 return ProductValidator.log_error("Could not find side panel fans")
-            if case.get_bottom_fans() is None or case.get_bottom_fans() == "":
+            if case.get_bottom_fans() is None:
                 return ProductValidator.log_error("Could not find bottom panel fans")
-            if case.get_top_fans() is None or case.get_top_fans() == "":
+            if case.get_top_fans() is None:
                 return ProductValidator.log_error("Could not find top panel fans")
             if case.get_power_supply() is None:
                 return ProductValidator.log_error("Could not find if case has power supply or not")
@@ -305,4 +312,52 @@ class ProductValidator:
         else:
             return ProductValidator.log_error(
                 f"Could not parse product of category '{case.get_category()}' to object of matching class.")
+        return True
+
+    @staticmethod
+    def validate_air_cooler(cooler):
+        if isinstance(cooler, AirCooler):
+            if cooler.get_socket_compatibility() is None or len(cooler.get_socket_compatibility()) == 0:
+                return ProductValidator.log_error("Could not find socket compatibility")
+            if cooler.get_lightning() is None:
+                return ProductValidator.log_error("Could not find if cooler has lightning or not")
+            if cooler.get_num_of_fans() is None or cooler.get_num_of_fans() <= 0:
+                return ProductValidator.log_error("Could not find number of fans")
+            if cooler.get_fan_diameter() is None or cooler.get_fan_diameter() <= 0:
+                return ProductValidator.log_error("Could not find fan diameter")
+            if cooler.get_vertical_installation() is None:
+                return ProductValidator.log_error("Could not find installation method")
+            if cooler.get_height() is None or cooler.get_height() <= 0:
+                return ProductValidator.log_error("Could not find height")
+            if cooler.get_width() is None or cooler.get_width() <= 0:
+                return ProductValidator.log_error("Could not find width")
+            if cooler.get_depth() is None or cooler.get_depth() <= 0:
+                return ProductValidator.log_error("Could not find depth")
+            if cooler.get_base_material() is None or cooler.get_base_material() == "":
+                return ProductValidator.log_error("Could not find base material")
+            if cooler.get_num_of_heat_pipes() is None or cooler.get_num_of_heat_pipes() <= 0:
+                return ProductValidator.log_error("Could not find number of heat pipes")
+            if cooler.get_heat_pipe_diameter() is None or cooler.get_heat_pipe_diameter() <= 0:
+                return ProductValidator.log_error("Could not find heat pipe diameter")
+        else:
+            return ProductValidator.log_error(
+                f"Could not parse product of category '{cooler.get_category()}' to object of matching class.")
+        return True
+
+    @staticmethod
+    def validate_liquid_cooler(cooler):
+        if isinstance(cooler, LiquidCooler):
+            if cooler.get_socket_compatibility() is None or len(cooler.get_socket_compatibility()) == 0:
+                return ProductValidator.log_error("Could not find socket compatibility")
+            if cooler.get_lightning() is None:
+                return ProductValidator.log_error("Could not find if cooler has lightning or not")
+            if cooler.get_num_of_fans() is None or cooler.get_num_of_fans() <= 0:
+                return ProductValidator.log_error("Could not find number of fans")
+            if cooler.get_fan_diameter() is None or cooler.get_fan_diameter() <= 0:
+                return ProductValidator.log_error("Could not find fan diameter")
+            if cooler.get_cooler_size() is None:
+                return ProductValidator.log_error("Could not find cooler size")
+        else:
+            return ProductValidator.log_error(
+                f"Could not parse product of category '{cooler.get_category()}' to object of matching class.")
         return True

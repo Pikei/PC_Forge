@@ -20,8 +20,7 @@ class Processor(Product):
         self.packaging: str = packaging
 
     def print_product_specs(self):
-        super().print_common()
-        print("--- SPECS ---")
+        super().print_product_specs()
         print("Line:", self.line)
         print("Model:", self.model)
         print("Number of cores:", self.cores)

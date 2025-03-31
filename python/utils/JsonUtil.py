@@ -1,6 +1,8 @@
 import json
 import os
 
+from product.Case import Case
+from product.Cooler import AirCooler, LiquidCooler
 from product.GraphicsCard import GraphicsCard
 from product.Motherboard import Motherboard
 from product.PowerSuppy import PowerSupply
@@ -57,6 +59,12 @@ class JsonUtil:
                 return self.parse_json_to_graphics_card(product_json)
             case ProductCategory.POWER_SUPPLY:
                 return self.parse_json_to_power_supply(product_json)
+            case ProductCategory.CASE:
+                return self.parse_json_to_case(product_json)
+            case ProductCategory.AIR_COOLER:
+                return self.parse_json_to_air_cooler(product_json)
+            case ProductCategory.LIQUID_COOLER:
+                return self.parse_json_to_liquid_cooler(product_json)
 
     @staticmethod
     def parse_json_to_cpu(product_json):
@@ -179,7 +187,85 @@ class JsonUtil:
                            product_json["width"],
                            product_json["depth"],
                            product_json["lightning"])
-    
+
+    @staticmethod
+    def parse_json_to_case(product_json):
+        return Case(product_json["name"],
+                    product_json["producer"],
+                    product_json["category"],
+                    product_json["description"],
+                    product_json["price"],
+                    product_json["producer_code"],
+                    product_json["color"],
+                    product_json["lightning"],
+                    product_json["height"],
+                    product_json["width"],
+                    product_json["depth"],
+                    product_json["weight"],
+                    product_json["case_type"],
+                    product_json["mb_compatibility"],
+                    product_json["window"],
+                    product_json["max_gpu_length"],
+                    product_json["max_cpu_cooler_height"],
+                    product_json["usb20"],
+                    product_json["usb30"],
+                    product_json["usb31"],
+                    product_json["usb32"],
+                    product_json["usbc"],
+                    product_json["card_reader"],
+                    product_json["headphones_connector"],
+                    product_json["microphone_connector"],
+                    product_json["num_of_internal_25_bays"],
+                    product_json["num_of_internal_35_bays"],
+                    product_json["num_of_external_35_bays"],
+                    product_json["num_of_external_525_bays"],
+                    product_json["num_of_extension_slot"],
+                    product_json["front_fans"],
+                    product_json["back_fans"],
+                    product_json["side_fans"],
+                    product_json["bottom_fans"],
+                    product_json["top_fans"],
+                    product_json["power_supply"],
+                    product_json["ps_power"])
+
+    @staticmethod
+    def parse_json_to_air_cooler(product_json):
+        return AirCooler(product_json["name"],
+                         product_json["producer"],
+                         product_json["category"],
+                         product_json["description"],
+                         product_json["price"],
+                         product_json["producer_code"],
+                         product_json["socket_compatibility"],
+                         product_json["lightning"],
+                         product_json["num_of_fans"],
+                         product_json["fan_diameter"],
+                         product_json["fan_speed"],
+                         product_json["noise_level"],
+                         product_json["vertical_installation"],
+                         product_json["height"],
+                         product_json["width"],
+                         product_json["depth"],
+                         product_json["base_material"],
+                         product_json["num_of_heat_pipes"],
+                         product_json["heat_pipe_diameter"])
+
+    @staticmethod
+    def parse_json_to_liquid_cooler(product_json):
+        return LiquidCooler(product_json["name"],
+                            product_json["producer"],
+                            product_json["category"],
+                            product_json["description"],
+                            product_json["price"],
+                            product_json["producer_code"],
+                            product_json["socket_compatibility"],
+                            product_json["lightning"],
+                            product_json["num_of_fans"],
+                            product_json["fan_diameter"],
+                            product_json["fan_speed"],
+                            product_json["noise_level"],
+                            product_json["cooler_size"])
+
     def parse_product_to_json(self, product: Product):
         if isinstance(product, Processor):
             return self.parse_cpu_to_json(product)
@@ -191,6 +277,12 @@ class JsonUtil:
             return self.parse_graphics_card_to_json(product)
         if isinstance(product, PowerSupply):
             return self.parse_power_supply_to_json(product)
+        if isinstance(product, Case):
+            return self.parse_case_to_json(product)
+        if isinstance(product, AirCooler):
+            return self.parse_air_cooler_to_json(product)
+        if isinstance(product, LiquidCooler):
+            return self.parse_liquid_cooler_to_json(product)
 
     @staticmethod
     def parse_cpu_to_json(cpu: Processor):
@@ -322,4 +414,88 @@ class JsonUtil:
             "width": ps.get_width(),
             "depth": ps.get_depth(),
             "lightning": ps.get_lightning()
+        }
+
+    @staticmethod
+    def parse_case_to_json(case: Case):
+        return {
+            "name": case.get_name(),
+            "producer": case.get_producer(),
+            "category": case.get_category(),
+            "description": case.get_description(),
+            "price": case.get_price(),
+            "producer_code": case.get_producer_code(),
+            "color": case.get_color(),
+            "lightning": case.get_lightning(),
+            "height": case.get_height(),
+            "width": case.get_width(),
+            "depth": case.get_depth(),
+            "weight": case.get_weight(),
+            "case_type": case.get_case_type(),
+            "mb_compatibility": case.get_mb_compatibility(),
+            "window": case.get_window(),
+            "max_gpu_length": case.get_max_gpu_length(),
+            "max_cpu_cooler_height": case.get_max_cpu_cooler_height(),
+            "usb20": case.get_usb20(),
+            "usb30": case.get_usb30(),
+            "usb31": case.get_usb31(),
+            "usb32": case.get_usb32(),
+            "usbc": case.get_usbc(),
+            "card_reader": case.get_card_reader(),
+            "headphones_connector": case.get_headphones_connector(),
+            "microphone_connector": case.get_microphone_connector(),
+            "num_of_internal_25_bays": case.get_num_of_internal_25_bays(),
+            "num_of_internal_35_bays": case.get_num_of_internal_35_bays(),
+            "num_of_external_35_bays": case.get_num_of_external_35_bays(),
+            "num_of_external_525_bays": case.get_num_of_external_525_bays(),
+            "num_of_extension_slot": case.get_num_of_extension_slot(),
+            "front_fans": case.get_front_fans(),
+            "back_fans": case.get_back_fans(),
+            "side_fans": case.get_side_fans(),
+            "bottom_fans": case.get_bottom_fans(),
+            "top_fans": case.get_top_fans(),
+            "power_supply": case.get_power_supply(),
+            "ps_power": case.get_ps_power()
+        }
+
+    @staticmethod
+    def parse_air_cooler_to_json(cooler: AirCooler):
+        return {
+            "name": cooler.get_name(),
+            "producer": cooler.get_producer(),
+            "category": cooler.get_category(),
+            "description": cooler.get_description(),
+            "price": cooler.get_price(),
+            "producer_code": cooler.get_producer_code(),
+            "socket_compatibility": cooler.get_socket_compatibility(),
+            "lightning": cooler.get_lightning(),
+            "num_of_fans": cooler.get_num_of_fans(),
+            "fan_diameter": cooler.get_fan_diameter(),
+            "fan_speed": cooler.get_fan_speed(),
+            "noise_level": cooler.get_noise_level(),
+            "vertical_installation": cooler.get_vertical_installation(),
+            "height": cooler.get_height(),
+            "width": cooler.get_width(),
+            "depth": cooler.get_depth(),
+            "base_material": cooler.get_base_material(),
+            "num_of_heat_pipes": cooler.get_num_of_heat_pipes(),
+            "heat_pipe_diameter": cooler.get_heat_pipe_diameter(),
+        }
+
+    @staticmethod
+    def parse_liquid_cooler_to_json(cooler: LiquidCooler):
+        return {
+            "name": cooler.get_name(),
+            "producer": cooler.get_producer(),
+            "category": cooler.get_category(),
+            "description": cooler.get_description(),
+            "price": cooler.get_price(),
+            "producer_code": cooler.get_producer_code(),
+            "socket_compatibility": cooler.get_socket_compatibility(),
+            "lightning": cooler.get_lightning(),
+            "num_of_fans": cooler.get_num_of_fans(),
+            "fan_diameter": cooler.get_fan_diameter(),
+            "fan_speed": cooler.get_fan_speed(),
+            "noise_level": cooler.get_noise_level(),
+            "cooler_size": cooler.get_cooler_size(),
         }

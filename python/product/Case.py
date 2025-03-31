@@ -9,7 +9,8 @@ class Case(Product):
                  headphones_connector: bool, microphone_connector: bool,
                  num_of_internal_25_bays: int, num_of_internal_35_bays: int,
                  num_of_external_35_bays: int, num_of_external_525_bays: int,
-                 num_of_extension_slot: int, front_fans: str, side_fans: str, bottom_fans: str, top_fans: str,
+                 num_of_extension_slot: int, front_fans: str, back_fans: str, side_fans: str, bottom_fans: str,
+                 top_fans: str,
                  power_supply: bool, ps_power: int):
         super().__init__(name, producer, category, description, price, producer_code)
         self.color: str = color
@@ -37,6 +38,7 @@ class Case(Product):
         self.num_of_external_525_bays: int = num_of_external_525_bays
         self.num_of_extension_slot: int = num_of_extension_slot
         self.front_fans: str = front_fans
+        self.back_fans: str = back_fans
         self.side_fans: str = side_fans
         self.bottom_fans: str = bottom_fans
         self.top_fans: str = top_fans
@@ -44,14 +46,16 @@ class Case(Product):
         self.ps_power: int = ps_power
 
     def print_product_specs(self):
-        super().print_common()
-        print("--- SPECS ---")
+        super().print_product_specs()
         print("Color:", self.color)
         print("Lightning:", self.lightning)
         print("Height:", self.height, "mm")
         print("Width:", self.width, "mm")
         print("Depth:", self.depth, "mm")
-        print("Weight:", self.weight, "kg")
+        if self.weight > 0.0:
+            print("Weight:", self.weight, "kg")
+        else:
+            print("Weight: no data")
         print("Case type:", self.case_type)
         print("Motherboard standards compatibility:", self.mb_compatibility)
         print("Window:", self.window)
@@ -71,6 +75,7 @@ class Case(Product):
         print("Number of external 5.2 inch. bays:", self.num_of_external_525_bays)
         print("Number of extension slots:", self.num_of_extension_slot)
         print("Front panel fans:", self.front_fans)
+        print("Back panel fans:", self.back_fans)
         print("Side panel fans:", self.side_fans)
         print("Bottom panel fans:", self.bottom_fans)
         print("Top panel fans:", self.top_fans)
@@ -228,6 +233,12 @@ class Case(Product):
 
     def set_front_fans(self, front_fans: str):
         self.front_fans = front_fans
+
+    def get_back_fans(self):
+        return self.back_fans
+
+    def set_back_fans(self, back_fans: str):
+        self.back_fans = back_fans
 
     def get_side_fans(self):
         return self.side_fans

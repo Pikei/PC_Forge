@@ -2,6 +2,8 @@ from regex import split
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
+from product.Case import Case
+from product.Cooler import Cooler, AirCooler, LiquidCooler
 from product.GraphicsCard import GraphicsCard
 from product.Motherboard import Motherboard
 from product.PowerSuppy import PowerSupply
@@ -83,7 +85,7 @@ class ProductParser:
 
         producer: str = CommonUtils.get_value_from_spec_row(spec_rows, "Producent")
         if producer is not None:
-            producer.replace("/", "-").replace("\\", "-")
+            producer = producer.replace("/", "-").replace("\\", "-")
 
         product = Product(name, producer, "", "", price, producer_code)
 
@@ -96,8 +98,12 @@ class ProductParser:
         #     product = self.parse_motherboard(product, spec_rows)
         # elif cat_url in UrlCategory.GPU:
         #     product = self.parse_gpu(product, spec_rows)
-        if cat_url in UrlCategory.POWER_SUPPLY:
-            product = self.parse_power_supply(product, spec_rows)
+        # elif cat_url in UrlCategory.POWER_SUPPLY:
+        #     product = self.parse_power_supply(product, spec_rows)
+        if cat_url in UrlCategory.CASE:
+            product = self.parse_case(product, spec_rows)
+        elif cat_url in UrlCategory.AIR_COOLER or cat_url in UrlCategory.LIQUID_COOLER:
+            product = self.parse_cooler(product, spec_rows)
 
         if ProductValidator.validate(product):
             self.util.save_image(product.get_category(), product.get_producer(), product.get_producer_code())
@@ -131,6 +137,8 @@ class ProductParser:
         num_of_threads = CommonUtils.extract_int(spec_value)
 
         socket = CommonUtils.get_value_from_spec_row(spec_rows, "Typ gniazda")
+        if socket is not None and socket.split(" ")[0] == "Socket":
+            socket = socket.split(" ")[1]
 
         spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Odblokowany mnożnik")
         unlocked = CommonUtils.translate_to_bool(spec_value)
@@ -347,11 +355,11 @@ class ProductParser:
 
     def parse_power_supply(self, product, spec_rows):
         """
-       Pobiera i przetwarza dane z adresu URL na obiekt klasy ``GraphicsCard``
-       :param product: obiekt klasy ``Product``, zawierający uniwersalne dane dla wszystkich typów produktów
-       :param spec_rows: wiersze tabeli specyfikacji
-       :return: obiekt klasy ``GraphicsCard``
-       """
+        Pobiera i przetwarza dane z adresu URL na obiekt klasy ``GraphicsCard``
+        :param product: obiekt klasy ``Product``, zawierający uniwersalne dane dla wszystkich typów produktów
+        :param spec_rows: wiersze tabeli specyfikacji
+        :return: obiekt klasy ``GraphicsCard``
+        """
         product.set_category(str(ProductCategory.POWER_SUPPLY))
         temp_name_list = product.get_name().split(" ")
         product.set_name("")
@@ -435,3 +443,238 @@ class ProductParser:
                            standard, power, efficiency_certificate, efficiency, cooling_type, fan_diameter, protections,
                            modular_cabling, atx24, pcie16, pcie8, pcie6, cpu8, cpu4, sata, molex, height, width, depth,
                            lightning)
+
+    def parse_case(self, product, spec_rows):
+        """
+        Pobiera i przetwarza dane z adresu URL na obiekt klasy ``Case``
+        :param product: obiekt klasy ``Product``, zawierający uniwersalne dane dla wszystkich typów produktów
+        :param spec_rows: wiersze tabeli specyfikacji
+        :return: obiekt klasy ``Case``
+        """
+        product.set_category(str(ProductCategory.CASE))
+        product.set_name(product.get_name()[:product.get_name().find("(")])
+        product.set_description(self.get_product_description(product.get_name()))
+
+        color: str = CommonUtils.get_value_from_spec_row(spec_rows, "Kolor")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Podświetlenie")
+        lightning: bool = CommonUtils.translate_to_bool(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Wysokość [cm]")
+        height: float = CommonUtils.extract_float(spec_value)
+        if height is not None:
+            height = height * 100
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Szerokość [cm]")
+        width: float = CommonUtils.extract_float(spec_value)
+        if width is not None:
+            width = width * 100
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Głębokość [cm]")
+        depth: float = CommonUtils.extract_float(spec_value)
+        if depth is not None:
+            depth = depth * 100
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Waga [kg]")
+        weight: float = CommonUtils.extract_float(spec_value)
+
+        case_type: str = CommonUtils.get_value_from_spec_row(spec_rows, "Typ obudowy")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Kompatybilność")
+        mb_compatibility: list[str] = []
+        if spec_value is not None:
+            mb_compatibility: list[str] = spec_value.strip().replace("\n", "").split(",")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Okno")
+        window: bool = CommonUtils.translate_to_bool(spec_value, custom_str_key="Z oknem")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Maksymalna długość karty graficznej [cm]")
+        max_gpu_length: float = CommonUtils.extract_float(spec_value)
+        if max_gpu_length is not None:
+            max_gpu_length = max_gpu_length * 100
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Maksymalna wysokość układu chłodzenia CPU [cm]")
+        max_cpu_cooler_height: float = CommonUtils.extract_float(spec_value)
+        if max_cpu_cooler_height is not None:
+            max_cpu_cooler_height = max_cpu_cooler_height * 100
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "USB 2.0")
+        usb20: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "USB 3.0")
+        usb30: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "USB 3.1")
+        usb31: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "USB 3.2")
+        usb32: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "USB Typ-C")
+        usbc: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Czytnik kart pamięci")
+        card_reader: bool = CommonUtils.translate_to_bool(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Złącze słuchawkowe/głośnikowe")
+        headphones_connector: bool = CommonUtils.translate_to_bool(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Złącze mikrofonowe")
+        microphone_connector: bool = CommonUtils.translate_to_bool(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Wnęki wewnętrzne 2.5 cala")
+        num_of_internal_25_bays: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Wnęki wewnętrzne 3.5 cala")
+        num_of_internal_35_bays: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Wnęki zewnętrzne 3.5 cala")
+        num_of_external_35_bays: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Wnęki zewnętrzne 5.25 cala")
+        num_of_external_525_bays: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Sloty rozszerzeń")
+        num_of_extension_slot: int = CommonUtils.extract_int(spec_value)
+
+        front_fans: str = CommonUtils.get_value_from_spec_row(spec_rows, "Panel przedni")
+        if not CommonUtils.translate_to_bool(front_fans):
+            front_fans = ""
+
+        back_fans: str = CommonUtils.get_value_from_spec_row(spec_rows, "Panel tylny")
+        if not CommonUtils.translate_to_bool(back_fans):
+            back_fans = ""
+
+        side_fans: str = CommonUtils.get_value_from_spec_row(spec_rows, "Panel boczny")
+        if not CommonUtils.translate_to_bool(side_fans):
+            side_fans = ""
+
+        bottom_fans: str = CommonUtils.get_value_from_spec_row(spec_rows, "Panel dolny")
+        if not CommonUtils.translate_to_bool(bottom_fans):
+            bottom_fans = ""
+
+        top_fans: str = CommonUtils.get_value_from_spec_row(spec_rows, "Panel górny")
+        if not CommonUtils.translate_to_bool(top_fans):
+            top_fans = ""
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Zasilacz")
+        power_supply: bool = CommonUtils.translate_to_bool(spec_value, custom_str_key="Z zasilaczem")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Moc zasilacza")
+        ps_power: int = CommonUtils.extract_int(spec_value)
+
+        return Case(product.get_name(), product.get_producer(), product.get_category(),
+                    product.get_description(), product.get_price(), product.get_producer_code(),
+                    color, lightning, height, width, depth, weight, case_type, mb_compatibility, window, max_gpu_length,
+                    max_cpu_cooler_height, usb20, usb30, usb31, usb32, usbc, card_reader, headphones_connector,
+                    microphone_connector, num_of_internal_25_bays, num_of_internal_35_bays, num_of_external_35_bays,
+                    num_of_external_525_bays, num_of_extension_slot, front_fans, back_fans, side_fans, bottom_fans,
+                    top_fans, power_supply, ps_power)
+
+    def parse_cooler(self, product, spec_rows):
+        """
+        Pobiera i przetwarza dane z adresu URL na obiekt klas rozszerzających ``Cooler``
+        :param product: obiekt klasy ``Product``, zawierający uniwersalne dane dla wszystkich typów produktów
+        :param spec_rows: wiersze tabeli specyfikacji
+        :return: obiekt klasy ``AirCooler`` lub ``LiquidCooler``
+        """
+        product.set_name(product.get_name()[:product.get_name().find("(")])
+        product.set_description(self.get_product_description(product.get_name()))
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Podświetlenie")
+        lightning: bool = CommonUtils.translate_to_bool(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Średnica wentylatora")
+        fan_diameter: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Maksymalna prędkość obrotowa")
+        fan_speed: int = CommonUtils.extract_int(spec_value)
+        if fan_speed == 0:
+            fan_speed = None
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Maksymalny poziom hałasu")
+        noise_level: float = CommonUtils.extract_float(spec_value)
+        if noise_level == 0.0:
+            noise_level = None
+
+        cooler = Cooler(product.get_name(), product.get_producer(), product.get_category(),
+                        product.get_description(), product.get_price(), product.get_producer_code(),
+                        [], lightning, 0, fan_diameter, fan_speed, noise_level)
+        cat_url = self.util.get_elements(By.CSS_SELECTOR, "a.main-breadcrumb")[-1].get_attribute("href")
+        if cat_url in UrlCategory.AIR_COOLER:
+            return self.parse_air_cooler(cooler, spec_rows)
+        elif cat_url in UrlCategory.LIQUID_COOLER:
+            return self.parse_liquid_cooler(cooler, spec_rows)
+
+    def parse_air_cooler(self, cooler: Cooler, spec_rows):
+        """
+        Pobiera i przetwarza dane z adresu URL na obiekt klasy ``AirCooler``
+        :param cooler: obiekt klasy ``Cooler``, zawierający uniwersalne dane dla wszystkich typów chłodzeń komputerowych
+        :param spec_rows: wiersze tabeli specyfikacji
+        :return: obiekt klasy ``AirCooler``
+        """
+        cooler.set_category(str(ProductCategory.AIR_COOLER))
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Socket procesora")
+        if spec_value is not None:
+            cooler.set_socket_compatibility(spec_value.strip().replace("\n", "").replace("/", ",").split(","))
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Ilość wentylatorów")
+        cooler.set_num_of_fans(CommonUtils.extract_int(spec_value))
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Sposób montażu")
+        vertical_installation: bool = CommonUtils.translate_to_bool(spec_value, custom_str_key="pionowy")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Wysokość [mm]")
+        height: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Szerokość [mm]")
+        width: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Głębokość [mm]")
+        depth: int = CommonUtils.extract_int(spec_value)
+
+        base_material: str = CommonUtils.get_value_from_spec_row(spec_rows, "Materiał podstawy")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Ilość ciepłowodów")
+        num_of_heat_pipes: int = CommonUtils.extract_int(spec_value)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Średnica ciepłowodów")
+        heat_pipe_diameter: int = CommonUtils.extract_int(spec_value)
+
+        return AirCooler(cooler.get_name(), cooler.get_producer(), cooler.get_category(),
+                         cooler.get_description(), cooler.get_price(), cooler.get_producer_code(),
+                         cooler.get_socket_compatibility(), cooler.get_lightning(), cooler.get_num_of_fans(),
+                         cooler.get_fan_diameter(), cooler.get_fan_speed(), cooler.get_noise_level(),
+                         vertical_installation, height, width, depth, base_material, num_of_heat_pipes,
+                         heat_pipe_diameter)
+
+    def parse_liquid_cooler(self, cooler: Cooler, spec_rows):
+        """
+        Pobiera i przetwarza dane z adresu URL na obiekt klasy ``LiquidCooler``
+        :param cooler: obiekt klasy ``Cooler``, zawierający uniwersalne dane dla wszystkich typów chłodzeń komputerowych
+        :param spec_rows: wiersze tabeli specyfikacji
+        :return: obiekt klasy ``LiquidCooler``
+        """
+        cooler.set_category(str(ProductCategory.LIQUID_COOLER))
+        sockets_intel: list[str] = []
+        sockets_amd: list[str] = []
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Kompatybilność z procesorami Intel")
+        if spec_value is not None:
+            sockets_intel = spec_value.replace("LGA", "").strip().replace("\n", "").replace("/", ",").split(",")
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Kompatybilność z procesorami AMD")
+        if spec_value is not None:
+            sockets_amd = spec_value.strip().replace("\n", "").split(",")
+
+        cooler.set_socket_compatibility(sockets_intel + sockets_amd)
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Liczba wentylatorów")
+        cooler.set_num_of_fans(CommonUtils.extract_int(spec_value))
+
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Rozmiar chłodnicy")
+        cooler_size: int = CommonUtils.extract_int(spec_value)
+
+        return LiquidCooler(cooler.get_name(), cooler.get_producer(), cooler.get_category(),
+                            cooler.get_description(), cooler.get_price(), cooler.get_producer_code(),
+                            cooler.get_socket_compatibility(), cooler.get_lightning(), cooler.get_num_of_fans(),
+                            cooler.get_fan_diameter(), cooler.get_fan_speed(), cooler.get_noise_level(), cooler_size)

@@ -28,8 +28,7 @@ class Motherboard(Product):
         self.depth: float = depth
 
     def print_product_specs(self):
-        super().print_common()
-        print("--- SPECS ---")
+        super().print_product_specs()
         print("Standard:", self.standard)
         print("Chipset:", self.chipset)
         print("CPU socket:", self.cpu_socket)
