@@ -116,7 +116,7 @@ class ProductParser:
             product = self.parse_case(product, spec_rows)
         elif cat_url in UrlCategory.AIR_COOLER or cat_url in UrlCategory.LIQUID_COOLER:
             product = self.parse_cooler(product, spec_rows)
-        if cat_url in UrlCategory.SSD or cat_url in UrlCategory.HDD:
+        elif cat_url in UrlCategory.SSD or cat_url in UrlCategory.HDD:
             product = self.parse_drive(product, spec_rows)
 
         if ProductValidator.validate(product):

@@ -43,11 +43,9 @@ if __name__ == "__main__":
             continue
         elif prod.get_ean() in products.keys():
             log_duplicate()
-            if len(prod.get_description()) > len(products[prod.get_ean()].get_description()):
-                products[prod.get_ean()] = prod
-            else:
-                products[prod.get_ean()] = prod
-                json.save_product(link, prod)
+        else:
+            products[prod.get_ean()] = prod
+            json.save_product(link, prod)
 
     for prod in products.values():
         prod.print_product_specs()
