@@ -231,8 +231,10 @@ class ProductParser:
         standard = CommonUtils.get_value_from_spec_row(spec_rows, "Standard płyty")
         chipset = CommonUtils.get_value_from_spec_row(spec_rows, "Chipset płyty")
         cpu_socket = CommonUtils.get_value_from_spec_row(spec_rows, "Gniazdo procesora")
-        if cpu_socket is not None:
-            cpu_socket = cpu_socket.split(",")[1]
+        if cpu_socket is not None and CommonUtils.translate_to_bool(cpu_socket, custom_str_key="socket"):
+            cpu_socket = cpu_socket.split(" ")[1]
+        else:
+            cpu_socket = None
         memory_standard = CommonUtils.get_value_from_spec_row(spec_rows, "Standard pamięci")
 
         spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Liczba slotów pamięci")
