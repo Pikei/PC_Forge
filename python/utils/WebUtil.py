@@ -205,6 +205,8 @@ class WebUtil:
         paragraphs = self.get_elements(By.TAG_NAME, "p", row, False)
         unordered_lists = self.get_elements(By.TAG_NAME, "ul", row, False)
         ordered_lists = self.get_elements(By.TAG_NAME, "ol", row, False)
+        if len(unordered_lists) == 0 and len(ordered_lists) == 0 and len(paragraphs) == 0:
+            return ""
         return header + CommonUtils.sort_elements_in_desc_row_by_position(paragraphs, unordered_lists, ordered_lists)
 
     def save_image(self, category: str, producer: str, ean: str):
