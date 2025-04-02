@@ -563,6 +563,9 @@ class JsonUtil:
             "price": hdd.get_price(),
             "producer_code": hdd.get_producer_code(),
             "EAN": hdd.get_ean(),
+            "drive_format": hdd.get_drive_format(),
+            "storage": hdd.get_storage(),
+            "interface": hdd.get_interface(),
             "rotational_speed": hdd.get_rotational_speed(),
         }
 
@@ -576,6 +579,9 @@ class JsonUtil:
             "price": ssd.get_price(),
             "producer_code": ssd.get_producer_code(),
             "EAN": ssd.get_ean(),
+            "drive_format": ssd.get_drive_format(),
+            "storage": ssd.get_storage(),
+            "interface": ssd.get_interface(),
             "read_speed": ssd.get_read_speed(),
             "write_speed": ssd.get_write_speed()
         }

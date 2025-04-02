@@ -412,7 +412,7 @@ class ProductParser:
 
         spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Zabezpieczenia")
         if spec_value is not None:
-            spec_value.strip().replace("\n", "")
+            spec_value.replace("\n", "").strip()
         protections: list[str] = []
         if CommonUtils.translate_to_bool(spec_value):
             protections = spec_value.split(",")
@@ -726,7 +726,7 @@ class ProductParser:
 
         spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Pojemność dysku")
         storage: int = CommonUtils.extract_int(spec_value)
-        if "TB" in spec_value:
+        if spec_value is not None and "TB" in spec_value:
             storage = storage * 1024
 
         interface: str = CommonUtils.get_value_from_spec_row(spec_rows, "Interfejs")
