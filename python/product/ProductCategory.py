@@ -2,6 +2,19 @@ from enum import StrEnum
 
 
 class ProductCategory(StrEnum):
+    """
+    Klasa enumeracyjna kodów produktów.
+    :param CASE: kod obudowy komputerowej
+    :param AIR_COOLER: kod chłodzenia powietrznego do procesora
+    :param LIQUID_COOLER: kod chłodzenia cieczą do procesora
+    :param GPU: kod karty graficznej
+    :param SSD: kod dysku Solid State Drive
+    :param HDD: kod dysku Hard Disk Drive
+    :param MB: kod płyty głównej
+    :param POWER_SUPPLY: kod zasilacza komputerowego
+    :param CPU: kod procesora
+    :param RAM: kod pamięci RAM
+    """
     CASE = "CASE"
     AIR_COOLER = "AIR_COOLER"
     LIQUID_COOLER = "LIQUID_COOLER"
@@ -15,6 +28,19 @@ class ProductCategory(StrEnum):
 
 
 class UrlCategory(StrEnum):
+    """
+    Klasa enumeracyjna zawierająca linki do kategorii produktów.
+    :param CASE: adres URL do kategorii ``Procesory`` na stronie https://www.morele.net
+    :param AIR_COOLER: adres URL do kategorii ``Pamięci RAM`` na stronie https://www.morele.net
+    :param LIQUID_COOLER: adres URL do kategorii ``Płyty główne`` na stronie https://www.morele.net
+    :param GPU: adres URL do kategorii ``Karty graficzne`` na stronie https://www.morele.net
+    :param SSD: adres URL do kategorii ``Zasilacze komputerowe ATX`` na stronie https://www.morele.net
+    :param HDD: adres URL do kategorii ``Obudowy`` na stronie https://www.morele.net
+    :param MB: adres URL do kategorii ``Chłodzenie CPU`` na stronie https://www.morele.net
+    :param POWER_SUPPLY: adres URL do kategorii ``Chłodzenie wodne - zestawy Do procesora`` na stronie https://www.morele.net
+    :param CPU: adres URL do kategorii ``Dyski SSD`` na stronie https://www.morele.net
+    :param RAM: adres URL do kategorii ``Dyski HDD`` na stronie https://www.morele.net
+    """
     CPU = "https://www.morele.net/kategoria/procesory-45/"
     RAM = "https://www.morele.net/kategoria/pamieci-ram-38/"
     MB = "https://www.morele.net/kategoria/plyty-glowne-42/"
