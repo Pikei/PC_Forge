@@ -1,7 +1,35 @@
+import sqlalchemy
+from sqlalchemy import ForeignKey, Column
+from sqlalchemy.dialects.postgresql import JSONB
+
 from product.Product import Product
 
 
 class PowerSupply(Product):
+    __tablename__ = "power_supply"
+    ean = Column("ean", ForeignKey("product.ean", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True,
+                 nullable=False)
+    standard = Column("standard", sqlalchemy.VARCHAR(255), nullable=False)
+    power = Column("power", sqlalchemy.Integer, nullable=False)
+    efficiency_certificate = Column("efficiency_certificate", sqlalchemy.VARCHAR(255), nullable=False)
+    efficiency = Column("efficiency", sqlalchemy.Integer, nullable=False)
+    cooling_type = Column("cooling_type", sqlalchemy.VARCHAR(255), nullable=False)
+    fan_diameter = Column("fan_diameter", sqlalchemy.Integer, nullable=False)
+    modular_cabling = Column("modular_cabling", sqlalchemy.Boolean, nullable=False)
+    atx24 = Column("atx24", sqlalchemy.Integer, nullable=False)
+    pcie16 = Column("pcie16", sqlalchemy.Integer, nullable=False)
+    pcie8 = Column("pcie8", sqlalchemy.Integer, nullable=False)
+    pcie6 = Column("pcie6", sqlalchemy.Integer, nullable=False)
+    cpu8 = Column("cpu8", sqlalchemy.Integer, nullable=False)
+    cpu4 = Column("cpu4", sqlalchemy.Integer, nullable=False)
+    sata = Column("sata", sqlalchemy.Integer, nullable=False)
+    molex = Column("molex", sqlalchemy.Integer, nullable=False)
+    height = Column("height", sqlalchemy.Integer, nullable=False)
+    width = Column("width", sqlalchemy.Integer, nullable=False)
+    depth = Column("depth", sqlalchemy.Integer, nullable=False)
+    lightning = Column("lightning", sqlalchemy.Boolean, nullable=False)
+    protections = Column("protections", sqlalchemy.ARRAY(JSONB), nullable=False)
+
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
                  ean: int,
                  standard: str, power: int, efficiency_certificate: str, efficiency: int, cooling_type: str,

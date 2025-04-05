@@ -1,7 +1,27 @@
-from product.Product import Product
+import sqlalchemy
+from sqlalchemy import Column, ForeignKey
 
+from product.Product import Product, Base
+
+
+class CoolerCpuCompatibility(Base):
+    __tablename__ = "cooler_socket_compatibility"
+    socket_id = Column("socket_id", ForeignKey("cpu_socket.socket_id", ondelete="CASCADE", onupdate="CASCADE"),
+                       primary_key=True, nullable=False)
+    ean = Column("ean", ForeignKey("cooler.ean", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True,
+                 nullable=False)
 
 class Cooler(Product):
+    __tablename__ = "cooler"
+    ean = Column("ean", ForeignKey("product.ean", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True,
+                 nullable=False)
+    lightning = Column("lightning", sqlalchemy.Boolean, nullable=False)
+    num_of_fans = Column("fans", sqlalchemy.Integer, nullable=False)
+    fan_diameter = Column("fan_diameter", sqlalchemy.Integer, nullable=False)
+    fan_speed = Column("fan_speed", sqlalchemy.Integer, nullable=False)
+    noise_level = Column("noise_level", sqlalchemy.Float, nullable=False)
+
+
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
                  ean: int,
                  socket_compatibility: list[str], lightning: bool, num_of_fans: int, fan_diameter: int, fan_speed: int,
@@ -61,6 +81,16 @@ class Cooler(Product):
 
 
 class AirCooler(Cooler):
+    __tablename__ = "air_cooler"
+    ean = Column("ean", ForeignKey("cooler.ean", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True,
+                 nullable=False)
+    vertical_installation = Column("vertical_installation", sqlalchemy.Boolean, nullable=False)
+    height = Column("height", sqlalchemy.Integer, nullable=False)
+    width = Column("width", sqlalchemy.Integer, nullable=False)
+    depth = Column("depth", sqlalchemy.Integer, nullable=False)
+    base_material = Column("base_material", sqlalchemy.VARCHAR(255), nullable=False)
+    num_of_heat_pipes = Column("heat_pipes", sqlalchemy.Integer, nullable=False)
+    heat_pipe_diameter = Column("heat_pipe_diameter", sqlalchemy.Integer, nullable=False)
 
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
                  ean: int,
@@ -134,6 +164,10 @@ class AirCooler(Cooler):
 
 
 class LiquidCooler(Cooler):
+    __tablename__ = "liquid_cooler"
+    ean = Column("ean", ForeignKey("cooler.ean", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True,
+                 nullable=False)
+    cooler_size = Column("cooler_size", sqlalchemy.Integer, nullable=False)
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
                  ean: int,
                  socket_compatibility: list[str], lightning: bool, num_of_fans: int, fan_diameter: int, fan_speed: int,

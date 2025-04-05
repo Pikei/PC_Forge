@@ -191,7 +191,7 @@ class ProductParser:
         product.set_name(product.get_name()[:product.get_name().find(",")])
         product.set_description(self.get_product_description(product.get_name()))
         line = CommonUtils.get_value_from_spec_row(spec_rows, "Linia")
-        memory_type = CommonUtils.get_value_from_spec_row(spec_rows, "Liczba modułów")
+        memory_type = CommonUtils.get_value_from_spec_row(spec_rows, "Typ pamięci")
 
         # Pojemność łączna na stronie wylistowana jest w Gigabajtach [GB].
         # Jednak w bardzo rzadkich przypadkach jest to jednostka Megabajtów [MB]. Aby uniknąć zapisu wszystkich wartości

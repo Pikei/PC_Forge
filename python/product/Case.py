@@ -1,7 +1,52 @@
-from product.Product import Product
+import sqlalchemy
+from sqlalchemy import Column, ForeignKey
 
+from product.Product import Product, Base
+
+
+class CaseMotherboardCompatibility(Base):
+    __tablename__ = "case_mb_compatibility"
+    standard_id = Column("standard_id",
+                         ForeignKey("motherboard_standard.standard_id", ondelete="CASCADE", onupdate="CASCADE"),
+                         primary_key=True, nullable=False)
+    ean = Column("ean", ForeignKey("product.ean", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True,
+                 nullable=False)
 
 class Case(Product):
+    __tablename__ = "pc_case"
+    ean = Column("ean", ForeignKey("product.ean", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True,
+                 nullable=False)
+    color = Column("color", sqlalchemy.VARCHAR(255), nullable=False)
+    lightning = Column("lightning", sqlalchemy.Boolean, nullable=False)
+    height = Column("height", sqlalchemy.Float, nullable=False)
+    width = Column("width", sqlalchemy.Float, nullable=False)
+    depth = Column("depth", sqlalchemy.Float, nullable=False)
+    weight = Column("weight", sqlalchemy.Float, nullable=False)
+    case_type = Column("case_type", sqlalchemy.VARCHAR(255), nullable=False)
+    window = Column("has_window", sqlalchemy.Boolean, nullable=False)
+    card_reader = Column("card_reader", sqlalchemy.Boolean, nullable=False)
+    microphone_connector = Column("microphone_connector", sqlalchemy.Boolean, nullable=False)
+    headphones_connector = Column("headphones_connector", sqlalchemy.Boolean, nullable=False)
+    num_of_internal_25_bays = Column("internal_25_bays", sqlalchemy.Integer, nullable=False)
+    num_of_internal_35_bays = Column("internal_35_bays", sqlalchemy.Integer, nullable=False)
+    num_of_external_35_bays = Column("external_35_bays", sqlalchemy.Integer, nullable=False)
+    num_of_external_525_bays = Column("external_525_bays", sqlalchemy.Integer, nullable=False)
+    num_of_extension_slot = Column("extension_slots", sqlalchemy.Integer, nullable=False)
+    max_gpu_length = Column("max_gpu_length", sqlalchemy.Float, nullable=False)
+    max_cpu_cooler_height = Column("max_cpu_cooler_height", sqlalchemy.Float, nullable=False)
+    usb20 = Column("usb_20", sqlalchemy.Integer, nullable=False)
+    usb30 = Column("usb_30", sqlalchemy.Integer, nullable=False)
+    usb31 = Column("usb_31", sqlalchemy.Integer, nullable=False)
+    usb32 = Column("usb_32", sqlalchemy.Integer, nullable=False)
+    usbc = Column("usb_c", sqlalchemy.Integer, nullable=False)
+    front_fans = Column("front_fans", sqlalchemy.VARCHAR(255), nullable=False)
+    back_fans = Column("back_fans", sqlalchemy.VARCHAR(255), nullable=False)
+    side_fans = Column("side_fans", sqlalchemy.VARCHAR(255), nullable=False)
+    bottom_fans = Column("bottom_fans", sqlalchemy.VARCHAR(255), nullable=False)
+    top_fans = Column("top_fans", sqlalchemy.VARCHAR(255), nullable=False)
+    power_supply = Column("power_supply", sqlalchemy.Boolean, nullable=False)
+    ps_power = Column("ps_power", sqlalchemy.Integer, nullable=False)
+
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
                  ean: int,
                  color: str, lightning: bool, height: float, width: float, depth: float, weight: float, case_type: str,

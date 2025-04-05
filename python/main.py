@@ -1,5 +1,9 @@
+import sys
+
 from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
+
+from utils.DatabaseUtil import DatabaseUtil
 from utils.JsonUtil import JsonUtil
 from utils.ProductParser import ProductParser
 from product.Product import Product
@@ -7,19 +11,17 @@ from product.ProductCategory import UrlCategory
 from utils.WebUtil import WebUtil
 
 
-def log_duplicate():
+def log_duplicate(new_product, saved_product):
     print("=============================================")
-    print("WARNING: Duplicate", prod.get_ean())
+    print("WARNING: Duplicate", new_product.get_ean())
     print("------------------- SAVED -------------------")
-    products[prod.get_ean()].print_product_specs()
+    saved_product.print_product_specs()
     print("------------------- PARSED -------------------")
-    prod.print_product_specs()
+    new_product.print_product_specs()
     print("=============================================")
 
 
-if __name__ == "__main__":
-    json = JsonUtil()
-    products: dict[str:Product] = json.load_saved_products()
+def scrape_data(products: dict[int:Product]):
     options = Options()
     options.add_argument("--headless")
     options.add_argument("--window-size=1920,1080")
@@ -41,14 +43,23 @@ if __name__ == "__main__":
         prod = parser.parse_product(link)
         if prod is None:
             continue
-        elif prod.get_ean() in products.keys():
-            log_duplicate()
+        elif prod.get_producer_code() in products.keys():
+            log_duplicate(prod, products[prod.get_producer_code()])
         else:
-            products[prod.get_ean()] = prod
+            products[prod.get_producer_code()] = prod
             json.save_product(link, prod)
-
-    for prod in products.values():
-        prod.print_product_specs()
-
-    print("Parsed products: " + str(len(products)) + "/" + str(len(all_links)))
     driver.quit()
+    print("Parsed products: " + str(len(products)) + "/" + str(len(all_links)))
+
+
+if __name__ == "__main__":
+    json = JsonUtil()
+    products: dict[int:Product] = json.load_saved_products()
+    if "--scrape-new-data" in sys.argv:
+        scrape_data(products)
+    if "--print-specs" in sys.argv:
+        for prod in products.values():
+            prod.print_product_specs()
+
+    db_util = DatabaseUtil(products)
+    db_util.add_products_to_database()

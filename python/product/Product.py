@@ -1,4 +1,21 @@
-class Product:
+import sqlalchemy
+from sqlalchemy import Column
+from sqlalchemy.orm import declarative_base
+
+Base = declarative_base()
+
+
+class Product(Base):
+    __tablename__ = "product"
+    ean = Column("ean", sqlalchemy.BIGINT, primary_key=True, autoincrement=False, nullable=False, unique=True)
+    name = Column("name", sqlalchemy.VARCHAR(255), nullable=False)
+    description = Column("description", sqlalchemy.TEXT, nullable=False)
+    price = Column("price", sqlalchemy.FLOAT, nullable=False)
+    producer_code = Column("producer_code", sqlalchemy.VARCHAR(255), nullable=False, unique=True)
+    producer = Column("producer", sqlalchemy.VARCHAR(255), nullable=False)
+    category = Column("category", sqlalchemy.VARCHAR(50), nullable=False)
+
+
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
                  ean: int):
         self.name: str = name

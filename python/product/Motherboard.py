@@ -1,7 +1,36 @@
-from product.Product import Product
+import sqlalchemy
+from sqlalchemy import Column, ForeignKey
+from product.Product import Product, Base
+from sqlalchemy.dialects.postgresql import JSONB
 
+
+class MB_Standard(Base):
+    __tablename__ = "motherboard_standard"
+    id = Column("standard_id", sqlalchemy.Integer, primary_key=True, autoincrement=True)
+    name = Column("standard_name", sqlalchemy.VARCHAR(255), nullable=False)
 
 class Motherboard(Product):
+    __tablename__ = "motherboard"
+    ean = Column("ean", ForeignKey("product.ean", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True,
+                 nullable=False)
+    standard_id = Column("standard_id", ForeignKey("motherboard_standard.standard_id"), nullable=False)
+    chipset = Column("chipset", sqlalchemy.VARCHAR(255), nullable=False)
+    memory_standard = Column("memory_standard", sqlalchemy.VARCHAR(255), nullable=False)
+    number_of_memory_slots = Column("memory_slots", sqlalchemy.Integer, nullable=False)
+    max_memory_capacity = Column("max_memory_capacity", sqlalchemy.Integer, nullable=False)
+    integrated_audio_card = Column("integrated_audio_card", sqlalchemy.VARCHAR(255), nullable=False)
+    audio_channels = Column("audio_channels", sqlalchemy.Float, nullable=False)
+    integrated_network_card = Column("integrated_network_card", sqlalchemy.VARCHAR(255), nullable=False)
+    bluetooth = Column("bluetooth", sqlalchemy.Boolean, nullable=False)
+    wifi = Column("wifi", sqlalchemy.Boolean, nullable=False)
+    width = Column("width", sqlalchemy.Float, nullable=False)
+    depth = Column("depth", sqlalchemy.Float, nullable=False)
+    socket_id = Column("socket_id", ForeignKey("cpu_socket.socket_id"), nullable=False)
+    expansion_slots = Column("expansion_slots", sqlalchemy.ARRAY(JSONB), nullable=False)
+    drive_interfaces = Column("drive_interfaces", sqlalchemy.ARRAY(JSONB), nullable=False)
+    outside_connectors = Column("outside_connectors", sqlalchemy.ARRAY(JSONB), nullable=False)
+    supported_memory_frequencies = Column("supported_memory_frequencies", sqlalchemy.ARRAY(JSONB), nullable=False)
+
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
                  ean: int,
                  standard: str, chipset: str, cpu_socket: str, memory_standard: str, number_of_memory_slots: int,
@@ -27,6 +56,8 @@ class Motherboard(Product):
         self.outside_connectors: list[str] = outside_connectors
         self.width: float = width
         self.depth: float = depth
+        self.standard_id = None
+        self.socket_id = None
 
     def print_product_specs(self):
         super().print_product_specs()
@@ -150,3 +181,15 @@ class Motherboard(Product):
 
     def set_depth(self, depth: float):
         self.depth = depth
+
+    def get_standard_id(self):
+        return self.standard_id
+
+    def set_standard_id(self, standard_id: int):
+        self.standard_id = standard_id
+
+    def get_socket_id(self):
+        return self.socket_id
+
+    def set_socket_id(self, socket_id: int):
+        self.socket_id = socket_id

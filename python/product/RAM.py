@@ -1,7 +1,21 @@
+import sqlalchemy
+from sqlalchemy import Column, ForeignKey
+
 from product.Product import Product
 
 
 class RAM(Product):
+    __tablename__ = "ram"
+    ean = Column("ean", ForeignKey("product.ean", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True,
+                 nullable=False)
+    line = Column("line", sqlalchemy.VARCHAR(255), nullable=False)
+    memory_type = Column("memory_type", sqlalchemy.VARCHAR(255), nullable=False)
+    total_capacity = Column("total_capacity", sqlalchemy.Integer, nullable=False)
+    number_of_modules = Column("number_of_modules", sqlalchemy.Integer, nullable=False)
+    latency = Column("latency", sqlalchemy.Integer, nullable=False)
+    lighting = Column("lighting", sqlalchemy.Integer, nullable=False)
+    frequency = Column("frequency", sqlalchemy.Integer, nullable=False)
+
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
                  ean: int,
                  line: str, memory_type: str, total_capacity: int, number_of_modules: int, frequency: int, latency: str,
