@@ -3,7 +3,7 @@ from product.Cooler import AirCooler, LiquidCooler
 from product.Drive import SolidStateDrive, HardDiskDrive
 from product.GraphicsCard import GraphicsCard
 from product.Motherboard import Motherboard
-from product.PowerSuppy import PowerSupply
+from product.PowerSupply import PowerSupply
 from product.Processor import Processor
 from product.Product import Product
 from product.ProductCategory import ProductCategory
@@ -11,14 +11,28 @@ from product.RAM import RAM
 
 
 class ProductValidator:
+    """
+    Klasa odpowiedzialna za walidację pobranych danych o produktach
+    """
 
     @staticmethod
     def log_error(message):
+        """
+        Wypisuje wiadomość błędu walidacji produktu i zwraca False
+        :param message: wiadomość błędu walidacji produktu
+        :return: False
+        """
         print("ERROR:", message)
         return False
 
     @staticmethod
     def validate(product: Product):
+        """
+        Waliduje dane wspólne dla wszystkich typów produktów i wywołuje odpowiednie metody walidujące dane
+        specyficzne dla produktów w danych kategoriach
+        :param product: obiekt klasy rozszerzającej ``Product``
+        :return: **True** jeśli dane są poprawne, **False** w przeciwnym razie
+        """
         if product is None:
             return False
         if product.get_name() is None or product.get_name() == '':
@@ -61,6 +75,11 @@ class ProductValidator:
 
     @staticmethod
     def validate_cpu(cpu: Product):
+        """
+        Waliduje dane dla procesorów
+        :param cpu: obiekt klasy rozszerzającej ``Product``
+        :return: **True** jeśli dane są poprawne, **False** w przeciwnym razie
+        """
         if isinstance(cpu, Processor):
             if cpu.get_line() is None or cpu.get_line() == '':
                 return ProductValidator.log_error("Could not find line")
@@ -93,6 +112,11 @@ class ProductValidator:
 
     @staticmethod
     def validate_ram(ram: Product):
+        """
+        Waliduje dane dla pamięci RAM
+        :param ram: obiekt klasy rozszerzającej ``Product``
+        :return: **True** jeśli dane są poprawne, **False** w przeciwnym razie
+        """
         if isinstance(ram, RAM):
             if ram.get_line() is None or ram.get_line() == '':
                 return ProductValidator.log_error("Could not find line")
@@ -115,6 +139,11 @@ class ProductValidator:
 
     @staticmethod
     def validate_motherboard(mb: Product):
+        """
+        Waliduje dane dla płyt głównych
+        :param mb: obiekt klasy rozszerzającej ``Product``
+        :return: **True** jeśli dane są poprawne, **False** w przeciwnym razie
+        """
         if isinstance(mb, Motherboard):
             if mb.get_standard() is None or mb.get_standard() == "":
                 return ProductValidator.log_error("Could not find motherboard standard")
@@ -157,6 +186,11 @@ class ProductValidator:
 
     @staticmethod
     def validate_gpu(gpu: Product):
+        """
+        Waliduje dane dla kart graficznych
+        :param gpu: obiekt klasy rozszerzającej ``Product``
+        :return: **True** jeśli dane są poprawne, **False** w przeciwnym razie
+        """
         if isinstance(gpu, GraphicsCard):
             if gpu.get_chipset_producer() is None or gpu.get_chipset_producer() == "":
                 return ProductValidator.log_error("Could not find Chipset producer")
@@ -207,6 +241,11 @@ class ProductValidator:
 
     @staticmethod
     def validate_power_supply(ps: Product):
+        """
+        Waliduje dane dla zasilaczy komputerowych
+        :param ps: obiekt klasy rozszerzającej ``Product``
+        :return: **True** jeśli dane są poprawne, **False** w przeciwnym razie
+        """
         if isinstance(ps, PowerSupply):
             if ps.get_standard() is None or ps.get_standard() == "":
                 return ProductValidator.log_error("Could not find standard")
@@ -253,6 +292,11 @@ class ProductValidator:
 
     @staticmethod
     def validate_case(case: Product):
+        """
+        Waliduje dane dla obudów komputerowych
+        :param case: obiekt klasy rozszerzającej ``Product``
+        :return: **True** jeśli dane są poprawne, **False** w przeciwnym razie
+        """
         if isinstance(case, Case):
             if case.get_color() is None or case.get_color() == "":
                 return ProductValidator.log_error("Could not find color")
@@ -322,7 +366,12 @@ class ProductValidator:
         return True
 
     @staticmethod
-    def validate_air_cooler(cooler):
+    def validate_air_cooler(cooler: Product):
+        """
+        Waliduje dane dla układów chłodzenia powietrzem dla procesorów
+        :param cooler: obiekt klasy rozszerzającej ``Product``
+        :return: **True** jeśli dane są poprawne, **False** w przeciwnym razie
+        """
         if isinstance(cooler, AirCooler):
             if cooler.get_socket_compatibility() is None or len(cooler.get_socket_compatibility()) == 0:
                 return ProductValidator.log_error("Could not find socket compatibility")
@@ -352,7 +401,12 @@ class ProductValidator:
         return True
 
     @staticmethod
-    def validate_liquid_cooler(cooler):
+    def validate_liquid_cooler(cooler: Product):
+        """
+        Waliduje dane dla układów chłodzenia cieczą dla procesorów
+        :param cooler: obiekt klasy rozszerzającej ``Product``
+        :return: **True** jeśli dane są poprawne, **False** w przeciwnym razie
+        """
         if isinstance(cooler, LiquidCooler):
             if cooler.get_socket_compatibility() is None or len(cooler.get_socket_compatibility()) == 0:
                 return ProductValidator.log_error("Could not find socket compatibility")
@@ -370,7 +424,12 @@ class ProductValidator:
         return True
 
     @staticmethod
-    def validate_ssd(ssd):
+    def validate_ssd(ssd: Product):
+        """
+        Waliduje dane dla dysków SSD
+        :param ssd: obiekt klasy rozszerzającej ``Product``
+        :return: **True** jeśli dane są poprawne, **False** w przeciwnym razie
+        """
         if isinstance(ssd, SolidStateDrive):
             if ssd.get_drive_format() is None or ssd.get_drive_format() == "":
                 return ProductValidator.log_error("Could not find drive format")
@@ -388,7 +447,12 @@ class ProductValidator:
         return True
 
     @staticmethod
-    def validate_hdd(hdd):
+    def validate_hdd(hdd: Product):
+        """
+        Waliduje dane dla dysków HDD
+        :param hdd: obiekt klasy rozszerzającej ``Product``
+        :return: **True** jeśli dane są poprawne, **False** w przeciwnym razie
+        """
         if isinstance(hdd, HardDiskDrive):
             if hdd.get_drive_format() is None or hdd.get_drive_format() == "":
                 return ProductValidator.log_error("Could not find drive format")

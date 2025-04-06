@@ -5,7 +5,7 @@ from product.Cooler import Cooler, AirCooler, LiquidCooler
 from product.Drive import Drive, SolidStateDrive, HardDiskDrive
 from product.GraphicsCard import GraphicsCard
 from product.Motherboard import Motherboard
-from product.PowerSuppy import PowerSupply
+from product.PowerSupply import PowerSupply
 from product.Processor import Processor
 from product.Product import Product
 from product.ProductCategory import UrlCategory, ProductCategory
@@ -369,8 +369,7 @@ class ProductParser:
 
         return GraphicsCard(product.get_name(), product.get_producer(), product.get_category(),
                             product.get_description(), product.get_price(), product.get_producer_code(),
-                            product.get_ean(),
-                            chipset_producer, chipset, core_frequency, max_core_frequency,
+                            product.get_ean(), chipset_producer, chipset, core_frequency, max_core_frequency,
                             stream_processors, rop_units, texturing_units, rt_cores, tensor_cores,
                             dlss, connector, card_length, resolution, recommended_ps, lightning,
                             ram, ram_type, data_bus, memory_freq, cooling_type, number_of_fans)

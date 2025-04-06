@@ -10,8 +10,16 @@ from product.Product import Product
 from product.ProductCategory import UrlCategory
 from utils.WebUtil import WebUtil
 
+SCRAPE_DATA = "--scrape-new-data"
+PRINT_SPECS = "--print-specs"
+
 
 def log_duplicate(new_product, saved_product):
+    """
+    Wypisuje dane o duplikatach.
+    :param new_product: przetworzony produkt
+    :param saved_product: zapisany produkt
+    """
     print("=============================================")
     print("WARNING: Duplicate", new_product.get_ean())
     print("------------------- SAVED -------------------")
@@ -22,6 +30,10 @@ def log_duplicate(new_product, saved_product):
 
 
 def scrape_data(products: dict[int:Product]):
+    """
+    Pobiera nowe dane ze strony. Wywoływana tylko z parametrem startowym ``SCRAPE_DATA``
+    :param products: słownik zapisanych obiektów
+    """
     options = Options()
     options.add_argument("--headless")
     options.add_argument("--window-size=1920,1080")
@@ -55,9 +67,9 @@ def scrape_data(products: dict[int:Product]):
 if __name__ == "__main__":
     json = JsonUtil()
     products: dict[int:Product] = json.load_saved_products()
-    if "--scrape-new-data" in sys.argv:
+    if SCRAPE_DATA in sys.argv:
         scrape_data(products)
-    if "--print-specs" in sys.argv:
+    if PRINT_SPECS in sys.argv:
         for prod in products.values():
             prod.print_product_specs()
 

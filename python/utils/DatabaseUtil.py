@@ -17,10 +17,22 @@ session = Session()
 
 
 class DatabaseUtil:
+    """
+    Klasa odpowiedzialna za dodanie produktów do bazy danych
+    """
+
     def __init__(self, products: dict[int:Product]):
+        """
+        Konstruktor klasy ``DatabaseUtil``
+        :param products: słownik zawierający obiekty klas dziedziczących z klasy ``Product``
+        """
         self.products = products
 
     def add_products_to_database(self):
+        """
+        Metoda dodająca produkty do bazy danych, jeśli te jeszcze się tam nie znajdują. W zależności od instancji produktu
+        wywołuje metody odpowiedzialne za pozyskanie identyfikatorów w relacjach między tabelami.
+        """
         counter = 0
         for prod in self.products.values():
             counter = counter + 1
@@ -54,6 +66,12 @@ class DatabaseUtil:
 
     @staticmethod
     def get_or_create_socket(socket):
+        """
+        Sprawdza, czy w bazie danych, w tabeli ``cpu_socket`` znajduje się wiersz posiadający nazwę przesłanego
+        gniazda procesora i zwraca identyfikator tego wiersza. Jeśli wiersz nie istnieje, to zostaje on dodany.
+        :param socket: Nazwa poszukiwanego w bazie danych gniazda procesora
+        :return: identyfikator gniazda procesora
+        """
         db_socket = session.query(CpuSocket).filter_by(name=socket).first()
         if db_socket:
             return db_socket.id
@@ -65,6 +83,12 @@ class DatabaseUtil:
 
     @staticmethod
     def get_or_create_mb_standard(standard):
+        """
+        Sprawdza, czy w bazie danych, w tabeli ``motherboard_standard`` znajduje się wiersz posiadający nazwę przesłanego
+        standardu płyty głównej i zwraca identyfikator tego wiersza. Jeśli wiersz nie istnieje, to zostaje on dodany.
+        :param standard: Nazwa poszukiwanego w bazie danych standardu płyty głównej
+        :return: identyfikator standardu płyty głównej
+        """
         db_standard = session.query(MB_Standard).filter_by(name=standard).first()
         if db_standard:
             return db_standard.id
@@ -76,6 +100,11 @@ class DatabaseUtil:
 
     @staticmethod
     def mb_case_compatibility(ean, compatibility_list):
+        """
+        Metoda dodająca wiersze do tabeli ``case_mb_compatibility`` będącej relacją wiele do wielu
+        :param ean: EAN obudowy
+        :param compatibility_list: lista kompatybilnych standardów płyt głównych
+        """
         db_standards = session.query(MB_Standard).all()
         for standard in db_standards:
             if standard.name in compatibility_list:
@@ -84,6 +113,13 @@ class DatabaseUtil:
 
     @staticmethod
     def cooler_socket_compatibility(ean, compatibility_list):
+        """
+        Metoda dodająca wiersze do tabeli ``cooler_socket_compatibility`` będącej relacją wiele do wielu
+        oraz do tabeli ``cpu_socket`` jeśli w liście kompatybilnych gniazd procesora znajduje się socket
+        jeszcze nieistniejący w bazie danych.
+        :param ean: EAN układu chłodzenia
+        :param compatibility_list: lista kompatybilnych gniazd procesora
+        """
         db_sockets = session.query(CpuSocket).all()
         for comp in compatibility_list:
             if comp not in db_sockets:
@@ -98,6 +134,12 @@ class DatabaseUtil:
 
     @staticmethod
     def get_or_create_drive_interface(drive_interface):
+        """
+        Sprawdza, czy w bazie danych, w tabeli ``drive_interfaces`` znajduje się wiersz posiadający nazwę przesłanego
+        interfejsu dysku i zwraca identyfikator tego wiersza. Jeśli wiersz nie istnieje, to zostaje on dodany.
+        :param drive_interface: Nazwa poszukiwanego w bazie danych interfejsu dysku
+        :return: identyfikator interfejsu dysku
+        """
         db_interface = session.query(DriveInterfaces).filter_by(name=drive_interface).first()
         if db_interface:
             return db_interface.id

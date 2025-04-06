@@ -6,7 +6,7 @@ from product.Cooler import AirCooler, LiquidCooler
 from product.Drive import HardDiskDrive, SolidStateDrive
 from product.GraphicsCard import GraphicsCard
 from product.Motherboard import Motherboard
-from product.PowerSuppy import PowerSupply
+from product.PowerSupply import PowerSupply
 from product.Processor import Processor
 from product.Product import Product
 from product.ProductCategory import ProductCategory
@@ -15,13 +15,25 @@ from utils.CommonUtils import CommonUtils
 
 
 class JsonUtil:
+    """
+    Klasa odpowiedzialna za odczytywanie i zapisywanie obiektów do pliku JSON
+    """
+
     def __init__(self):
+        """
+        Konstruktor klasy ``JsonUtil``. Ustawia nazwę pliku docelowego i ścieżkę do niego
+        """
         file_name = "saved_products.json"
         self.json_path = os.path.join(os.getcwd(), "json", file_name)
         self.parsed_urls = {}
         CommonUtils.directory_exists("json")
 
     def save_product(self, url: str, product: Product):
+        """
+        Metoda zapisująca produkt w pliku JSON
+        :param url: adres URL do oryginalnej strony z produktem
+        :param product: obiekt klasy rozszerzającej z klasy ``Product``
+        """
         data_to_save = {}
         data = []
         data_to_save["url"] = url
@@ -38,6 +50,10 @@ class JsonUtil:
                 json.dump(data, json_file, indent=4)
 
     def load_saved_products(self):
+        """
+        Metoda ładująca słownik produktów z pliku JSON
+        :return: słownik obiektów klas rozszerzających ``Product``
+        """
         products: dict[str:Product] = {}
         if not os.path.exists(self.json_path):
             return {}
@@ -49,6 +65,12 @@ class JsonUtil:
         return products
 
     def parse_json_to_product(self, product_json):
+        """
+        Wywołuje odpowiednią metodę do przetworzenia obiektu w pliku JSON na obiekt korelującej klasy,
+        w zależności od kategorii produktu
+        :param product_json: obiekt w pliku JSON
+        :return:
+        """
         match product_json["category"]:
             case ProductCategory.CPU:
                 return self.parse_json_to_cpu(product_json)
@@ -73,6 +95,11 @@ class JsonUtil:
 
     @staticmethod
     def parse_json_to_cpu(product_json):
+        """
+        Przetwarza obiekt JSON na obiekt klasy ``Processor``
+        :param product_json: obiekt JSON
+        :return: obiekt klasy ``Processor``
+        """
         return Processor(product_json["name"],
                          product_json["producer"],
                          product_json["category"],
@@ -95,6 +122,11 @@ class JsonUtil:
 
     @staticmethod
     def parse_json_to_ram(product_json):
+        """
+        Przetwarza obiekt JSON na obiekt klasy ``RAM``
+        :param product_json: obiekt JSON
+        :return: obiekt klasy ``RAM``
+        """
         return RAM(product_json["name"],
                    product_json["producer"],
                    product_json["category"],
@@ -112,6 +144,11 @@ class JsonUtil:
 
     @staticmethod
     def parse_json_to_motherboard(product_json):
+        """
+        Przetwarza obiekt JSON na obiekt klasy ``Motherboard``
+        :param product_json: obiekt JSON
+        :return: obiekt klasy ``Motherboard``
+        """
         return Motherboard(product_json["name"],
                            product_json["producer"],
                            product_json["category"],
@@ -139,6 +176,11 @@ class JsonUtil:
 
     @staticmethod
     def parse_json_to_graphics_card(product_json):
+        """
+        Przetwarza obiekt JSON na obiekt klasy ``GraphicsCard``
+        :param product_json: obiekt JSON
+        :return: obiekt klasy ``GraphicsCard``
+        """
         return GraphicsCard(product_json["name"],
                             product_json["producer"],
                             product_json["category"],
@@ -170,6 +212,11 @@ class JsonUtil:
 
     @staticmethod
     def parse_json_to_power_supply(product_json):
+        """
+        Przetwarza obiekt JSON na obiekt klasy ``PowerSupply``
+        :param product_json: obiekt JSON
+        :return: obiekt klasy ``PowerSupply``
+        """
         return PowerSupply(product_json["name"],
                            product_json["producer"],
                            product_json["category"],
@@ -200,6 +247,11 @@ class JsonUtil:
 
     @staticmethod
     def parse_json_to_case(product_json):
+        """
+        Przetwarza obiekt JSON na obiekt klasy ``Case``
+        :param product_json: obiekt JSON
+        :return: obiekt klasy ``Case``
+        """
         return Case(product_json["name"],
                     product_json["producer"],
                     product_json["category"],
@@ -241,6 +293,11 @@ class JsonUtil:
 
     @staticmethod
     def parse_json_to_air_cooler(product_json):
+        """
+        Przetwarza obiekt JSON na obiekt klasy ``AirCooler``
+        :param product_json: obiekt JSON
+        :return: obiekt klasy ``AirCooler``
+        """
         return AirCooler(product_json["name"],
                          product_json["producer"],
                          product_json["category"],
@@ -264,6 +321,11 @@ class JsonUtil:
 
     @staticmethod
     def parse_json_to_liquid_cooler(product_json):
+        """
+        Przetwarza obiekt JSON na obiekt klasy ``LiquidCooler``
+        :param product_json: obiekt JSON
+        :return: obiekt klasy ``LiquidCooler``
+        """
         return LiquidCooler(product_json["name"],
                             product_json["producer"],
                             product_json["category"],
@@ -281,6 +343,11 @@ class JsonUtil:
 
     @staticmethod
     def parse_json_to_hdd(product_json):
+        """
+        Przetwarza obiekt JSON na obiekt klasy ``HardDiskDrive``
+        :param product_json: obiekt JSON
+        :return: obiekt klasy ``HardDiskDrive``
+        """
         return HardDiskDrive(product_json["name"],
                              product_json["producer"],
                              product_json["category"],
@@ -295,6 +362,11 @@ class JsonUtil:
 
     @staticmethod
     def parse_json_to_ssd(product_json):
+        """
+        Przetwarza obiekt JSON na obiekt klasy ``SolidStateDrive``
+        :param product_json: obiekt JSON
+        :return: obiekt klasy ``SolidStateDrive``
+        """
         return SolidStateDrive(product_json["name"],
                                product_json["producer"],
                                product_json["category"],
@@ -309,6 +381,11 @@ class JsonUtil:
                                product_json["write_speed"])
 
     def parse_product_to_json(self, product: Product):
+        """
+        Wywołuje odpowiednie metody do przetwarzania obiektów na zapis JSON, w zależności od instancji produktu
+        :param product: obiekt klasy dziedziczącej z klasy ``Product``
+        :return: zapis JSON obiektu klasy dziedziczącej z klasy ``Product``
+        """
         if isinstance(product, Processor):
             return self.parse_cpu_to_json(product)
         if isinstance(product, RAM):
@@ -332,6 +409,11 @@ class JsonUtil:
 
     @staticmethod
     def parse_cpu_to_json(cpu: Processor):
+        """
+        Przetwarza informacje w obiekcie klasy ``Processor`` na zapis JSON
+        :param cpu: obiekt klasy ``Processor``
+        :return: format JSON obiektu
+        """
         return {
             "name": cpu.get_name(),
             "producer": cpu.get_producer(),
@@ -356,6 +438,11 @@ class JsonUtil:
 
     @staticmethod
     def parse_ram_to_json(ram: RAM):
+        """
+        Przetwarza informacje w obiekcie klasy ``RAM`` na zapis JSON
+        :param ram: obiekt klasy ``RAM``
+        :return: format JSON obiektu
+        """
         return {
             "name": ram.get_name(),
             "producer": ram.get_producer(),
@@ -375,6 +462,11 @@ class JsonUtil:
 
     @staticmethod
     def parse_motherboard_to_json(mb: Motherboard):
+        """
+        Przetwarza informacje w obiekcie klasy ``Motherboard`` na zapis JSON
+        :param mb: obiekt klasy ``Motherboard``
+        :return: format JSON obiektu
+        """
         return {
             "name": mb.get_name(),
             "producer": mb.get_producer(),
@@ -404,6 +496,11 @@ class JsonUtil:
 
     @staticmethod
     def parse_graphics_card_to_json(gpu: GraphicsCard):
+        """
+        Przetwarza informacje w obiekcie klasy ``GraphicsCard`` na zapis JSON
+        :param gpu: obiekt klasy ``GraphicsCard``
+        :return: format JSON obiektu
+        """
         return {
             "name": gpu.get_name(),
             "producer": gpu.get_producer(),
@@ -437,6 +534,11 @@ class JsonUtil:
 
     @staticmethod
     def parse_power_supply_to_json(ps: PowerSupply):
+        """
+        Przetwarza informacje w obiekcie klasy ``PowerSupply`` na zapis JSON
+        :param ps: obiekt klasy ``PowerSupply``
+        :return: format JSON obiektu
+        """
         return {
             "name": ps.get_name(),
             "producer": ps.get_producer(),
@@ -469,6 +571,11 @@ class JsonUtil:
 
     @staticmethod
     def parse_case_to_json(case: Case):
+        """
+        Przetwarza informacje w obiekcie klasy ``Case`` na zapis JSON
+        :param case: obiekt klasy ``Case``
+        :return: format JSON obiektu
+        """
         return {
             "name": case.get_name(),
             "producer": case.get_producer(),
@@ -512,6 +619,11 @@ class JsonUtil:
 
     @staticmethod
     def parse_air_cooler_to_json(cooler: AirCooler):
+        """
+        Przetwarza informacje w obiekcie klasy ``AirCooler`` na zapis JSON
+        :param cooler: obiekt klasy ``AirCooler``
+        :return: format JSON obiektu
+        """
         return {
             "name": cooler.get_name(),
             "producer": cooler.get_producer(),
@@ -536,6 +648,11 @@ class JsonUtil:
 
     @staticmethod
     def parse_liquid_cooler_to_json(cooler: LiquidCooler):
+        """
+        Przetwarza informacje w obiekcie klasy ``LiquidCooler`` na zapis JSON
+        :param cooler: obiekt klasy ``LiquidCooler``
+        :return: format JSON obiektu
+        """
         return {
             "name": cooler.get_name(),
             "producer": cooler.get_producer(),
@@ -555,6 +672,11 @@ class JsonUtil:
 
     @staticmethod
     def parse_hdd_to_json(hdd: HardDiskDrive):
+        """
+        Przetwarza informacje w obiekcie klasy ``HardDiskDrive`` na zapis JSON
+        :param hdd: obiekt klasy ``HardDiskDrive``
+        :return: format JSON obiektu
+        """
         return {
             "name": hdd.get_name(),
             "producer": hdd.get_producer(),
@@ -571,6 +693,11 @@ class JsonUtil:
 
     @staticmethod
     def parse_ssd_to_json(ssd: SolidStateDrive):
+        """
+        Przetwarza informacje w obiekcie klasy ``SolidStateDrive`` na zapis JSON
+        :param ssd: obiekt klasy ``SolidStateDrive``
+        :return: format JSON obiektu
+        """
         return {
             "name": ssd.get_name(),
             "producer": ssd.get_producer(),

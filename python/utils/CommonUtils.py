@@ -126,7 +126,8 @@ class CommonUtils:
         Metoda służąca do pozyskiwania list i paragrafów w opisie na stronie, w odpowiedniej kolejności.
         Kolejność elementów determinowana jest na podstawie pozycji w osi Y na stronie.
         :param paragraphs: Lista paragrafów w kodzie HTML w danym wierszu opisu
-        :param unordered_lists: Lista list w kodzie HTML w danym wierszu opisu
+        :param unordered_lists: Lista nienumerowanych list w kodzie HTML w danym wierszu opisu
+        :param ordered_lists: Lista numerowanych list w kodzie HTML w danym wierszu opisu
         :return: Ciąg znaków w zapisie HTML z elementami zapisanymi w odpowiedniej kolejności.
         """
         res = ""
@@ -156,7 +157,8 @@ class CommonUtils:
     @staticmethod
     def translate_to_bool(s: str, custom_str_key: str = None):
         """
-        Metoda sprawdzająca, czy w podanym ciągu znaków znajduje się słowo kluczowe "Tak", "Nie" lub "Brak" ignorując przy tym wielkość liter.
+        Metoda sprawdzająca, czy w podanym ciągu znaków znajduje się słowo kluczowe "Tak", "Nie" lub "Brak"
+        ignorując przy tym wielkość liter, lub poszukująca słowa kluczowego w przekazanym ciągu znaków.
         :param s: Ciąg znaków do sprawdzenia, czy zawiera słowo "Tak"
         :param custom_str_key: Poszukiwane słowo kluczowe. Jeśli w podanym ciągu znaków znajduje się podane słowo kluczowe,
             zostanie zwrócone **True**. Domyślnie ustawione na None

@@ -115,8 +115,9 @@ class WebUtil:
 
     def load_page(self, url: str, by: By, selector: str):
         """
-        Ładuje stronę, oczekując na pobranie kluczowego elementu.
-        Wywołuje metodę ``self.accept_cookies()``, jeśli pliki cookie jeszcze nie zostały zaakceptowane w tej sesji
+        Ładuje stronę, oczekując na pobranie kluczowego elementu. Jeśli znaleziono na stronie
+        nakładkę akceptacji plików cookie, ustawia flagę na ``False``. Zapobiega to błędom w przypadku
+        ponownego pojawienia się nakładki, co może wystąpić przy rozłączeniu sesji.
         :param url: Adres URL strony
         :param by: Strategia lokalizowania elementu, np.: ``By.CLASS_NAME``, ``By.CSS_SELECTOR``, ``By.XPATH``
         :param selector: Selektor wykorzystywany do zlokalizowania elementu dla konkretnej strategii
@@ -138,8 +139,8 @@ class WebUtil:
         Znajduje przycisk odpowiedzialny za akceptację plików cookie,
         po czym go klika i ustawia flagę ``self.__cookies_accepted`` na **True**
         """
-        cookie_btn = self.get_element(By.CSS_SELECTOR,
-                                      'button[data-action="cookie-consent#onApproveAll"].btn--save-all', timeout=5)
+        selector = 'button[data-action="cookie-consent#onApproveAll"].btn--save-all'
+        cookie_btn = self.get_element(By.CSS_SELECTOR, selector, timeout=5)
         if cookie_btn is not None:
             cookie_btn.click()
             self.__cookies_accepted = True
@@ -179,8 +180,8 @@ class WebUtil:
         po czym czeka sekundę, dając tym samym czas na zakończenie animacji rozwijania opisu.
         """
         try:
-            expand_btn = self.get_element(By.CSS_SELECTOR, "toggle-btn.collapsible-description__btn.btn",
-                                          mandatory=False)
+            selector = "toggle-btn.collapsible-description__btn.btn"
+            expand_btn = self.get_element(By.CSS_SELECTOR, selector, mandatory=False)
             if expand_btn is not None:
                 expand_btn.click()
                 sleep(1)
@@ -211,7 +212,9 @@ class WebUtil:
 
     def save_image(self, category: str, producer: str, ean: str):
         """
-        Klika w galerię zdjęć produktów, co pozwala na wykonanie zrzutu ekranu bez dodatkowych elementów,
+        Próbuje kliknąć galerię zdjęć produktów, co jeśli się nie powiedzie, z powodu braku widoczności
+        elementu w widoku strony, przewija witrynę na samą górę i powtarza operację.
+        Kliknięcie, co pozwala na wykonanie zrzutu ekranu bez dodatkowych elementów,
         takich jak przycisk porównania, czy dodania do listy. Zrzut ekranu jest następnie zapisywany w katalogu zdjęć,
         pod nazwą taką samą jak kod producenta. Zapis jest w formacie PNG.
         :param category: Kategoria produktu potrzebna do zapisania zdjęcia w odpowiednim folderze
@@ -227,6 +230,7 @@ class WebUtil:
             img_box.click()
         except ElementClickInterceptedException:
             self.driver.execute_script("window.scrollTo(0, 0)")
+            img_box = self.get_element(By.CSS_SELECTOR, "picture img")
             img_box.click()
         img = self.get_element(By.CSS_SELECTOR, "img.mobx-img.mobx-media-loaded")
         path = os.path.join(path, f"{ean}.png")

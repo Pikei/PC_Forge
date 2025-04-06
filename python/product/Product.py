@@ -49,7 +49,8 @@ class Product(Base):
 
     def print_product_specs(self):
         """
-        Wypisuje dane wspólne dla wszystkich typów produktów
+        Wypisuje dane wspólne dla wszystkich typów produktów.
+        Wywoływana tylko z parametrem uruchomieniowym ``PRINT_SPECS`` lub przy znalezieniu duplikatów produktów.
         """
         print("--------------- ", self.name, " ---------------")
         print("Product type:", self.category)

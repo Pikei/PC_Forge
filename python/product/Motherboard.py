@@ -59,7 +59,7 @@ class Motherboard(Product):
         :param cpu_socket: obsługiwany przez płytę główną socket procesora
         :param memory_standard: obsługiwany przez płytę główną standard pamięci RAM
         :param number_of_memory_slots: liczba slotów pamięci RAM znajdującej się na płycie głównej
-        :param supported_memory_frequencies: lista obsługiwanych przez płytę główną częstotliwości pamięci RAM
+        :param supported_memory_frequencies: lista obsługiwanych przez płytę główną częstotliwości pamięci RAM [MHz]
         :param max_memory_capacity: maksymalna pojemność pamięci RAM [GB]
         :param integrated_audio_card: zintegrowana karta dźwiękowa
         :param audio_channels: kanały audio
@@ -187,14 +187,14 @@ class Motherboard(Product):
     def get_supported_memory_frequencies(self):
         """
         Getter listy obsługiwanych przez płytę główną częstotliwości pamięci RAM
-        :return: lista obsługiwanych przez płytę główną częstotliwości pamięci RAM
+        :return: lista obsługiwanych przez płytę główną częstotliwości pamięci RAM [MHz]
         """
         return self.supported_memory_frequencies
 
     def set_supported_memory_frequencies(self, supported_memory_frequencies: list[int]):
         """
         Setter listy obsługiwanych przez płytę główną częstotliwości pamięci RAM
-        :param supported_memory_frequencies: lista obsługiwanych przez płytę główną częstotliwości pamięci RAM
+        :param supported_memory_frequencies: lista obsługiwanych przez płytę główną częstotliwości pamięci RAM [MHz]
         """
         self.supported_memory_frequencies = supported_memory_frequencies
 
