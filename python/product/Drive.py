@@ -4,16 +4,6 @@ from sqlalchemy import Column, ForeignKey
 from product.Product import Product, Base
 
 
-class DriveInterfaces(Base):
-    """
-    Klasa będąca reprezentacją tabeli ``drive_interfaces`` w bazie danych.
-    Przechowuje informacje o dostępnych interfejsach dysków.
-    """
-    __tablename__ = "drive_interfaces"
-    id = Column("interface_id", sqlalchemy.Integer, primary_key=True, autoincrement=True)
-    name = Column("interface_name", sqlalchemy.VARCHAR(255), nullable=False)
-
-
 class Drive(Product):
     """
     Klasa będąca reprezentacją tabeli ``drive`` w bazie danych.
@@ -24,7 +14,7 @@ class Drive(Product):
                  nullable=False)
     storage = Column("storage", sqlalchemy.Integer, nullable=False)
     drive_format = Column("drive_format", sqlalchemy.VARCHAR(255), nullable=False)
-    drive_interface_id = Column("drive_interface_id", ForeignKey("drive_interfaces.interface_id"), nullable=False)
+    interface = Column("drive_interface", sqlalchemy.VARCHAR(255), nullable=False)
 
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
                  ean: int, drive_format: str, storage: int, interface: str):
@@ -45,7 +35,6 @@ class Drive(Product):
         self.drive_format: str = drive_format
         self.storage: int = storage
         self.interface: str = interface
-        self.drive_interface_id = None
 
     def print_product_specs(self):
         """
@@ -97,20 +86,6 @@ class Drive(Product):
         :param interface: interfejs dysku
         """
         self.interface = interface
-
-    def get_drive_interface_id(self):
-        """
-        Getter identyfikatora (klucza obcego) interfejsu dysku
-        :return: identyfikator (klucz obcy) interfejsu dysku
-        """
-        return self.drive_interface_id
-
-    def set_drive_interface_id(self, drive_interface_id: int):
-        """
-        Setter identyfikatora (klucza obcego) interfejsu dysku
-        :param drive_interface_id: identyfikator (klucz obcy) interfejsu dysku
-        """
-        self.drive_interface_id = drive_interface_id
 
 
 class HardDiskDrive(Drive):

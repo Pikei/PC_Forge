@@ -5,7 +5,6 @@ import sqlalchemy as sa
 
 from product.Case import Case, CaseMotherboardCompatibility
 from product.Cooler import Cooler, CoolerCpuCompatibility
-from product.Drive import Drive, DriveInterfaces
 from product.Motherboard import Motherboard, MB_Standard
 from product.Processor import Processor, CpuSocket
 from product.Product import Product
@@ -53,9 +52,6 @@ class DatabaseUtil:
                 elif isinstance(prod, Cooler):
                     session.add(prod)
                     self.cooler_socket_compatibility(prod.get_ean(), prod.get_socket_compatibility())
-                elif isinstance(prod, Drive):
-                    prod.set_drive_interface_id(self.get_or_create_drive_interface(prod.get_interface()))
-                    session.add(prod)
                 else:
                     session.add(prod)
             else:
@@ -131,20 +127,3 @@ class DatabaseUtil:
             if socket.name in compatibility_list:
                 compatibility = CoolerCpuCompatibility(socket_id=socket.id, ean=ean)
                 session.add(compatibility)
-
-    @staticmethod
-    def get_or_create_drive_interface(drive_interface):
-        """
-        Sprawdza, czy w bazie danych, w tabeli ``drive_interfaces`` znajduje się wiersz posiadający nazwę przesłanego
-        interfejsu dysku i zwraca identyfikator tego wiersza. Jeśli wiersz nie istnieje, to zostaje on dodany.
-        :param drive_interface: Nazwa poszukiwanego w bazie danych interfejsu dysku
-        :return: identyfikator interfejsu dysku
-        """
-        db_interface = session.query(DriveInterfaces).filter_by(name=drive_interface).first()
-        if db_interface:
-            return db_interface.id
-
-        db_interface = DriveInterfaces(name=drive_interface)
-        session.add(db_interface)
-        session.flush()
-        return db_interface.id
