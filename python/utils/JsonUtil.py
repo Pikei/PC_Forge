@@ -69,7 +69,7 @@ class JsonUtil:
         Wywołuje odpowiednią metodę do przetworzenia obiektu w pliku JSON na obiekt korelującej klasy,
         w zależności od kategorii produktu
         :param product_json: obiekt w pliku JSON
-        :return:
+        :return: obiekt klasy dziedziczącej z ``Product``
         """
         match product_json["category"]:
             case ProductCategory.CPU:

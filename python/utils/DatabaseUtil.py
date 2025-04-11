@@ -35,10 +35,11 @@ class DatabaseUtil:
         counter = 0
         for prod in self.products.values():
             counter = counter + 1
+            percent: int = 0
             product_db = session.query(Product).filter_by(ean=prod.get_ean()).first()
             if product_db is None:
-                print(f"[{int((counter * 100) / len(self.products))}%] Adding", prod.get_name(), "(", prod.get_ean(),
-                      ") to Database")
+                percent = int((counter * 100) / len(self.products))
+                print(f"[{percent}%] Adding", prod.get_name(), "(", prod.get_ean(), ") to Database")
                 if isinstance(prod, Processor):
                     prod.set_socket_id(self.get_or_create_socket(prod.get_socket()))
                     session.add(prod)
