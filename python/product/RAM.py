@@ -1,5 +1,5 @@
 import sqlalchemy
-from sqlalchemy import Column, ForeignKey
+from sqlalchemy import Column, ForeignKey, Integer
 
 from product.Product import Product
 
@@ -13,11 +13,11 @@ class RAM(Product):
                  nullable=False)
     line = Column("line", sqlalchemy.VARCHAR(255), nullable=False)
     memory_type = Column("memory_type", sqlalchemy.VARCHAR(255), nullable=False)
-    total_capacity = Column("total_capacity", sqlalchemy.Integer, nullable=False)
-    number_of_modules = Column("number_of_modules", sqlalchemy.Integer, nullable=False)
-    latency = Column("latency", sqlalchemy.Integer, nullable=False)
-    lighting = Column("lighting", sqlalchemy.Integer, nullable=False)
-    frequency = Column("frequency", sqlalchemy.Integer, nullable=False)
+    total_capacity = Column("total_capacity", Integer, nullable=False)
+    number_of_modules = Column("number_of_modules", Integer, nullable=False)
+    latency = Column("latency", Integer, nullable=False)
+    lighting = Column("lighting", Integer, nullable=False)
+    frequency = Column("frequency", Integer, nullable=False)
 
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
                  ean: int, line: str, memory_type: str, total_capacity: int, number_of_modules: int,

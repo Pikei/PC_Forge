@@ -1,7 +1,7 @@
 import sqlalchemy
-from sqlalchemy import Column, ForeignKey
+from sqlalchemy import Column, ForeignKey, Integer
 
-from product.Product import Product, Base
+from product.Product import Product
 
 
 class Drive(Product):
@@ -12,7 +12,7 @@ class Drive(Product):
     __tablename__ = "drive"
     ean = Column("ean", ForeignKey("product.ean", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True,
                  nullable=False)
-    storage = Column("storage", sqlalchemy.Integer, nullable=False)
+    storage = Column("storage", Integer, nullable=False)
     drive_format = Column("drive_format", sqlalchemy.VARCHAR(255), nullable=False)
     interface = Column("drive_interface", sqlalchemy.VARCHAR(255), nullable=False)
 
@@ -95,7 +95,7 @@ class HardDiskDrive(Drive):
     __tablename__ = "hdd"
     ean = Column("ean", ForeignKey("drive.ean", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True,
                  nullable=False)
-    rotational_speed = Column("rotational_speed", sqlalchemy.Integer, nullable=False)
+    rotational_speed = Column("rotational_speed", Integer, nullable=False)
 
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
                  ean: int,
@@ -148,8 +148,8 @@ class SolidStateDrive(Drive):
     __tablename__ = "ssd"
     ean = Column("ean", ForeignKey("drive.ean", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True,
                  nullable=False)
-    read_speed = Column("read_speed", sqlalchemy.Integer, nullable=False)
-    write_speed = Column("write_speed", sqlalchemy.Integer, nullable=False)
+    read_speed = Column("read_speed", Integer, nullable=False)
+    write_speed = Column("write_speed", Integer, nullable=False)
 
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
                  ean: int, drive_format: str, storage: int, interface: str, read_speed: int, write_speed: int):

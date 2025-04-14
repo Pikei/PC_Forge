@@ -1,5 +1,5 @@
 import sqlalchemy
-from sqlalchemy import Column, ForeignKey
+from sqlalchemy import Column, ForeignKey, Integer, Boolean, Float
 
 from product.Product import Product, Base
 
@@ -10,6 +10,7 @@ class CoolerCpuCompatibility(Base):
     Przechowuje id gniazd procesorów i numery EAN chłodzeń jako relacja wiele do wielu.
     """
     __tablename__ = "cooler_socket_compatibility"
+    compatibility_id = Column("compatibility_id", Integer, primary_key=True, autoincrement=True)
     socket_id = Column("socket_id", ForeignKey("cpu_socket.socket_id", ondelete="CASCADE", onupdate="CASCADE"),
                        primary_key=True, nullable=False)
     ean = Column("ean", ForeignKey("cooler.ean", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True,
@@ -24,11 +25,11 @@ class Cooler(Product):
     __tablename__ = "cooler"
     ean = Column("ean", ForeignKey("product.ean", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True,
                  nullable=False)
-    lightning = Column("lightning", sqlalchemy.Boolean, nullable=False)
-    num_of_fans = Column("fans", sqlalchemy.Integer, nullable=False)
-    fan_diameter = Column("fan_diameter", sqlalchemy.Integer, nullable=False)
-    fan_speed = Column("fan_speed", sqlalchemy.Integer)
-    noise_level = Column("noise_level", sqlalchemy.Float)
+    lightning = Column("lightning", Boolean, nullable=False)
+    num_of_fans = Column("fans", Integer, nullable=False)
+    fan_diameter = Column("fan_diameter", Integer, nullable=False)
+    fan_speed = Column("fan_speed", Integer)
+    noise_level = Column("noise_level", Float)
 
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
                  ean: int,

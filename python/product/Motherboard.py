@@ -1,7 +1,6 @@
 import sqlalchemy
-from sqlalchemy import Column, ForeignKey
+from sqlalchemy import Column, ForeignKey, Integer, Float, Boolean
 from product.Product import Product, Base
-from sqlalchemy.dialects.postgresql import JSONB
 
 
 class MB_Standard(Base):
@@ -10,7 +9,7 @@ class MB_Standard(Base):
     Przechowuje informacje o dostępnych standardach płyt głównych.
     """
     __tablename__ = "motherboard_standard"
-    id = Column("standard_id", sqlalchemy.Integer, primary_key=True, autoincrement=True)
+    id = Column("standard_id", Integer, primary_key=True, autoincrement=True)
     name = Column("standard_name", sqlalchemy.VARCHAR(255), nullable=False)
 
 class Motherboard(Product):
@@ -23,20 +22,20 @@ class Motherboard(Product):
     standard_id = Column("standard_id", ForeignKey("motherboard_standard.standard_id"), nullable=False)
     chipset = Column("chipset", sqlalchemy.VARCHAR(255), nullable=False)
     memory_standard = Column("memory_standard", sqlalchemy.VARCHAR(255), nullable=False)
-    number_of_memory_slots = Column("memory_slots", sqlalchemy.Integer, nullable=False)
-    max_memory_capacity = Column("max_memory_capacity", sqlalchemy.Integer, nullable=False)
+    number_of_memory_slots = Column("memory_slots", Integer, nullable=False)
+    max_memory_capacity = Column("max_memory_capacity", Integer, nullable=False)
     integrated_audio_card = Column("integrated_audio_card", sqlalchemy.VARCHAR(255), nullable=False)
-    audio_channels = Column("audio_channels", sqlalchemy.Float, nullable=False)
+    audio_channels = Column("audio_channels", Float, nullable=False)
     integrated_network_card = Column("integrated_network_card", sqlalchemy.VARCHAR(255), nullable=False)
-    bluetooth = Column("bluetooth", sqlalchemy.Boolean, nullable=False)
-    wifi = Column("wifi", sqlalchemy.Boolean, nullable=False)
-    width = Column("width", sqlalchemy.Float, nullable=False)
-    depth = Column("depth", sqlalchemy.Float, nullable=False)
+    bluetooth = Column("bluetooth", Boolean, nullable=False)
+    wifi = Column("wifi", Boolean, nullable=False)
+    width = Column("width", Float, nullable=False)
+    depth = Column("depth", Float, nullable=False)
     socket_id = Column("socket_id", ForeignKey("cpu_socket.socket_id"), nullable=False)
-    expansion_slots = Column("expansion_slots", sqlalchemy.ARRAY(JSONB), nullable=False)
-    drive_interfaces = Column("drive_interfaces", sqlalchemy.ARRAY(JSONB), nullable=False)
-    outside_connectors = Column("outside_connectors", sqlalchemy.ARRAY(JSONB), nullable=False)
-    supported_memory_frequencies = Column("supported_memory_frequencies", sqlalchemy.ARRAY(JSONB), nullable=False)
+    expansion_slots = Column("expansion_slots", sqlalchemy.ARRAY(sqlalchemy.VARCHAR(255)), nullable=False)
+    drive_interfaces = Column("drive_interfaces", sqlalchemy.ARRAY(sqlalchemy.VARCHAR(255)), nullable=False)
+    outside_connectors = Column("outside_connectors", sqlalchemy.ARRAY(sqlalchemy.VARCHAR(255)), nullable=False)
+    supported_memory_frequencies = Column("supported_memory_frequencies", sqlalchemy.ARRAY(Integer), nullable=False)
 
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
                  ean: int,

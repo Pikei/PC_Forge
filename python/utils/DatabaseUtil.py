@@ -106,6 +106,7 @@ class DatabaseUtil:
         for standard in db_standards:
             if standard.name in compatibility_list:
                 compatibility = CaseMotherboardCompatibility(standard_id=standard.id, ean=ean)
+                session.flush()
                 session.add(compatibility)
 
     @staticmethod
@@ -127,4 +128,5 @@ class DatabaseUtil:
         for socket in db_sockets:
             if socket.name in compatibility_list:
                 compatibility = CoolerCpuCompatibility(socket_id=socket.id, ean=ean)
+                session.flush()
                 session.add(compatibility)

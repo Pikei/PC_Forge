@@ -1,5 +1,5 @@
 import sqlalchemy
-from sqlalchemy import Column, ForeignKey
+from sqlalchemy import Column, ForeignKey, Integer, Boolean
 
 from product.Product import Product
 
@@ -13,25 +13,25 @@ class GraphicsCard(Product):
                  nullable=False)
     chipset_producer = Column("chipset_producer", sqlalchemy.VARCHAR(255), nullable=False)
     chipset = Column("chipset", sqlalchemy.VARCHAR(255), nullable=False)
-    core_frequency = Column("core_frequency", sqlalchemy.Integer, nullable=False)
-    max_core_frequency = Column("max_core_frequency", sqlalchemy.Integer, nullable=False)
-    stream_processors = Column("stream_processors", sqlalchemy.Integer, nullable=False)
-    rop_units = Column("rop_units", sqlalchemy.Integer, nullable=False)
-    texturing_units = Column("texturing_units", sqlalchemy.Integer, nullable=False)
-    rt_cores = Column("rt_cores", sqlalchemy.Integer, nullable=False)
-    tensor_cores = Column("tensor_cores", sqlalchemy.Integer, nullable=False)
+    core_frequency = Column("core_frequency", Integer, nullable=False)
+    max_core_frequency = Column("max_core_frequency", Integer, nullable=False)
+    stream_processors = Column("stream_processors", Integer, nullable=False)
+    rop_units = Column("rop_units", Integer, nullable=False)
+    texturing_units = Column("texturing_units", Integer, nullable=False)
+    rt_cores = Column("rt_cores", Integer, nullable=False)
+    tensor_cores = Column("tensor_cores", Integer, nullable=False)
     dlss = Column("dlss", sqlalchemy.VARCHAR(255), nullable=False)
     connector = Column("connector", sqlalchemy.VARCHAR(255), nullable=False)
-    card_length = Column("card_length", sqlalchemy.Integer, nullable=False)
+    card_length = Column("card_length", Integer, nullable=False)
     resolution = Column("resolution", sqlalchemy.VARCHAR(255), nullable=False)
-    recommended_ps = Column("recommended_ps_power", sqlalchemy.Integer, nullable=False)
-    lightning = Column("lightning", sqlalchemy.Boolean, nullable=False)
-    ram = Column("ram", sqlalchemy.Integer, nullable=False)
+    recommended_ps = Column("recommended_ps_power", Integer, nullable=False)
+    lightning = Column("lightning", Boolean, nullable=False)
+    ram = Column("ram", Integer, nullable=False)
     ram_type = Column("ram_type", sqlalchemy.VARCHAR(255), nullable=False)
-    data_bus = Column("data_bus", sqlalchemy.Integer, nullable=False)
-    memory_freq = Column("memory_frequency", sqlalchemy.Integer, nullable=False)
+    data_bus = Column("data_bus", Integer, nullable=False)
+    memory_freq = Column("memory_frequency", Integer, nullable=False)
     cooling_type = Column("cooling_type", sqlalchemy.VARCHAR(255), nullable=False)
-    number_of_fans = Column("number_of_fans", sqlalchemy.Integer, nullable=False)
+    number_of_fans = Column("number_of_fans", Integer, nullable=False)
 
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
                  ean: int, chipset_producer: str, chipset: str, core_frequency: int, max_core_frequency: int,

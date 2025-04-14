@@ -1,11 +1,11 @@
 import sqlalchemy
-from sqlalchemy import Column, ForeignKey
+from sqlalchemy import Column, ForeignKey, Integer, Boolean, Float
 from product.Product import Product, Base
 
 
 class CpuSocket(Base):
     __tablename__ = "cpu_socket"
-    id = Column("socket_id", sqlalchemy.Integer, primary_key=True, autoincrement=True)
+    id = Column("socket_id", Integer, primary_key=True, autoincrement=True)
     name = Column("socket", sqlalchemy.VARCHAR(255), nullable=False)
 
 
@@ -18,15 +18,15 @@ class Processor(Product):
                  nullable=False)
     line = Column("line", sqlalchemy.VARCHAR(255), nullable=False)
     model = Column("model", sqlalchemy.VARCHAR(255), nullable=False)
-    cores = Column("cores", sqlalchemy.Integer, nullable=False)
-    threads = Column("threads", sqlalchemy.Integer, nullable=False)
+    cores = Column("cores", Integer, nullable=False)
+    threads = Column("threads", Integer, nullable=False)
     socket_id = Column("socket_id", ForeignKey("cpu_socket.socket_id"), nullable=False)
-    unlocked = Column("unlocked", sqlalchemy.Boolean, nullable=False)
-    frequency = Column("frequency", sqlalchemy.Float, nullable=False)
-    max_frequency = Column("max_frequency", sqlalchemy.Float, nullable=False)
+    unlocked = Column("unlocked", Boolean, nullable=False)
+    frequency = Column("frequency", Float, nullable=False)
+    max_frequency = Column("max_frequency", Float, nullable=False)
     integrated_graphics_unit = Column("integrated_graphics_unit", sqlalchemy.VARCHAR(255), nullable=True)
-    tdp = Column("tdp", sqlalchemy.Integer, nullable=False)
-    cooler_included = Column("cooler_included", sqlalchemy.Boolean, nullable=False)
+    tdp = Column("tdp", Integer, nullable=False)
+    cooler_included = Column("cooler_included", Boolean, nullable=False)
     packaging = Column("packaging", sqlalchemy.VARCHAR(255), nullable=False)
 
     def __init__(self, name: str, producer: str, category: str, description: str, price: float, producer_code: str,
