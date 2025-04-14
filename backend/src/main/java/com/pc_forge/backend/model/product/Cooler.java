@@ -11,8 +11,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "drive", schema = "public")
-public class Drive {
+@Table(name = "cooler", schema = "public")
+public class Cooler {
     @Id
     @Column(name = "ean", nullable = false)
     private Long id;
@@ -22,13 +22,19 @@ public class Drive {
     @JoinColumn(name = "ean", nullable = false)
     private Product product;
 
-    @Column(name = "drive_format", nullable = false, length = 100)
-    private String driveFormat;
+    @Column(name = "lightning", nullable = false)
+    private Boolean lightning = false;
 
-    @Column(name = "storage", nullable = false)
-    private Integer storage;
+    @Column(name = "fans", nullable = false)
+    private Integer fans;
 
-    @Column(name = "drive_interface", nullable = false, length = Integer.MAX_VALUE)
-    private String driveInterface;
+    @Column(name = "fan_diameter", nullable = false)
+    private Integer fanDiameter;
+
+    @Column(name = "fan_speed")
+    private Integer fanSpeed;
+
+    @Column(name = "noise_level")
+    private Double noiseLevel;
 
 }

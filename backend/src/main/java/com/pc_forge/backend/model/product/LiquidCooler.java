@@ -11,8 +11,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "drive", schema = "public")
-public class Drive {
+@Table(name = "liquid_cooler", schema = "public")
+public class LiquidCooler {
     @Id
     @Column(name = "ean", nullable = false)
     private Long id;
@@ -20,15 +20,9 @@ public class Drive {
     @MapsId
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ean", nullable = false)
-    private Product product;
+    private Cooler cooler;
 
-    @Column(name = "drive_format", nullable = false, length = 100)
-    private String driveFormat;
-
-    @Column(name = "storage", nullable = false)
-    private Integer storage;
-
-    @Column(name = "drive_interface", nullable = false, length = Integer.MAX_VALUE)
-    private String driveInterface;
+    @Column(name = "cooler_size", nullable = false)
+    private Integer coolerSize;
 
 }

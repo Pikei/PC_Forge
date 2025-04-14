@@ -1,11 +1,28 @@
 package com.pc_forge.backend.model.product;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-public final class HardDiskDrive extends Drive {
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Entity
+@Table(name = "hdd", schema = "public")
+public class HardDiskDrive {
+    @Id
+    @Column(name = "ean", nullable = false)
+    private Long id;
+
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ean", nullable = false)
+    private Drive drive;
+
+    @Column(name = "rotational_speed", nullable = false)
     private Integer rotationalSpeed;
-}
 
+}
