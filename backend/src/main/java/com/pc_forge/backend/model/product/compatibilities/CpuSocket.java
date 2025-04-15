@@ -7,11 +7,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "cpu_socket", schema = "public")
+@Table(name = "cpu_socket", schema = "public", uniqueConstraints = {
+        @UniqueConstraint(name = "cpu_socket_socket_key", columnNames = {"socket"})
+})
 public class CpuSocket {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cpu_socket_id_gen")
-    @SequenceGenerator(name = "cpu_socket_id_gen", sequenceName = "cpu_socket_socket_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "socket_id", nullable = false)
     private Integer id;
 

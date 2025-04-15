@@ -13,6 +13,7 @@ import lombok.Setter;
 })
 public class Configuration {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "config_id", nullable = false)
     private Long id;
 
@@ -46,7 +47,7 @@ public class Configuration {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    private UserData user;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ssd_id")

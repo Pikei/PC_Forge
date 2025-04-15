@@ -1,17 +1,13 @@
 package com.pc_forge.backend.model.product;
 
-import com.vladmihalcea.hibernate.type.array.StringArrayType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.List;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -83,8 +79,8 @@ public class PowerSupply {
     @Column(name = "lightning", nullable = false)
     private Boolean lightning = false;
 
-    @Type(value = StringArrayType.class)
-    @Column(name = "protections", nullable = false, columnDefinition = "varchar[]")
+    @JdbcTypeCode(SqlTypes.ARRAY)
+    @Column(name = "protections", nullable = false, columnDefinition = "int[]")
     private List<String> protections;
 
 }

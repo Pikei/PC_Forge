@@ -8,8 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "contains", schema = "public")
-public class Contain {
+@Table(name = "order_detail", schema = "public")
+public class OrderDetail {
     @Id
     @Column(name = "order_id", nullable = false)
     private Integer id;
@@ -17,10 +17,13 @@ public class Contain {
     @MapsId
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "order_id", nullable = false)
-    private OrderData orderData;
+    private Order orderData;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ean", nullable = false)
-    private Product ean;
+    @JoinColumn(name = "product_ean", nullable = false)
+    private Product productEan;
+
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
 
 }

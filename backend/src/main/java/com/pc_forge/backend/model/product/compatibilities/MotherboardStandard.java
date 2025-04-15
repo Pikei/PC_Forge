@@ -12,8 +12,7 @@ import lombok.Setter;
 })
 public class MotherboardStandard {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "motherboard_standard_id_gen")
-    @SequenceGenerator(name = "motherboard_standard_id_gen", sequenceName = "motherboard_standard_standard_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "standard_id", nullable = false)
     private Integer id;
 

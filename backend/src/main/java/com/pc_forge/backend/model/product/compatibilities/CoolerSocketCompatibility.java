@@ -13,17 +13,12 @@ import lombok.Setter;
 })
 public class CoolerSocketCompatibility {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cooler_socket_compatibility_id_gen")
-    @SequenceGenerator(name = "cooler_socket_compatibility_id_gen", sequenceName = "cooler_socket_compatibility_compatibility_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "compatibility_id", nullable = false)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ean", nullable = false)
     private Cooler ean;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "socket_id", nullable = false)
-    private CpuSocket socket;
 
 }

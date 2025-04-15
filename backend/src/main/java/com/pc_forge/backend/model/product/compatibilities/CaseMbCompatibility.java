@@ -13,8 +13,7 @@ import lombok.Setter;
 })
 public class CaseMbCompatibility {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "case_mb_compatibility_id_gen")
-    @SequenceGenerator(name = "case_mb_compatibility_id_gen", sequenceName = "case_mb_compatibility_compatibility_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "compatibility_id", nullable = false)
     private Integer id;
 
