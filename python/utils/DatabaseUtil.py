@@ -106,8 +106,8 @@ class DatabaseUtil:
         for standard in db_standards:
             if standard.name in compatibility_list:
                 compatibility = CaseMotherboardCompatibility(standard_id=standard.id, ean=ean)
-                session.flush()
                 session.add(compatibility)
+        session.flush()
 
     @staticmethod
     def cooler_socket_compatibility(ean, compatibility_list):
@@ -122,11 +122,10 @@ class DatabaseUtil:
         for comp in compatibility_list:
             if comp not in db_sockets:
                 socket = CpuSocket(name=comp)
-                session.flush()
                 session.add(socket)
 
         for socket in db_sockets:
             if socket.name in compatibility_list:
                 compatibility = CoolerCpuCompatibility(socket_id=socket.id, ean=ean)
-                session.flush()
                 session.add(compatibility)
+        session.flush()
