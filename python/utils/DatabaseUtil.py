@@ -103,11 +103,18 @@ class DatabaseUtil:
         :param compatibility_list: lista kompatybilnych standardów płyt głównych
         """
         db_standards = session.query(MB_Standard).all()
+        db_standard_names = [standard.name for standard in db_standards]
+        for comp in compatibility_list:
+            if comp not in db_standard_names:
+                socket = MB_Standard(name=comp)
+                session.add(socket)
+                session.flush()
+
         for standard in db_standards:
             if standard.name in compatibility_list:
                 compatibility = CaseMotherboardCompatibility(standard_id=standard.id, ean=ean)
                 session.add(compatibility)
-        session.flush()
+                session.flush()
 
     @staticmethod
     def cooler_socket_compatibility(ean, compatibility_list):
@@ -119,13 +126,15 @@ class DatabaseUtil:
         :param compatibility_list: lista kompatybilnych gniazd procesora
         """
         db_sockets = session.query(CpuSocket).all()
+        db_socket_names = [socket.name for socket in db_sockets]
         for comp in compatibility_list:
-            if comp not in db_sockets:
+            if comp not in db_socket_names:
                 socket = CpuSocket(name=comp)
                 session.add(socket)
+                session.flush()
 
         for socket in db_sockets:
             if socket.name in compatibility_list:
                 compatibility = CoolerCpuCompatibility(socket_id=socket.id, ean=ean)
                 session.add(compatibility)
-        session.flush()
+                session.flush()
