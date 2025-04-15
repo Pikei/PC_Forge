@@ -1,0 +1,32 @@
+package com.pc_forge.backend.view.api.model;
+
+import jakarta.validation.constraints.*;
+import lombok.Data;
+
+@Data
+public class Registration {
+    @NotNull
+    @NotBlank
+    @Size(min = 3, max = 64)
+    private String username;
+
+    @Email()
+    private String email;
+
+    @NotNull
+    @NotBlank
+    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$")
+    private String password;
+
+    @NotNull
+    @NotBlank
+    @Size(min = 3, max = 64)
+    private String firstName;
+
+    @NotNull
+    @NotBlank
+    private String lastName;
+
+    @Pattern(regexp = "^\\d{9}$")
+    private String phoneNumber;
+}
