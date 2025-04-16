@@ -2,13 +2,14 @@ package com.pc_forge.backend.view.api.controller;
 
 import com.pc_forge.backend.controller.exceptions.UserAlreadyExistsException;
 import com.pc_forge.backend.controller.utils.UserService;
+import com.pc_forge.backend.view.api.model.Login;
+import com.pc_forge.backend.view.api.model.LoginResponse;
 import com.pc_forge.backend.view.api.model.Registration;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,5 +29,16 @@ public class AuthenticationController {
             System.out.println(e.getMessage());
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody Login login) {
+        String jwt = userService.login(login);
+        if (jwt != null) {
+            LoginResponse token = new LoginResponse();
+            token.setJwt(jwt);
+            return ResponseEntity.ok(token);
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }

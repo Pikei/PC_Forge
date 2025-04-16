@@ -20,11 +20,12 @@ public class Registration {
 
     @NotNull
     @NotBlank
-    @Size(min = 3, max = 64)
+    @Pattern(regexp = "^[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]{3,64}$")
     private String firstName;
 
     @NotNull
     @NotBlank
+    @Pattern(regexp = "^[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]{3,64}$")
     private String lastName;
 
     @Pattern(regexp = "^\\d{9}$")
