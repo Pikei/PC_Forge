@@ -12,13 +12,13 @@ import java.util.Date;
 
 @Service
 public class JWTService {
-    @Value("${jwt.key}")
+    @Value("${JWT_KEY}")
     private String key;
 
-    @Value("${jwt.issuer}")
+    @Value("${JWT_ISSUER}")
     private String issuer;
 
-    @Value("${jwt.expiration}")
+    @Value("${JWT_EXPIRATION_HOURS}")
     private Integer expiration;
 
     private Algorithm algorithm;
@@ -30,9 +30,14 @@ public class JWTService {
     }
 
     public String createJWT(User user) {
-        return JWT.create().withClaim(USERNAME_KEY, user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + (1000L * expiration)))
+        return JWT.create()
+                .withClaim(USERNAME_KEY, user.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis() + (1000L * 3600 * expiration)))
                 .withIssuer(issuer)
                 .sign(algorithm);
+    }
+
+    public String verifyJWT(String token) {
+        return JWT.decode(token).getClaim(USERNAME_KEY).asString();
     }
 }

@@ -1,5 +1,6 @@
 package com.pc_forge.backend.model.database.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
+    @JsonIgnore
     private Integer id;
 
     @Column(name = "username", nullable = false, length = 200)
@@ -22,6 +24,7 @@ public class User {
     @Column(name = "email", nullable = false, length = 200)
     private String email;
 
+    @JsonIgnore
     @Column(name = "password", nullable = false, length = 1000)
     private String password;
 
