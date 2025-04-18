@@ -1,6 +1,8 @@
-package com.pc_forge.backend.model.database.product.compatibilities;
+package com.pc_forge.backend.model.database.product.compatibility;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +18,8 @@ public class CpuSocket {
     @Column(name = "socket_id", nullable = false)
     private Integer id;
 
+    @Size(max = 100)
+    @NotNull
     @Column(name = "socket", nullable = false, length = 100)
     private String socket;
 

@@ -1,27 +1,23 @@
 package com.pc_forge.backend.model.database.product;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
 @Table(name = "liquid_cooler", schema = "public")
-public class LiquidCooler {
-    @Id
-    @Column(name = "ean", nullable = false)
-    private Long id;
+@PrimaryKeyJoinColumn(name = "ean")
+@DiscriminatorValue("LIQUID_COOLER")
+public final class LiquidCooler extends Cooler {
 
-    @MapsId
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ean", nullable = false)
-    private Cooler cooler;
-
+    @NotNull
     @Column(name = "cooler_size", nullable = false)
     private Integer coolerSize;
 

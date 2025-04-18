@@ -1,33 +1,33 @@
 package com.pc_forge.backend.model.database.product;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
 @Table(name = "drive", schema = "public")
-public class Drive {
-    @Id
-    @Column(name = "ean", nullable = false)
-    private Long id;
+@Inheritance(strategy = InheritanceType.JOINED)
+@PrimaryKeyJoinColumn(name = "ean")
 
-    @MapsId
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ean", nullable = false)
-    private Product product;
-
+public abstract class Drive extends Product {
+    @Size(max = 100)
+    @NotNull
     @Column(name = "drive_format", nullable = false, length = 100)
     private String driveFormat;
 
+    @NotNull
     @Column(name = "storage", nullable = false)
     private Integer storage;
 
+    @NotNull
     @Column(name = "drive_interface", nullable = false, length = Integer.MAX_VALUE)
     private String driveInterface;
 

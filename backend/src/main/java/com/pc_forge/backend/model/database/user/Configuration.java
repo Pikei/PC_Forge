@@ -2,6 +2,7 @@ package com.pc_forge.backend.model.database.user;
 
 import com.pc_forge.backend.model.database.product.*;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,10 +22,12 @@ public class Configuration {
     @JoinColumn(name = "gpu_id")
     private GraphicsCard gpu;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "case_id", nullable = false)
     private Case caseField;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "mb_id", nullable = false)
     private Motherboard mb;
@@ -37,14 +40,17 @@ public class Configuration {
     @JoinColumn(name = "ps_id")
     private PowerSupply ps;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ram_id", nullable = false)
     private Memory ram;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "cpu_id", nullable = false)
     private Processor cpu;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

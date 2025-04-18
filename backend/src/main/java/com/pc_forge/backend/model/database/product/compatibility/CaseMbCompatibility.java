@@ -1,7 +1,8 @@
-package com.pc_forge.backend.model.database.product.compatibilities;
+package com.pc_forge.backend.model.database.product.compatibility;
 
 import com.pc_forge.backend.model.database.product.Case;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,10 +18,12 @@ public class CaseMbCompatibility {
     @Column(name = "compatibility_id", nullable = false)
     private Integer id;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "standard_id", nullable = false)
-    private MotherboardStandard standard;
+    private com.pc_forge.backend.model.database.product.compatibility.MotherboardStandard standard;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ean", nullable = false)
     private Case ean;
