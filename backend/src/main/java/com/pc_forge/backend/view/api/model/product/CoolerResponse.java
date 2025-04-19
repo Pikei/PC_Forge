@@ -7,6 +7,5 @@ import lombok.Setter;
 @Setter
 public final class CoolerResponse extends ProductResponse {
     private Boolean lightning;
-    private Integer fans;
     private Integer fanDiameter;
 }

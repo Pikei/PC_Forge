@@ -9,8 +9,8 @@ import lombok.Setter;
 public final class MotherboardResponse extends ProductResponse {
     private String chipset;
     private String memoryStandard;
+    private String standard;
     private Integer memorySlots;
     private Boolean bluetooth;
     private Boolean wifi;
-    private MotherboardStandard standard;
 }

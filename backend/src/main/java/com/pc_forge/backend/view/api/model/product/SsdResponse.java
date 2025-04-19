@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public final class SsdResponse extends ProductResponse {
+public final class SsdResponse extends DriveResponse {
     private Integer readSpeed;
     private Integer writeSpeed;
 }

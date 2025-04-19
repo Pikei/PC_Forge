@@ -3,21 +3,21 @@ package com.pc_forge.backend.view.api;
 import lombok.Getter;
 
 @Getter
-public enum ProductTypeCodes {
+public enum ProductCategoryCode {
     CASE("CASE"),
     AIR_COOLER("AIR_COOLER"),
     LIQUID_COOLER("LIQUID_COOLER"),
-    GPU("GPU"),
+    GRAPHICS_CARD("GPU"),
     SSD("SSD"),
     HDD("HDD"),
-    MB("MB"),
-    POWER_SUPPLY("POWER_SUPPLY"),
-    CPU("CPU"),
+    MOTHERBOARD("MB"),
+    POWER_SUPPLY("PS"),
+    PROCESSOR("CPU"),
     RAM("RAM");
 
     private final String code;
 
-    ProductTypeCodes(final String code) {
+    ProductCategoryCode(final String code) {
         this.code = code;
     }
 

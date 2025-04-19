@@ -5,6 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class HddResponse extends ProductResponse {
+public class HddResponse extends DriveResponse {
     private Integer rotationalSpeed;
 }
