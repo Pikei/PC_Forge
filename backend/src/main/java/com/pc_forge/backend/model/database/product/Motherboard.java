@@ -2,6 +2,7 @@ package com.pc_forge.backend.model.database.product;
 
 import com.pc_forge.backend.model.database.product.compatibility.CpuSocket;
 import com.pc_forge.backend.model.database.product.compatibility.MotherboardStandard;
+import io.hypersistence.utils.hibernate.type.array.ListArrayType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -9,8 +10,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Type;
 
 import java.util.List;
 
@@ -71,29 +73,29 @@ public final class Motherboard extends Product {
     private Double depth;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "standard_id", nullable = false)
     private MotherboardStandard standard;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "socket_id", nullable = false)
     private CpuSocket socket;
 
-    @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(name = "expansion_slots", nullable = false, columnDefinition = "varchar[]")
+    @Type(ListArrayType.class)
+    @Column(name = "expansion_slots", nullable = false, columnDefinition = "_varchar (Types#ARRAY)")
     private List<String> expansionSlots;
 
-    @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(name = "drive_interfaces", nullable = false, columnDefinition = "varchar[]")
+    @Type(ListArrayType.class)
+    @Column(name = "drive_interfaces", nullable = false, columnDefinition = "_varchar (Types#ARRAY)")
     private List<String> driveInterfaces;
 
-    @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(name = "outside_connectors", nullable = false, columnDefinition = "varchar[]")
+    @Type(ListArrayType.class)
+    @Column(name = "outside_connectors", nullable = false, columnDefinition = "_varchar (Types#ARRAY)")
     private List<String> outsideConnectors;
 
-    @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(name = "supported_memory_frequencies", nullable = false, columnDefinition = "int[]")
+    @Type(ListArrayType.class)
+    @Column(name = "supported_memory_frequencies", nullable = false, columnDefinition = "_int4 (Types#ARRAY)")
     private List<Integer> supportedMemoryFrequencies;
 
 }

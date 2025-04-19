@@ -1,12 +1,12 @@
 package com.pc_forge.backend.model.database.product;
 
+import io.hypersistence.utils.hibernate.type.array.ListArrayType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import org.hibernate.annotations.Type;
 
 import java.util.List;
 
@@ -97,8 +97,8 @@ public final class PowerSupply extends Product {
     private Boolean lightning = false;
 
     @NotNull
-    @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(name = "protections", nullable = false, columnDefinition = "varchar[]")
+    @Type(ListArrayType.class)
+    @Column(name = "protections", nullable = false, columnDefinition = "_varchar (Types#ARRAY)")
     private List<String> protections;
 
 }

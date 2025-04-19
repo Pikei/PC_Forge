@@ -1,4 +1,4 @@
-package com.pc_forge.backend.controller.utils;
+package com.pc_forge.backend.controller.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

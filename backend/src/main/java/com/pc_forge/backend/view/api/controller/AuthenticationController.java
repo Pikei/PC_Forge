@@ -1,13 +1,12 @@
 package com.pc_forge.backend.view.api.controller;
 
 import com.pc_forge.backend.controller.exceptions.UserAlreadyExistsException;
-import com.pc_forge.backend.controller.utils.UserService;
+import com.pc_forge.backend.controller.service.UserService;
 import com.pc_forge.backend.model.database.user.User;
 import com.pc_forge.backend.view.api.model.Login;
 import com.pc_forge.backend.view.api.model.LoginResponse;
 import com.pc_forge.backend.view.api.model.Registration;
 import jakarta.validation.Valid;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

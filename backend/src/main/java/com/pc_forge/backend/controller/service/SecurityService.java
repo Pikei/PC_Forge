@@ -1,4 +1,4 @@
-package com.pc_forge.backend.controller.utils;
+package com.pc_forge.backend.controller.service;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;

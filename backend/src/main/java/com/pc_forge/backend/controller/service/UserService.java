@@ -1,4 +1,4 @@
-package com.pc_forge.backend.controller.utils;
+package com.pc_forge.backend.controller.service;
 
 import com.pc_forge.backend.controller.exceptions.UserAlreadyExistsException;
 import com.pc_forge.backend.model.database.user.User;
