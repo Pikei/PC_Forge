@@ -1,10 +1,10 @@
-package com.pc_forge.backend.view.api.model;
+package com.pc_forge.backend.view.api.request.body;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
-public class Registration {
+public class RegistrationBody {
     @NotNull
     @NotBlank
     @Size(min = 3, max = 64)

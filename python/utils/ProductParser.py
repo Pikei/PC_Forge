@@ -211,7 +211,7 @@ class ProductParser:
 
         latency = CommonUtils.get_value_from_spec_row(spec_rows, "Opóźnienie")
 
-        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Częstotliwość pracy [MHz]")
+        spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Podświetlenie")
         lighting = CommonUtils.translate_to_bool(spec_value)
 
         return RAM(product.get_name(), product.get_producer(), product.get_category(), product.get_description(),

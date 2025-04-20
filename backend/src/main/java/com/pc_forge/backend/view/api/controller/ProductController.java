@@ -1,15 +1,14 @@
 package com.pc_forge.backend.view.api.controller;
 
-import com.pc_forge.backend.controller.service.ProductService;
+import com.pc_forge.backend.controller.service.product.ProcessorService;
+import com.pc_forge.backend.controller.service.product.ProductService;
 import com.pc_forge.backend.model.database.product.*;
 import com.pc_forge.backend.view.api.ProductCategoryCode;
 import com.pc_forge.backend.view.api.ProductCategoryUrl;
-import com.pc_forge.backend.view.api.model.product.*;
+import com.pc_forge.backend.controller.filter.ProcessorFilter;
+import com.pc_forge.backend.view.api.request.response.product.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +17,48 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductController {
     private final ProductService productService;
+    private final ProcessorService processorService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, ProcessorService processorService) {
         this.productService = productService;
+        this.processorService = processorService;
+    }
+
+    @GetMapping("category-testfilter/cpu")
+    public ResponseEntity<List<ProductResponse>> getFilteredProcessors(
+            @RequestParam(value = "maxPrice", required = false) Double maxPrice,
+            @RequestParam(value = "minPrice", required = false) Double minPrice,
+            @RequestParam(value = "producers", required = false) List<String> producers,
+            @RequestParam(value = "sockets", required = false) List<String> sockets,
+            @RequestParam(value = "lines", required = false) List<String> lines,
+            @RequestParam(value = "cores", required = false) List<Integer> cores,
+            @RequestParam(value = "freq", required = false) List<Double> freq,
+            @RequestParam(value = "igu", required = false) List<String> igu,
+            @RequestParam(value = "pack", required = false) List<String> pack,
+            @RequestParam(value = "unlocked", required = false) Boolean unlocked,
+            @RequestParam(value = "cooler", required = false) Boolean cooler
+    ) {
+        ProcessorFilter filter = new ProcessorFilter();
+        filter.setPriceMaximum(maxPrice);
+        filter.setPriceMinimum(minPrice);
+        filter.setSelectedProducers(producers);
+        filter.setSelectedSockets(sockets);
+        filter.setSelectedLines(lines);
+        filter.setSelectedCores(cores);
+        filter.setSelectedFrequencies(freq);
+        filter.setSelectedGraphicsUnits(igu);
+        filter.setSelectedPackagingTypes(pack);
+        filter.setUnlocked(unlocked);
+        filter.setCoolerIncluded(cooler);
+        List<Product> products = processorService.getFilteredProducts(filter);
+        if (products.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        List<ProductResponse> productResponses = new ArrayList<>();
+        for (Product product : products) {
+            productResponses.add(getProductResponse(product));
+        }
+        return ResponseEntity.ok(productResponses);
     }
 
     @GetMapping("/category/{category}")

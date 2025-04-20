@@ -3,8 +3,8 @@ package com.pc_forge.backend.controller.service;
 import com.pc_forge.backend.controller.exceptions.UserAlreadyExistsException;
 import com.pc_forge.backend.model.database.user.User;
 import com.pc_forge.backend.model.database.user.repository.UserRepository;
-import com.pc_forge.backend.view.api.model.Login;
-import com.pc_forge.backend.view.api.model.Registration;
+import com.pc_forge.backend.view.api.request.body.LoginBody;
+import com.pc_forge.backend.view.api.request.body.RegistrationBody;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -21,7 +21,7 @@ public class UserService {
         this.jwtService = jwtService;
     }
 
-    public User createAccount(Registration registration) throws UserAlreadyExistsException {
+    public User createAccount(RegistrationBody registration) throws UserAlreadyExistsException {
         if (userRepository.findByEmailIgnoreCase(registration.getEmail()).isPresent()) {
             throw new UserAlreadyExistsException("Email \"" + registration.getEmail() + "\" is already linked to another user");
         }
@@ -39,7 +39,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public String login(Login login) {
+    public String login(LoginBody login) {
         Optional<User> optUser = userRepository.findByUsernameIgnoreCase(login.getUsername());
         if (optUser.isPresent()) {
             User user = optUser.get();

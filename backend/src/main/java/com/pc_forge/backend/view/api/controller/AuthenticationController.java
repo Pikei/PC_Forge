@@ -3,9 +3,9 @@ package com.pc_forge.backend.view.api.controller;
 import com.pc_forge.backend.controller.exceptions.UserAlreadyExistsException;
 import com.pc_forge.backend.controller.service.UserService;
 import com.pc_forge.backend.model.database.user.User;
-import com.pc_forge.backend.view.api.model.Login;
-import com.pc_forge.backend.view.api.model.LoginResponse;
-import com.pc_forge.backend.view.api.model.Registration;
+import com.pc_forge.backend.view.api.request.body.LoginBody;
+import com.pc_forge.backend.view.api.request.response.LoginResponse;
+import com.pc_forge.backend.view.api.request.body.RegistrationBody;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Void> register(@Valid @RequestBody Registration registration) {
+    public ResponseEntity<Void> register(@Valid @RequestBody RegistrationBody registration) {
         try {
             userService.createAccount(registration);
             return ResponseEntity.ok().build();
@@ -35,7 +35,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody Login login) {
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginBody login) {
         String jwt = userService.login(login);
         if (jwt != null) {
             LoginResponse token = new LoginResponse();

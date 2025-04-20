@@ -1,6 +1,5 @@
-package com.pc_forge.backend.view.api.model.product;
+package com.pc_forge.backend.view.api.request.response.product;
 
-import com.pc_forge.backend.model.database.product.compatibility.MotherboardStandard;
 import lombok.Getter;
 import lombok.Setter;
 

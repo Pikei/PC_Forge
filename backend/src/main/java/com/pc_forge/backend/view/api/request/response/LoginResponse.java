@@ -1,4 +1,4 @@
-package com.pc_forge.backend.view.api.model;
+package com.pc_forge.backend.view.api.request.response;
 
 import lombok.Data;
 
