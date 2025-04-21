@@ -73,13 +73,13 @@ public final class Motherboard extends Product {
     private Double depth;
 
     @NotNull
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "standard_id", nullable = false)
     private MotherboardStandard standard;
 
     @NotNull
-    @ManyToOne(optional = false)
     @JoinColumn(name = "socket_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private CpuSocket socket;
 
     @Type(ListArrayType.class)

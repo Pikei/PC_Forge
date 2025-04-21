@@ -2,6 +2,7 @@ package com.pc_forge.backend.model.database.product.repository;
 
 import com.pc_forge.backend.model.database.product.Processor;
 import com.pc_forge.backend.model.database.product.Product;
+import com.pc_forge.backend.view.api.ProductCategoryCode;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,22 +11,22 @@ import org.springframework.lang.Nullable;
 import java.util.List;
 
 public interface ProcessorRepository extends JpaRepository<Processor, Long> {
-    List<Product> findBySocket_Socket(String socket);
+    List<Processor> findBySocket_Socket(String socket);
 
-    List<Product> findByLine(String line);
+    List<Processor> findByLine(String line);
 
-    List<Product> findByCores(Integer cores);
+    List<Processor> findByCores(Integer cores);
 
-    List<Product> findByUnlocked(Boolean unlocked);
+    List<Processor> findByUnlocked(Boolean unlocked);
 
-    List<Product> findByFrequency(Double frequency);
+    List<Processor> findByFrequency(Double frequency);
 
     @Query("select p from Processor p where (:unit is null and p.integratedGraphicsUnit is null) or (:unit is not null and p.integratedGraphicsUnit = :unit)")
-    List<Product> findByIntegratedGraphicsUnit(@Nullable @Param("unit") String integratedGraphicsUnit);
+    List<Processor> findByIntegratedGraphicsUnit(@Nullable @Param("unit") String integratedGraphicsUnit);
 
-    List<Product> findByCoolerIncluded(Boolean coolerIncluded);
+    List<Processor> findByCoolerIncluded(Boolean coolerIncluded);
 
-    List<Product> findByPackaging(String packaging);
+    List<Processor> findByPackaging(String packaging);
 
     @Query("select p.socket.socket, count(*) from Processor p group by p.socket.socket order by p.socket.socket")
     List<Object[]> getSocketFilter();

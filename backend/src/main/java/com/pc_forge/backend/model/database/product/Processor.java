@@ -60,7 +60,7 @@ public final class Processor extends Product {
     private String packaging;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "socket_id", nullable = false)
     private CpuSocket socket;
 

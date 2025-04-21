@@ -1,12 +1,15 @@
 package com.pc_forge.backend.view.api.controller;
 
+import com.pc_forge.backend.controller.filter.MotherboardFilter;
+import com.pc_forge.backend.controller.service.product.MotherboardService;
 import com.pc_forge.backend.controller.service.product.ProcessorService;
-import com.pc_forge.backend.controller.service.product.ProductService;
 import com.pc_forge.backend.model.database.product.*;
 import com.pc_forge.backend.view.api.ProductCategoryCode;
-import com.pc_forge.backend.view.api.ProductCategoryUrl;
 import com.pc_forge.backend.controller.filter.ProcessorFilter;
+import com.pc_forge.backend.view.api.request.response.filter.CommonProductService;
+import com.pc_forge.backend.view.api.request.response.filter.ProductFilterResponse;
 import com.pc_forge.backend.view.api.request.response.product.*;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,21 +19,43 @@ import java.util.List;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
-    private final ProductService productService;
+    private final CommonProductService productService;
     private final ProcessorService processorService;
+    private final MotherboardService motherboardService;
 
-    public ProductController(ProductService productService, ProcessorService processorService) {
+    public ProductController(
+            @Qualifier("productService") CommonProductService productService,
+            @Qualifier("processorService") ProcessorService processorService,
+            @Qualifier("motherboardService") MotherboardService motherboardService) {
         this.productService = productService;
         this.processorService = processorService;
+        this.motherboardService = motherboardService;
     }
 
-    @GetMapping("category-testfilter/cpu")
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable String id) {
+        try {
+            Long productId = Long.parseLong(id);
+            Product product = productService.getProductById(productId);
+            return ResponseEntity.ok(product);
+        } catch (NumberFormatException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/search/{name}")
+    public ResponseEntity<List<ProductResponse>> getProductsByName(@PathVariable String name) {
+        List<Product> products = productService.getProductsByName(name);
+        return responseListOfProducts(products);
+    }
+
+    @GetMapping("/category/processors")
     public ResponseEntity<List<ProductResponse>> getFilteredProcessors(
-            @RequestParam(value = "maxPrice", required = false) Double maxPrice,
             @RequestParam(value = "minPrice", required = false) Double minPrice,
-            @RequestParam(value = "producers", required = false) List<String> producers,
-            @RequestParam(value = "sockets", required = false) List<String> sockets,
-            @RequestParam(value = "lines", required = false) List<String> lines,
+            @RequestParam(value = "maxPrice", required = false) Double maxPrice,
+            @RequestParam(value = "producer", required = false) List<String> producers,
+            @RequestParam(value = "socket", required = false) List<String> sockets,
+            @RequestParam(value = "line", required = false) List<String> lines,
             @RequestParam(value = "cores", required = false) List<Integer> cores,
             @RequestParam(value = "freq", required = false) List<Double> freq,
             @RequestParam(value = "igu", required = false) List<String> igu,
@@ -39,8 +64,8 @@ public class ProductController {
             @RequestParam(value = "cooler", required = false) Boolean cooler
     ) {
         ProcessorFilter filter = new ProcessorFilter();
-        filter.setPriceMaximum(maxPrice);
         filter.setPriceMinimum(minPrice);
+        filter.setPriceMaximum(maxPrice);
         filter.setSelectedProducers(producers);
         filter.setSelectedSockets(sockets);
         filter.setSelectedLines(lines);
@@ -50,39 +75,66 @@ public class ProductController {
         filter.setSelectedPackagingTypes(pack);
         filter.setUnlocked(unlocked);
         filter.setCoolerIncluded(cooler);
-        List<Product> products = processorService.getFilteredProducts(filter);
-        if (products.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
+        List<Processor> products = processorService.getFilteredProducts(filter);
+        return responseListOfProducts(products);
+    }
+
+    @GetMapping("/category/motherboards")
+    public ResponseEntity<List<ProductResponse>> getFilteredMotherboards(
+            @RequestParam(value = "minPrice", required = false) Double minPrice,
+            @RequestParam(value = "maxPrice", required = false) Double maxPrice,
+            @RequestParam(value = "producer", required = false) List<String> producers,
+            @RequestParam(value = "socket", required = false) List<String> sockets,
+            @RequestParam(value = "standard", required = false) List<String> standards,
+            @RequestParam(value = "chipset", required = false) List<String> chipsets,
+            @RequestParam(value = "ramType", required = false) List<String> memoryStandards,
+            @RequestParam(value = "ramSlots", required = false) List<Integer> memorySlots,
+            @RequestParam(value = "ramMax", required = false) List<Integer> maxMemory,
+            @RequestParam(value = "freq", required = false) List<Integer> frequencies,
+            @RequestParam(value = "bt", required = false) Boolean bluetooth,
+            @RequestParam(value = "wifi", required = false) Boolean wifi,
+            @RequestParam(value = "minWidth", required = false) Double minWidth,
+            @RequestParam(value = "maxWidth", required = false) Double maxWidth,
+            @RequestParam(value = "minDepth", required = false) Double minDepth,
+            @RequestParam(value = "maxDepth", required = false) Double maxDepth
+    ) {
+        MotherboardFilter filter = new MotherboardFilter();
+        filter.setPriceMinimum(minPrice);
+        filter.setPriceMaximum(maxPrice);
+        filter.setSelectedProducers(producers);
+        filter.setSelectedSockets(sockets);
+        filter.setSelectedStandards(standards);
+        filter.setSelectedChipsets(chipsets);
+        filter.setSelectedMemoryStandards(memoryStandards);
+        filter.setSelectedMemorySlots(memorySlots);
+        filter.setSelectedMaxMemoryCapacity(maxMemory);
+        filter.setSelectedFrequencies(frequencies);
+        filter.setBluetooth(bluetooth);
+        filter.setWifi(wifi);
+        filter.setMinWidth(minWidth);
+        filter.setMaxWidth(maxWidth);
+        filter.setMinDepth(minDepth);
+        filter.setMaxDepth(maxDepth);
+        List<Motherboard> products = motherboardService.getFilteredProducts(filter);
+        return responseListOfProducts(products);
+    }
+
+    @GetMapping("/filter/cpu")
+    public ResponseEntity<? extends ProductFilterResponse> getProcessorFilters() {
+        return ResponseEntity.ok(processorService.getFilters());
+    }
+
+    @GetMapping("/filter/motherboard")
+    public ResponseEntity<? extends ProductFilterResponse> getMotherboardFilters() {
+        return ResponseEntity.ok(motherboardService.getFilters());
+    }
+
+    private ResponseEntity<List<ProductResponse>> responseListOfProducts(List<? extends Product> products) {
         List<ProductResponse> productResponses = new ArrayList<>();
         for (Product product : products) {
             productResponses.add(getProductResponse(product));
         }
         return ResponseEntity.ok(productResponses);
-    }
-
-    @GetMapping("/category/{category}")
-    public ResponseEntity<List<ProductResponse>> getProductsByCategory(@PathVariable String category) {
-        List<Product> products = productService.getProductsInCategory(ProductCategoryUrl.valueOf(category).getCode());
-        List<ProductResponse> productResponses = new ArrayList<>();
-        for (Product product : products) {
-            productResponses.add(getProductResponse(product));
-        }
-        if (productResponses.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(productResponses);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable String id) {
-        try {
-            Long productId = Long.parseLong(id);
-            Product product = productService.getProductById(productId).orElse(null);
-            return ResponseEntity.ok(product);
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().build();
-        }
     }
 
     private ProductResponse getProductResponse(Product product) {

@@ -2,7 +2,6 @@ package com.pc_forge.backend.controller.filter;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Filter;
 
 import java.util.List;
 

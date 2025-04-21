@@ -1,5 +1,6 @@
 package com.pc_forge.backend.model.database.product.compatibility;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -14,6 +15,7 @@ import lombok.Setter;
 })
 public class CpuSocket {
     @Id
+    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "socket_id", nullable = false)
     private Integer id;
