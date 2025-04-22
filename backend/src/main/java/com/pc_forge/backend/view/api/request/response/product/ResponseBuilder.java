@@ -163,6 +163,7 @@ public class ResponseBuilder {
         response.setLatency(product.getLatency());
         response.setFrequency(product.getFrequency());
         response.setModules(product.getNumberOfModules());
+        response.setLighting(product.getLighting());
         return response;
     }
 

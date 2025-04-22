@@ -2,7 +2,6 @@ package com.pc_forge.backend.controller.service.product;
 
 import com.pc_forge.backend.controller.ProductCategoryCode;
 import com.pc_forge.backend.controller.filter.MemoryFilter;
-import com.pc_forge.backend.controller.filter.MotherboardFilter;
 import com.pc_forge.backend.controller.filter.ProductFilter;
 import com.pc_forge.backend.model.database.product.Memory;
 import com.pc_forge.backend.model.database.product.repository.MemoryRepository;
