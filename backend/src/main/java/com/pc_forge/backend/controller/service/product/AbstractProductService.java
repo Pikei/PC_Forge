@@ -37,8 +37,6 @@ public abstract class AbstractProductService<T extends Product> {
         return productRepository.findByCategory(category);
     }
 
-    ;
-
     public abstract List<T> getFilteredProducts(ProductFilter filter);
 
     protected void filterByProducers(String category, List<String> producers) {
@@ -72,5 +70,5 @@ public abstract class AbstractProductService<T extends Product> {
                 .orElseGet(ArrayList::new);
     }
 
-    public abstract ProductFilterResponse getFilters();
+    public abstract <V extends ProductFilterResponse> V getAvailableFilters();
 }

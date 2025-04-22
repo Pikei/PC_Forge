@@ -5,7 +5,7 @@ import com.pc_forge.backend.controller.filter.ProductFilter;
 import com.pc_forge.backend.model.database.product.Processor;
 import com.pc_forge.backend.model.database.product.repository.ProcessorRepository;
 import com.pc_forge.backend.model.database.product.repository.ProductRepository;
-import com.pc_forge.backend.view.api.ProductCategoryCode;
+import com.pc_forge.backend.controller.ProductCategoryCode;
 import com.pc_forge.backend.view.api.request.response.filter.ProcessorFilterResponse;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@Service("processorService")
+@Service
 public final class ProcessorService extends AbstractProductService<Processor> {
     private final ProcessorRepository processorRepository;
 
@@ -28,6 +28,9 @@ public final class ProcessorService extends AbstractProductService<Processor> {
     public List<Processor> getFilteredProducts(ProductFilter filter) {
         filteredProducts.clear();
         filteredProducts.add(getProductsInCategory(ProductCategoryCode.PROCESSOR.getCode()));
+        if (filter.empty()) {
+            return applyFilters();
+        }
         filterByPrice(filter.getPriceMinimum(), filter.getPriceMaximum(), ProductCategoryCode.PROCESSOR.getCode());
         filterByProducers(ProductCategoryCode.PROCESSOR.getCode(), filter.getSelectedProducers());
         filterByListParam(((ProcessorFilter) filter).getSelectedSockets(), processorRepository::findBySocket_Socket);
@@ -42,7 +45,8 @@ public final class ProcessorService extends AbstractProductService<Processor> {
     }
 
     @Override
-    public ProcessorFilterResponse getFilters() {
+    @SuppressWarnings("unchecked")
+    public ProcessorFilterResponse getAvailableFilters() {
         ProcessorFilterResponse response = new ProcessorFilterResponse();
         response.setPriceMinimum(productRepository.getMinPriceFilter(ProductCategoryCode.PROCESSOR.getCode()));
         response.setPriceMaximum(productRepository.getMaxPriceFilter(ProductCategoryCode.PROCESSOR.getCode()));

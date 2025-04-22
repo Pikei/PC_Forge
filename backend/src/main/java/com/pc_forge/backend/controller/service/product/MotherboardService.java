@@ -5,14 +5,13 @@ import com.pc_forge.backend.controller.filter.ProductFilter;
 import com.pc_forge.backend.model.database.product.Motherboard;
 import com.pc_forge.backend.model.database.product.repository.MotherboardRepository;
 import com.pc_forge.backend.model.database.product.repository.ProductRepository;
-import com.pc_forge.backend.view.api.ProductCategoryCode;
+import com.pc_forge.backend.controller.ProductCategoryCode;
 import com.pc_forge.backend.view.api.request.response.filter.MotherboardFilterResponse;
-import com.pc_forge.backend.view.api.request.response.filter.ProductFilterResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service("motherboardService")
+@Service
 public final class MotherboardService extends AbstractProductService<Motherboard> {
     private final MotherboardRepository motherboardRepository;
 
@@ -25,6 +24,9 @@ public final class MotherboardService extends AbstractProductService<Motherboard
     public List<Motherboard> getFilteredProducts(ProductFilter filter) {
         filteredProducts.clear();
         filteredProducts.add(getProductsInCategory(ProductCategoryCode.MOTHERBOARD.getCode()));
+        if (filter.empty()) {
+            return applyFilters();
+        }
         filterByPrice(filter.getPriceMinimum(), filter.getPriceMaximum(), ProductCategoryCode.MOTHERBOARD.getCode());
         filterByProducers(ProductCategoryCode.MOTHERBOARD.getCode(), filter.getSelectedProducers());
         filterByListParam(((MotherboardFilter) filter).getSelectedSockets(), motherboardRepository::findBySocket_Socket);
@@ -42,7 +44,8 @@ public final class MotherboardService extends AbstractProductService<Motherboard
     }
 
     @Override
-    public ProductFilterResponse getFilters() {
+    @SuppressWarnings("unchecked")
+    public MotherboardFilterResponse getAvailableFilters() {
         MotherboardFilterResponse response = new MotherboardFilterResponse();
         response.setPriceMinimum(productRepository.getMinPriceFilter(ProductCategoryCode.MOTHERBOARD.getCode()));
         response.setPriceMaximum(productRepository.getMaxPriceFilter(ProductCategoryCode.MOTHERBOARD.getCode()));

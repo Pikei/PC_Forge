@@ -1,8 +1,6 @@
 package com.pc_forge.backend.model.database.product.repository;
 
 import com.pc_forge.backend.model.database.product.Processor;
-import com.pc_forge.backend.model.database.product.Product;
-import com.pc_forge.backend.view.api.ProductCategoryCode;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

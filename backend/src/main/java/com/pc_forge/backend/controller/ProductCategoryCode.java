@@ -1,4 +1,4 @@
-package com.pc_forge.backend.view.api;
+package com.pc_forge.backend.controller;
 
 import lombok.Getter;
 

@@ -8,8 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ProductRepository<T extends Product> extends JpaRepository<T, Long> {
-    List<Product> findByNameContainsIgnoreCase(String name);
-
     List<T> findByCategory(String category);
 
     List<T> findByProducerAndCategory(String producer, String category);

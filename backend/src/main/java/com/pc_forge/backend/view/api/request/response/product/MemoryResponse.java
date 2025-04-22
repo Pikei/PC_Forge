@@ -10,4 +10,5 @@ public final class MemoryResponse extends ProductResponse {
     private Integer totalCapacity;
     private String latency;
     private Integer frequency;
+    private Integer modules;
 }
