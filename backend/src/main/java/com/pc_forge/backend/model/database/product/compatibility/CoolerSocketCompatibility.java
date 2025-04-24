@@ -26,6 +26,6 @@ public class CoolerSocketCompatibility {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "socket_id", nullable = false)
-    private com.pc_forge.backend.model.database.product.compatibility.CpuSocket socket;
+    private CpuSocket socket;
 
 }

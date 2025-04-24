@@ -21,7 +21,7 @@ public class CaseMbCompatibility {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "standard_id", nullable = false)
-    private com.pc_forge.backend.model.database.product.compatibility.MotherboardStandard standard;
+    private MotherboardStandard standard;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

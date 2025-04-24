@@ -1,6 +1,5 @@
 package com.pc_forge.backend.controller.filter;
 
-import com.pc_forge.backend.model.database.product.compatibility.MotherboardStandard;
 import lombok.Getter;
 import lombok.Setter;
 
