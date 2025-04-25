@@ -41,8 +41,7 @@ public final class CaseFilter extends ProductFilter {
 
     @Override
     public Boolean empty() {
-        boolean result = getPriceMaximum() == null && getPriceMinimum() == null;
-        result = result && (getSelectedProducers() == null || getSelectedProducers().isEmpty());
+        boolean result = checkCommonFilterFieldsIfEmpty();
         result = result && (selectedColors == null || selectedColors.isEmpty());
         result = result && (selectedCaseTypes == null || selectedCaseTypes.isEmpty());
         result = result && minHeight == null && maxHeight == null;
@@ -66,11 +65,8 @@ public final class CaseFilter extends ProductFilter {
     }
 
     @Override
-    protected void setFilter() {
-        splitJoinedParams();
-        setPriceMinimum(getDoubleFromRequestParam(RequestParams.PRICE_MINIMUM));
-        setPriceMaximum(getDoubleFromRequestParam(RequestParams.PRICE_MAXIMUM));
-        setSelectedProducers(getStringListFromRequestParam(RequestParams.PRODUCER));
+    public void setFilter() {
+        setCommonFilters();
         selectedColors = getStringListFromRequestParam(RequestParams.COLOR);
         selectedCaseTypes = getStringListFromRequestParam(RequestParams.CASE_TYPE);
         minHeight = getDoubleFromRequestParam(RequestParams.HEIGHT_MINIMUM);

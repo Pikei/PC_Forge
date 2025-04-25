@@ -31,8 +31,7 @@ public final class GpuFilter extends ProductFilter {
 
     @Override
     public Boolean empty() {
-        boolean result = getPriceMaximum() == null && getPriceMinimum() == null;
-        result = result && (getSelectedProducers() == null || getSelectedProducers().isEmpty());
+        boolean result = checkCommonFilterFieldsIfEmpty();
         result = result && (selectedChipsetProducers == null || selectedChipsetProducers.isEmpty());
         result = result && (selectedChipsets == null || selectedChipsets.isEmpty());
         result = result && (selectedRamCapacities == null || selectedRamCapacities.isEmpty());
@@ -49,11 +48,8 @@ public final class GpuFilter extends ProductFilter {
     }
 
     @Override
-    protected void setFilter() {
-        splitJoinedParams();
-        setPriceMinimum(getDoubleFromRequestParam(RequestParams.PRICE_MINIMUM));
-        setPriceMaximum(getDoubleFromRequestParam(RequestParams.PRICE_MAXIMUM));
-        setSelectedProducers(getStringListFromRequestParam(RequestParams.PRODUCER));
+    public void setFilter() {
+        setCommonFilters();
         selectedChipsetProducers = getStringListFromRequestParam(RequestParams.CHIPSET_PRODUCER);
         selectedChipsets = getStringListFromRequestParam(RequestParams.CHIPSET);
         selectedRamCapacities = getIntegerListFromRequestParam(RequestParams.RAM_CAPACITY);

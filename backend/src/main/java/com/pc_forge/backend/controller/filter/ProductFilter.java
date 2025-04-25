@@ -1,5 +1,6 @@
 package com.pc_forge.backend.controller.filter;
 
+import com.pc_forge.backend.controller.api.constants.RequestParams;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +19,35 @@ public abstract class ProductFilter {
 
     public ProductFilter(Map<String, String[]> requestParameters) {
         this.requestParameters = requestParameters;
+    }
+
+    public abstract Boolean empty();
+
+    public abstract void setFilter();
+
+    protected Boolean checkCommonFilterFieldsIfEmpty() {
+        boolean result = priceMinimum == null && priceMaximum == null;
+        result = result && (selectedProducers == null || selectedProducers.isEmpty());
+        return result;
+    }
+
+    protected void setCommonFilters() {
+        splitJoinedParams();
+        setPriceMinimum(getDoubleFromRequestParam(RequestParams.PRICE_MINIMUM));
+        setPriceMaximum(getDoubleFromRequestParam(RequestParams.PRICE_MAXIMUM));
+        setSelectedProducers(getStringListFromRequestParam(RequestParams.PRODUCER));
+    }
+
+    private void splitJoinedParams() {
+        Map<String, String[]> params = new HashMap<>();
+        for (String key : requestParameters.keySet()) {
+            if (requestParameters.get(key).length == 1) {
+                params.put(key, requestParameters.get(key)[0].split(","));
+            } else {
+                params.put(key, requestParameters.get(key));
+            }
+        }
+        this.requestParameters = params;
     }
 
     protected Boolean getBooleanFromRequestParam(String param) {
@@ -73,20 +103,4 @@ public abstract class ProductFilter {
         }
         return null;
     }
-
-    protected void splitJoinedParams() {
-        Map<String, String[]> params = new HashMap<>();
-        for (String key : requestParameters.keySet()) {
-            if (requestParameters.get(key).length == 1) {
-                params.put(key, requestParameters.get(key)[0].split(","));
-            } else {
-                params.put(key, requestParameters.get(key));
-            }
-        }
-        this.requestParameters = params;
-    }
-
-    public abstract Boolean empty();
-
-    protected abstract void setFilter();
 }

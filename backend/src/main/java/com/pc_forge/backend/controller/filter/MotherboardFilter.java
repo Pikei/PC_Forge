@@ -31,8 +31,7 @@ public final class MotherboardFilter extends ProductFilter {
 
     @Override
     public Boolean empty() {
-        boolean result = getPriceMaximum() == null && getPriceMinimum() == null;
-        result = result && (getSelectedProducers() == null || getSelectedProducers().isEmpty());
+        boolean result = checkCommonFilterFieldsIfEmpty();
         result = result && (selectedSockets == null || selectedSockets.isEmpty());
         result = result && (selectedStandards == null || selectedStandards.isEmpty());
         result = result && (selectedChipsets == null || selectedChipsets.isEmpty());
@@ -48,11 +47,8 @@ public final class MotherboardFilter extends ProductFilter {
     }
 
     @Override
-    protected void setFilter() {
-        splitJoinedParams();
-        setPriceMinimum(getDoubleFromRequestParam(RequestParams.PRICE_MINIMUM));
-        setPriceMaximum(getDoubleFromRequestParam(RequestParams.PRICE_MAXIMUM));
-        setSelectedProducers(getStringListFromRequestParam(RequestParams.PRODUCER));
+    public void setFilter() {
+        setCommonFilters();
         selectedSockets = getStringListFromRequestParam(RequestParams.SOCKET);
         selectedStandards = getStringListFromRequestParam(RequestParams.MOTHERBOARD_STANDARD);
         selectedChipsets = getStringListFromRequestParam(RequestParams.CHIPSET);

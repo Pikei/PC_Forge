@@ -27,8 +27,7 @@ public final class PowerSupplyFilter extends ProductFilter {
 
     @Override
     public Boolean empty() {
-        boolean result = getPriceMaximum() == null && getPriceMinimum() == null;
-        result = result && (getSelectedProducers() == null || getSelectedProducers().isEmpty());
+        boolean result = checkCommonFilterFieldsIfEmpty();
         result = result && (selectedPowers == null || selectedPowers.isEmpty());
         result = result && (selectedCertificates == null || selectedCertificates.isEmpty());
         result = result && (selectedEfficiencies == null || selectedEfficiencies.isEmpty());
@@ -41,11 +40,8 @@ public final class PowerSupplyFilter extends ProductFilter {
     }
 
     @Override
-    protected void setFilter() {
-        splitJoinedParams();
-        setPriceMinimum(getDoubleFromRequestParam(RequestParams.PRICE_MINIMUM));
-        setPriceMaximum(getDoubleFromRequestParam(RequestParams.PRICE_MAXIMUM));
-        setSelectedProducers(getStringListFromRequestParam(RequestParams.PRODUCER));
+    public void setFilter() {
+        setCommonFilters();
         selectedPowers = getIntegerListFromRequestParam(RequestParams.PS_POWER);
         selectedCertificates = getStringListFromRequestParam(RequestParams.CERTIFICATE);
         selectedEfficiencies = getIntegerListFromRequestParam(RequestParams.EFFICIENCY);

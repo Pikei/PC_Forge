@@ -22,13 +22,15 @@ public class FilterController {
     private final GraphicsCardService graphicsCardService;
     private final PowerSupplyService powerSupplyService;
     private final CaseService caseService;
+    private final SsdService ssdService;
+    private final HddService hddService;
 
     public FilterController(CommonProductService productService,
                             ProcessorService processorService,
                             MotherboardService motherboardService,
                             MemoryService memoryService,
                             GraphicsCardService graphicsCardService,
-                            PowerSupplyService powerSupplyService, CaseService caseService) {
+                            PowerSupplyService powerSupplyService, CaseService caseService, SsdService ssdService, HddService hddService) {
         this.productService = productService;
         this.processorService = processorService;
         this.motherboardService = motherboardService;
@@ -36,6 +38,8 @@ public class FilterController {
         this.graphicsCardService = graphicsCardService;
         this.powerSupplyService = powerSupplyService;
         this.caseService = caseService;
+        this.ssdService = ssdService;
+        this.hddService = hddService;
     }
 
     @GetMapping(UrlPath.SEARCH)
@@ -76,5 +80,15 @@ public class FilterController {
     @GetMapping(UrlPath.CASE)
     public ResponseEntity<CaseFilterResponse> getCaseFilters() {
         return ResponseEntity.ok(caseService.getAvailableFilters());
+    }
+
+    @GetMapping(UrlPath.SSD)
+    public ResponseEntity<SsdFilterResponse> getSSDFilters() {
+        return ResponseEntity.ok(ssdService.getAvailableFilters());
+    }
+
+    @GetMapping(UrlPath.HDD)
+    public ResponseEntity<HddFilterResponse> getHDDFilters() {
+        return ResponseEntity.ok(hddService.getAvailableFilters());
     }
 }

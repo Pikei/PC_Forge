@@ -26,8 +26,7 @@ public final class ProcessorFilter extends ProductFilter {
 
     @Override
     public Boolean empty() {
-        boolean result = getPriceMaximum() == null && getPriceMinimum() == null;
-        result = result && (getSelectedProducers() == null || getSelectedProducers().isEmpty());
+        boolean result = checkCommonFilterFieldsIfEmpty();
         result = result && (selectedSockets == null || selectedSockets.isEmpty());
         result = result && (selectedLines == null || selectedLines.isEmpty());
         result = result && (selectedCores == null || selectedCores.isEmpty());
@@ -40,11 +39,8 @@ public final class ProcessorFilter extends ProductFilter {
     }
 
     @Override
-    protected void setFilter() {
-        splitJoinedParams();
-        setPriceMinimum(getDoubleFromRequestParam(RequestParams.PRICE_MINIMUM));
-        setPriceMaximum(getDoubleFromRequestParam(RequestParams.PRICE_MAXIMUM));
-        setSelectedProducers(getStringListFromRequestParam(RequestParams.PRODUCER));
+    public void setFilter() {
+        setCommonFilters();
         selectedSockets = getStringListFromRequestParam(RequestParams.SOCKET);
         selectedLines = getStringListFromRequestParam(RequestParams.MODEL);
         selectedCores = getIntegerListFromRequestParam(RequestParams.NUMBER_OF_CORES);

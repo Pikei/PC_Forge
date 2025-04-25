@@ -11,5 +11,7 @@ public class UrlPath {
     public static final String GRAPHICS_CARD = "/graphics-card";
     public static final String POWER_SUPPLY = "/power-supply";
     public static final String CASE = "/pc-case";
+    public static final String SSD = "/ssd";
+    public static final String HDD = "/hdd";
 
 }

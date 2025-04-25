@@ -22,11 +22,9 @@ public final class MemoryFilter extends ProductFilter {
         setFilter();
     }
 
-
     @Override
     public Boolean empty() {
-        boolean result = getPriceMaximum() == null && getPriceMinimum() == null;
-        result = result && (getSelectedProducers() == null || getSelectedProducers().isEmpty());
+        boolean result = checkCommonFilterFieldsIfEmpty();
         result = result && (selectedTypes == null || selectedTypes.isEmpty());
         result = result && (selectedCapacities == null || selectedCapacities.isEmpty());
         result = result && (selectedFrequencies == null || selectedFrequencies.isEmpty());
@@ -37,11 +35,8 @@ public final class MemoryFilter extends ProductFilter {
     }
 
     @Override
-    protected void setFilter() {
-        splitJoinedParams();
-        setPriceMinimum(getDoubleFromRequestParam(RequestParams.PRICE_MINIMUM));
-        setPriceMaximum(getDoubleFromRequestParam(RequestParams.PRICE_MAXIMUM));
-        setSelectedProducers(getStringListFromRequestParam(RequestParams.PRODUCER));
+    public void setFilter() {
+        setCommonFilters();
         selectedTypes = getStringListFromRequestParam(RequestParams.RAM_TYPE);
         selectedCapacities = getIntegerListFromRequestParam(RequestParams.CAPACITY);
         selectedFrequencies = getIntegerListFromRequestParam(RequestParams.FREQUENCY);

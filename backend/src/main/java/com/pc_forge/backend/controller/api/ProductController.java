@@ -23,12 +23,14 @@ public class ProductController {
     private final GraphicsCardService graphicsCardService;
     private final PowerSupplyService powerSupplyService;
     private final CaseService caseService;
+    private final SsdService ssdService;
+    private final HddService hddService;
 
     public ProductController(CommonProductService productService,
                              ProcessorService processorService,
                              MotherboardService motherboardService,
                              MemoryService memoryService,
-                             GraphicsCardService graphicsCardService, PowerSupplyService powerSupplyService, CaseService caseService) {
+                             GraphicsCardService graphicsCardService, PowerSupplyService powerSupplyService, CaseService caseService, SsdService ssdService, HddService hddService) {
         this.productService = productService;
         this.processorService = processorService;
         this.motherboardService = motherboardService;
@@ -36,6 +38,8 @@ public class ProductController {
         this.graphicsCardService = graphicsCardService;
         this.powerSupplyService = powerSupplyService;
         this.caseService = caseService;
+        this.ssdService = ssdService;
+        this.hddService = hddService;
     }
 
     @GetMapping(UrlPath.PRODUCT + "/{id}")
@@ -110,6 +114,19 @@ public class ProductController {
         return ResponseBuilder.generateProductList(products);
     }
 
+    @GetMapping(UrlPath.CATEGORY + UrlPath.SSD)
+    public ResponseEntity<List<ProductResponse>> getFilteredSSDs(HttpServletRequest request) {
+        Map<String, String[]> params = request.getParameterMap();
+        SsdFilter filter = new SsdFilter(params);
+        List<SolidStateDrive> products = ssdService.getFilteredProducts(filter);
+        return ResponseBuilder.generateProductList(products);
+    }
 
-
+    @GetMapping(UrlPath.CATEGORY + UrlPath.HDD)
+    public ResponseEntity<List<ProductResponse>> getFilteredHDDs(HttpServletRequest request) {
+        Map<String, String[]> params = request.getParameterMap();
+        HddFilter filter = new HddFilter(params);
+        List<HardDiskDrive> products = hddService.getFilteredProducts(filter);
+        return ResponseBuilder.generateProductList(products);
+    }
 }
