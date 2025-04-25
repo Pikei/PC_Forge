@@ -484,18 +484,12 @@ class ProductParser:
 
         spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Wysokość [cm]")
         height: float = CommonUtils.extract_float(spec_value)
-        if height is not None:
-            height = height * 100
 
         spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Szerokość [cm]")
         width: float = CommonUtils.extract_float(spec_value)
-        if width is not None:
-            width = width * 100
 
         spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Głębokość [cm]")
         depth: float = CommonUtils.extract_float(spec_value)
-        if depth is not None:
-            depth = depth * 100
 
         spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Waga [kg]")
         weight: float = CommonUtils.extract_float(spec_value)
@@ -508,17 +502,17 @@ class ProductParser:
             mb_compatibility: list[str] = spec_value.strip().replace("\n", "").split(",")
 
         spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Okno")
-        window: bool = CommonUtils.translate_to_bool(spec_value, custom_str_key="Z oknem")
+        window: bool = CommonUtils.translate_to_bool(spec_value)
 
         spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Maksymalna długość karty graficznej [cm]")
         max_gpu_length: float = CommonUtils.extract_float(spec_value)
         if max_gpu_length is not None:
-            max_gpu_length = max_gpu_length * 100
+            max_gpu_length = max_gpu_length * 10
 
         spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "Maksymalna wysokość układu chłodzenia CPU [cm]")
         max_cpu_cooler_height: float = CommonUtils.extract_float(spec_value)
         if max_cpu_cooler_height is not None:
-            max_cpu_cooler_height = max_cpu_cooler_height * 100
+            max_cpu_cooler_height = max_cpu_cooler_height * 10
 
         spec_value = CommonUtils.get_value_from_spec_row(spec_rows, "USB 2.0")
         usb20: int = CommonUtils.extract_int(spec_value)

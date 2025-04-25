@@ -21,11 +21,36 @@ public abstract class ProductFilter {
     }
 
     protected Boolean getBooleanFromRequestParam(String param) {
-        return requestParameters.containsKey(param) ? Boolean.parseBoolean(requestParameters.get(param)[0]) : null;
+        if (requestParameters.containsKey(param)) {
+            try {
+                return Boolean.parseBoolean(requestParameters.get(param)[0]);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    protected Integer getIntegerFromRequestParam(String param) {
+        if (requestParameters.containsKey(param)) {
+            try {
+                return Integer.parseInt(requestParameters.get(param)[0]);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+        return null;
     }
 
     protected Double getDoubleFromRequestParam(String param) {
-        return requestParameters.containsKey(param) ? Double.parseDouble(requestParameters.get(param)[0]) : null;
+        if (requestParameters.containsKey(param)) {
+            try {
+                return Double.parseDouble(requestParameters.get(param)[0]);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+        return null;
     }
 
     protected List<String> getStringListFromRequestParam(String param) {

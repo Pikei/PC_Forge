@@ -50,6 +50,9 @@ public abstract class AbstractProductService<T extends Product> {
     }
 
     protected void filterByPrice(Double minPrice, Double maxPrice, String category) {
+        if (minPrice == null && maxPrice == null) {
+            return;
+        }
         if (minPrice == null) {
             minPrice = productRepository.getMinPriceFilter(category);
         }

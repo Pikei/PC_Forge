@@ -21,19 +21,21 @@ public class FilterController {
     private final MemoryService memoryService;
     private final GraphicsCardService graphicsCardService;
     private final PowerSupplyService powerSupplyService;
+    private final CaseService caseService;
 
     public FilterController(CommonProductService productService,
                             ProcessorService processorService,
                             MotherboardService motherboardService,
                             MemoryService memoryService,
                             GraphicsCardService graphicsCardService,
-                            PowerSupplyService powerSupplyService) {
+                            PowerSupplyService powerSupplyService, CaseService caseService) {
         this.productService = productService;
         this.processorService = processorService;
         this.motherboardService = motherboardService;
         this.memoryService = memoryService;
         this.graphicsCardService = graphicsCardService;
         this.powerSupplyService = powerSupplyService;
+        this.caseService = caseService;
     }
 
     @GetMapping(UrlPath.SEARCH)
@@ -69,5 +71,10 @@ public class FilterController {
     @GetMapping(UrlPath.POWER_SUPPLY)
     public ResponseEntity<PsFilterResponse> getPowerSupplyFilters() {
         return ResponseEntity.ok(powerSupplyService.getAvailableFilters());
+    }
+
+    @GetMapping(UrlPath.CASE)
+    public ResponseEntity<CaseFilterResponse> getCaseFilters() {
+        return ResponseEntity.ok(caseService.getAvailableFilters());
     }
 }

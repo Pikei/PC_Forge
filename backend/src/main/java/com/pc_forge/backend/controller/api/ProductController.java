@@ -22,18 +22,20 @@ public class ProductController {
     private final MemoryService memoryService;
     private final GraphicsCardService graphicsCardService;
     private final PowerSupplyService powerSupplyService;
+    private final CaseService caseService;
 
     public ProductController(CommonProductService productService,
                              ProcessorService processorService,
                              MotherboardService motherboardService,
                              MemoryService memoryService,
-                             GraphicsCardService graphicsCardService, PowerSupplyService powerSupplyService) {
+                             GraphicsCardService graphicsCardService, PowerSupplyService powerSupplyService, CaseService caseService) {
         this.productService = productService;
         this.processorService = processorService;
         this.motherboardService = motherboardService;
         this.memoryService = memoryService;
         this.graphicsCardService = graphicsCardService;
         this.powerSupplyService = powerSupplyService;
+        this.caseService = caseService;
     }
 
     @GetMapping(UrlPath.PRODUCT + "/{id}")
@@ -99,5 +101,15 @@ public class ProductController {
         List<PowerSupply> products = powerSupplyService.getFilteredProducts(filter);
         return ResponseBuilder.generateProductList(products);
     }
+
+    @GetMapping(UrlPath.CATEGORY + UrlPath.CASE)
+    public ResponseEntity<List<ProductResponse>> getFilteredCases(HttpServletRequest request) {
+        Map<String, String[]> params = request.getParameterMap();
+        CaseFilter filter = new CaseFilter(params);
+        List<Case> products = caseService.getFilteredProducts(filter);
+        return ResponseBuilder.generateProductList(products);
+    }
+
+
 
 }

@@ -167,7 +167,7 @@ class CommonUtils:
         if s is None: return None
         if custom_str_key is None:
             if "tak" in s.lower(): return True
-            if "nie" in s.lower() or "brak" in s.lower(): return False
+            if "nie" in s.lower() or "brak" in s.lower() or "bez" in s.lower(): return False
             return True
         else:
             if custom_str_key.lower() in s.lower(): return True
