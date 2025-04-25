@@ -9,5 +9,6 @@ public class UrlPath {
     public static final String MOTHERBOARD = "/motherboards";
     public static final String MEMORY = "/memory";
     public static final String GRAPHICS_CARD = "/graphics-card";
+    public static final String POWER_SUPPLY = "/power-supply";
 
 }

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class MotherboardFilterResponse extends ProductFilterResponse {
+public final class MotherboardFilterResponse extends ProductFilterResponse {
     @JsonProperty(RequestParams.SOCKET)
     private List<Object[]> socket;
 

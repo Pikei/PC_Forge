@@ -2,10 +2,7 @@ package com.pc_forge.backend.controller.api;
 
 import com.pc_forge.backend.controller.api.constants.RequestParams;
 import com.pc_forge.backend.controller.api.constants.UrlPath;
-import com.pc_forge.backend.controller.filter.GpuFilter;
-import com.pc_forge.backend.controller.filter.MemoryFilter;
-import com.pc_forge.backend.controller.filter.MotherboardFilter;
-import com.pc_forge.backend.controller.filter.ProcessorFilter;
+import com.pc_forge.backend.controller.filter.*;
 import com.pc_forge.backend.controller.service.product.*;
 import com.pc_forge.backend.model.product.*;
 import com.pc_forge.backend.view.response.product.ProductResponse;
@@ -24,17 +21,19 @@ public class ProductController {
     private final MotherboardService motherboardService;
     private final MemoryService memoryService;
     private final GraphicsCardService graphicsCardService;
+    private final PowerSupplyService powerSupplyService;
 
     public ProductController(CommonProductService productService,
                              ProcessorService processorService,
                              MotherboardService motherboardService,
                              MemoryService memoryService,
-                             GraphicsCardService graphicsCardService) {
+                             GraphicsCardService graphicsCardService, PowerSupplyService powerSupplyService) {
         this.productService = productService;
         this.processorService = processorService;
         this.motherboardService = motherboardService;
         this.memoryService = memoryService;
         this.graphicsCardService = graphicsCardService;
+        this.powerSupplyService = powerSupplyService;
     }
 
     @GetMapping(UrlPath.PRODUCT + "/{id}")
@@ -92,4 +91,13 @@ public class ProductController {
         List<GraphicsCard> products = graphicsCardService.getFilteredProducts(filter);
         return ResponseBuilder.generateProductList(products);
     }
+
+    @GetMapping(UrlPath.CATEGORY + UrlPath.POWER_SUPPLY)
+    public ResponseEntity<List<ProductResponse>> getFilteredPowerSupplies(HttpServletRequest request) {
+        Map<String, String[]> params = request.getParameterMap();
+        PowerSupplyFilter filter = new PowerSupplyFilter(params);
+        List<PowerSupply> products = powerSupplyService.getFilteredProducts(filter);
+        return ResponseBuilder.generateProductList(products);
+    }
+
 }

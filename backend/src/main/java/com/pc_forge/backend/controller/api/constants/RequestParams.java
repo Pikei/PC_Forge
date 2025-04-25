@@ -38,5 +38,10 @@ public class RequestParams {
     public static final String RESOLUTION = "res";
     public static final String COOLING_TYPE = "cooling_type";
     public static final String NUMBER_OF_FANS = "fans";
+    public static final String FAN_DIAMETER = "fan_diameter";
     public static final String PS_POWER = "power";
+    public static final String CERTIFICATE = "cert";
+    public static final String EFFICIENCY = "efficiency";
+    public static final String PROTECTIONS = "protections";
+    public static final String MODULAR_CABLING = "modular";
 }

@@ -2,10 +2,8 @@ package com.pc_forge.backend.controller.api;
 
 import com.pc_forge.backend.controller.api.constants.UrlPath;
 import com.pc_forge.backend.controller.service.product.*;
-import com.pc_forge.backend.view.response.filter.GpuFilterResponse;
-import com.pc_forge.backend.view.response.filter.MemoryFilterResponse;
-import com.pc_forge.backend.view.response.filter.MotherboardFilterResponse;
-import com.pc_forge.backend.view.response.filter.ProcessorFilterResponse;
+import com.pc_forge.backend.model.product.repository.PowerSupplyRepository;
+import com.pc_forge.backend.view.response.filter.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,13 +20,20 @@ public class FilterController {
     private final MotherboardService motherboardService;
     private final MemoryService memoryService;
     private final GraphicsCardService graphicsCardService;
+    private final PowerSupplyService powerSupplyService;
 
-    public FilterController(CommonProductService productService, ProcessorService processorService, MotherboardService motherboardService, MemoryService memoryService, GraphicsCardService graphicsCardService) {
+    public FilterController(CommonProductService productService,
+                            ProcessorService processorService,
+                            MotherboardService motherboardService,
+                            MemoryService memoryService,
+                            GraphicsCardService graphicsCardService,
+                            PowerSupplyService powerSupplyService) {
         this.productService = productService;
         this.processorService = processorService;
         this.motherboardService = motherboardService;
         this.memoryService = memoryService;
         this.graphicsCardService = graphicsCardService;
+        this.powerSupplyService = powerSupplyService;
     }
 
     @GetMapping(UrlPath.SEARCH)
@@ -59,5 +64,10 @@ public class FilterController {
     @GetMapping(UrlPath.GRAPHICS_CARD)
     public ResponseEntity<GpuFilterResponse> getGraphicsCardFilters() {
         return ResponseEntity.ok(graphicsCardService.getAvailableFilters());
+    }
+
+    @GetMapping(UrlPath.POWER_SUPPLY)
+    public ResponseEntity<PsFilterResponse> getPowerSupplyFilters() {
+        return ResponseEntity.ok(powerSupplyService.getAvailableFilters());
     }
 }

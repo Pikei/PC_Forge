@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class MemoryFilterResponse extends ProductFilterResponse {
+public final class MemoryFilterResponse extends ProductFilterResponse {
 
     @JsonProperty(RequestParams.RAM_TYPE)
     private List<Object[]> memoryType;

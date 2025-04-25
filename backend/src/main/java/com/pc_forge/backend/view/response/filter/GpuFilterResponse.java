@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class GpuFilterResponse extends ProductFilterResponse {
+public final class GpuFilterResponse extends ProductFilterResponse {
     @JsonProperty(RequestParams.CHIPSET_PRODUCER)
     private List<Object[]> chipsetProducer;
 
