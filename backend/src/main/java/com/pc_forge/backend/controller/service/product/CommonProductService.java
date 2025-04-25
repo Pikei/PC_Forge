@@ -1,7 +1,7 @@
 package com.pc_forge.backend.controller.service.product;
 
-import com.pc_forge.backend.model.database.product.Product;
-import com.pc_forge.backend.model.database.product.repository.CommonProductRepository;
+import com.pc_forge.backend.model.product.Product;
+import com.pc_forge.backend.model.product.repository.CommonProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

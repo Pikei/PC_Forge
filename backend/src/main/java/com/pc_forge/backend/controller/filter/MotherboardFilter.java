@@ -1,9 +1,11 @@
 package com.pc_forge.backend.controller.filter;
 
+import com.pc_forge.backend.controller.api.constants.RequestParams;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -22,6 +24,11 @@ public final class MotherboardFilter extends ProductFilter {
     private Double minDepth;
     private Double maxDepth;
 
+    public MotherboardFilter(Map<String, String[]> requestParameters) {
+        super(requestParameters);
+        setFilter();
+    }
+
     @Override
     public Boolean empty() {
         boolean result = getPriceMaximum() == null && getPriceMinimum() == null;
@@ -38,5 +45,26 @@ public final class MotherboardFilter extends ProductFilter {
         result = result && minWidth == null && maxWidth == null;
         result = result && minDepth == null && maxDepth == null;
         return result;
+    }
+
+    @Override
+    protected void setFilter() {
+        splitJoinedParams();
+        setPriceMinimum(getDoubleFromRequestParam(RequestParams.PRICE_MINIMUM));
+        setPriceMaximum(getDoubleFromRequestParam(RequestParams.PRICE_MAXIMUM));
+        setSelectedProducers(getStringListFromRequestParam(RequestParams.PRODUCER));
+        selectedSockets = getStringListFromRequestParam(RequestParams.SOCKET);
+        selectedStandards = getStringListFromRequestParam(RequestParams.MOTHERBOARD_STANDARD);
+        selectedChipsets = getStringListFromRequestParam(RequestParams.CHIPSET);
+        selectedMemoryStandards = getStringListFromRequestParam(RequestParams.RAM_TYPE);
+        selectedMemorySlots = getIntegerListFromRequestParam(RequestParams.RAM_SLOTS);
+        selectedMaxMemoryCapacity = getIntegerListFromRequestParam(RequestParams.RAM_CAPACITY);
+        selectedFrequencies = getIntegerListFromRequestParam(RequestParams.FREQUENCY);
+        bluetooth = getBooleanFromRequestParam(RequestParams.BLUETOOTH);
+        wifi = getBooleanFromRequestParam(RequestParams.WIFI);
+        minWidth = getDoubleFromRequestParam(RequestParams.WIDTH_MINIMUM);
+        maxWidth = getDoubleFromRequestParam(RequestParams.WIDTH_MAXIMUM);
+        minDepth = getDoubleFromRequestParam(RequestParams.DEPTH_MINIMUM);
+        maxDepth = getDoubleFromRequestParam(RequestParams.DEPTH_MAXIMUM);
     }
 }

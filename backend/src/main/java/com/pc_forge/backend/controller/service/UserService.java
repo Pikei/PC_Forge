@@ -1,10 +1,10 @@
 package com.pc_forge.backend.controller.service;
 
 import com.pc_forge.backend.controller.exceptions.UserAlreadyExistsException;
-import com.pc_forge.backend.model.database.user.User;
-import com.pc_forge.backend.model.database.user.repository.UserRepository;
-import com.pc_forge.backend.view.api.request.body.LoginBody;
-import com.pc_forge.backend.view.api.request.body.RegistrationBody;
+import com.pc_forge.backend.model.user.User;
+import com.pc_forge.backend.model.user.repository.UserRepository;
+import com.pc_forge.backend.view.body.LoginBody;
+import com.pc_forge.backend.view.body.RegistrationBody;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

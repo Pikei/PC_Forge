@@ -2,11 +2,11 @@ package com.pc_forge.backend.controller.service.product;
 
 import com.pc_forge.backend.controller.filter.ProcessorFilter;
 import com.pc_forge.backend.controller.filter.ProductFilter;
-import com.pc_forge.backend.model.database.product.Processor;
-import com.pc_forge.backend.model.database.product.repository.ProcessorRepository;
-import com.pc_forge.backend.model.database.product.repository.ProductRepository;
-import com.pc_forge.backend.controller.ProductCategoryCode;
-import com.pc_forge.backend.view.api.request.response.filter.ProcessorFilterResponse;
+import com.pc_forge.backend.model.product.Processor;
+import com.pc_forge.backend.model.product.repository.ProcessorRepository;
+import com.pc_forge.backend.model.product.repository.ProductRepository;
+import com.pc_forge.backend.controller.api.constants.ProductCategoryCode;
+import com.pc_forge.backend.view.response.filter.ProcessorFilterResponse;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
@@ -27,12 +27,12 @@ public final class ProcessorService extends AbstractProductService<Processor> {
     @Override
     public List<Processor> getFilteredProducts(ProductFilter filter) {
         filteredProducts.clear();
-        filteredProducts.add(getProductsInCategory(ProductCategoryCode.PROCESSOR.getCode()));
+        filteredProducts.add(getProductsInCategory(ProductCategoryCode.PROCESSOR));
         if (filter.empty()) {
             return applyFilters();
         }
-        filterByPrice(filter.getPriceMinimum(), filter.getPriceMaximum(), ProductCategoryCode.PROCESSOR.getCode());
-        filterByProducers(ProductCategoryCode.PROCESSOR.getCode(), filter.getSelectedProducers());
+        filterByPrice(filter.getPriceMinimum(), filter.getPriceMaximum(), ProductCategoryCode.PROCESSOR);
+        filterByProducers(ProductCategoryCode.PROCESSOR, filter.getSelectedProducers());
         filterByListParam(((ProcessorFilter) filter).getSelectedSockets(), processorRepository::findBySocket_Socket);
         filterByListParam(((ProcessorFilter) filter).getSelectedLines(), processorRepository::findByLine);
         filterByListParam(((ProcessorFilter) filter).getSelectedCores(), processorRepository::findByCores);
@@ -48,9 +48,9 @@ public final class ProcessorService extends AbstractProductService<Processor> {
     @SuppressWarnings("unchecked")
     public ProcessorFilterResponse getAvailableFilters() {
         ProcessorFilterResponse response = new ProcessorFilterResponse();
-        response.setPriceMinimum(productRepository.getMinPriceFilter(ProductCategoryCode.PROCESSOR.getCode()));
-        response.setPriceMaximum(productRepository.getMaxPriceFilter(ProductCategoryCode.PROCESSOR.getCode()));
-        response.setProducers(productRepository.getProducerFilter(ProductCategoryCode.PROCESSOR.getCode()));
+        response.setPriceMinimum(productRepository.getMinPriceFilter(ProductCategoryCode.PROCESSOR));
+        response.setPriceMaximum(productRepository.getMaxPriceFilter(ProductCategoryCode.PROCESSOR));
+        response.setProducers(productRepository.getProducerFilter(ProductCategoryCode.PROCESSOR));
         response.setSocket(processorRepository.getSocketFilter());
         response.setModel(processorRepository.getLineFilter());
         response.setNumberOfCores(processorRepository.getCoresFilter());

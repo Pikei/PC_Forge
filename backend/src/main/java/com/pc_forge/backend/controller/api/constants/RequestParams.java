@@ -1,0 +1,42 @@
+package com.pc_forge.backend.controller.api.constants;
+
+public class RequestParams {
+    public static final String PRODUCT_CATEGORY = "category";
+    public static final String PRICE_MINIMUM = "min_price";
+    public static final String PRICE_MAXIMUM = "max_price";
+    public static final String PRODUCER = "producer";
+    public static final String SOCKET = "socket";
+    public static final String MODEL = "model";
+    public static final String NUMBER_OF_CORES = "num_cores";
+    public static final String FREQUENCY = "freq";
+    public static final String INTEGRATED_GRAPHICS_UNIT = "igu";
+    public static final String PACKAGING_TYPE = "pack";
+    public static final String CORE_UNLOCKED = "unlocked";
+    public static final String COOLER_INCLUDED = "cooler";
+    public static final String MOTHERBOARD_STANDARD = "standard";
+    public static final String CHIPSET = "chip";
+    public static final String RAM_TYPE = "ram_type";
+    public static final String RAM_SLOTS = "ram_slots";
+    public static final String RAM_CAPACITY = "ram_cap";
+    public static final String BLUETOOTH = "bt";
+    public static final String WIFI = "wifi";
+    public static final String WIDTH_MINIMUM = "min_w";
+    public static final String WIDTH_MAXIMUM = "max_w";
+    public static final String HEIGHT_MINIMUM = "min_h";
+    public static final String HEIGHT_MAXIMUM = "max_h";
+    public static final String DEPTH_MINIMUM = "min_d";
+    public static final String DEPTH_MAXIMUM = "max_d";
+    public static final String LENGTH_MINIMUM = "min_l";
+    public static final String LENGTH_MAXIMUM = "max_l";
+    public static final String CAPACITY = "cap";
+    public static final String NUMBER_OF_MODULES = "mod";
+    public static final String LATENCY = "latency";
+    public static final String LIGHTNING = "light";
+    public static final String CHIPSET_PRODUCER = "chip_prod";
+    public static final String DLSS = "dlss";
+    public static final String CONNECTOR = "conn";
+    public static final String RESOLUTION = "res";
+    public static final String COOLING_TYPE = "cooling_type";
+    public static final String NUMBER_OF_FANS = "fans";
+    public static final String PS_POWER = "power";
+}

@@ -1,9 +1,9 @@
 package com.pc_forge.backend.controller.service.product;
 
 import com.pc_forge.backend.controller.filter.ProductFilter;
-import com.pc_forge.backend.model.database.product.Product;
-import com.pc_forge.backend.model.database.product.repository.ProductRepository;
-import com.pc_forge.backend.view.api.request.response.filter.ProductFilterResponse;
+import com.pc_forge.backend.model.product.Product;
+import com.pc_forge.backend.model.product.repository.ProductRepository;
+import com.pc_forge.backend.view.response.filter.ProductFilterResponse;
 
 import java.util.*;
 import java.util.function.Function;

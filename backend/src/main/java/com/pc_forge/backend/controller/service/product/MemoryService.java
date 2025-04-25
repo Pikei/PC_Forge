@@ -1,12 +1,12 @@
 package com.pc_forge.backend.controller.service.product;
 
-import com.pc_forge.backend.controller.ProductCategoryCode;
+import com.pc_forge.backend.controller.api.constants.ProductCategoryCode;
 import com.pc_forge.backend.controller.filter.MemoryFilter;
 import com.pc_forge.backend.controller.filter.ProductFilter;
-import com.pc_forge.backend.model.database.product.Memory;
-import com.pc_forge.backend.model.database.product.repository.MemoryRepository;
-import com.pc_forge.backend.model.database.product.repository.ProductRepository;
-import com.pc_forge.backend.view.api.request.response.filter.MemoryFilterResponse;
+import com.pc_forge.backend.model.product.Memory;
+import com.pc_forge.backend.model.product.repository.MemoryRepository;
+import com.pc_forge.backend.model.product.repository.ProductRepository;
+import com.pc_forge.backend.view.response.filter.MemoryFilterResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,12 +23,12 @@ public final class MemoryService extends AbstractProductService<Memory> {
     @Override
     public List<Memory> getFilteredProducts(ProductFilter filter) {
         filteredProducts.clear();
-        filteredProducts.add(getProductsInCategory(ProductCategoryCode.RAM.getCode()));
+        filteredProducts.add(getProductsInCategory(ProductCategoryCode.RAM));
         if (filter.empty()) {
             return applyFilters();
         }
-        filterByPrice(filter.getPriceMinimum(), filter.getPriceMaximum(), ProductCategoryCode.RAM.getCode());
-        filterByProducers(ProductCategoryCode.RAM.getCode(), filter.getSelectedProducers());
+        filterByPrice(filter.getPriceMinimum(), filter.getPriceMaximum(), ProductCategoryCode.RAM);
+        filterByProducers(ProductCategoryCode.RAM, filter.getSelectedProducers());
         filterByListParam(((MemoryFilter) filter).getSelectedTypes(), memoryRepository::findByMemoryType);
         filterByListParam(((MemoryFilter) filter).getSelectedCapacities(), memoryRepository::findByTotalCapacity);
         filterByListParam(((MemoryFilter) filter).getSelectedFrequencies(), memoryRepository::findByFrequency);
@@ -42,9 +42,9 @@ public final class MemoryService extends AbstractProductService<Memory> {
     @SuppressWarnings("unchecked")
     public MemoryFilterResponse getAvailableFilters() {
         MemoryFilterResponse response = new MemoryFilterResponse();
-        response.setPriceMinimum(productRepository.getMinPriceFilter(ProductCategoryCode.RAM.getCode()));
-        response.setPriceMaximum(productRepository.getMaxPriceFilter(ProductCategoryCode.RAM.getCode()));
-        response.setProducers(productRepository.getProducerFilter(ProductCategoryCode.RAM.getCode()));
+        response.setPriceMinimum(productRepository.getMinPriceFilter(ProductCategoryCode.RAM));
+        response.setPriceMaximum(productRepository.getMaxPriceFilter(ProductCategoryCode.RAM));
+        response.setProducers(productRepository.getProducerFilter(ProductCategoryCode.RAM));
         response.setMemoryType(memoryRepository.getMemoryTypeFilter());
         response.setTotalCapacity(memoryRepository.getTotalCapacityFilter());
         response.setFrequency(memoryRepository.getFrequencyFilter());

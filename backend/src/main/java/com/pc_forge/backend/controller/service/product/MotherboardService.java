@@ -2,11 +2,11 @@ package com.pc_forge.backend.controller.service.product;
 
 import com.pc_forge.backend.controller.filter.MotherboardFilter;
 import com.pc_forge.backend.controller.filter.ProductFilter;
-import com.pc_forge.backend.model.database.product.Motherboard;
-import com.pc_forge.backend.model.database.product.repository.MotherboardRepository;
-import com.pc_forge.backend.model.database.product.repository.ProductRepository;
-import com.pc_forge.backend.controller.ProductCategoryCode;
-import com.pc_forge.backend.view.api.request.response.filter.MotherboardFilterResponse;
+import com.pc_forge.backend.model.product.Motherboard;
+import com.pc_forge.backend.model.product.repository.MotherboardRepository;
+import com.pc_forge.backend.model.product.repository.ProductRepository;
+import com.pc_forge.backend.controller.api.constants.ProductCategoryCode;
+import com.pc_forge.backend.view.response.filter.MotherboardFilterResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,12 +23,12 @@ public final class MotherboardService extends AbstractProductService<Motherboard
     @Override
     public List<Motherboard> getFilteredProducts(ProductFilter filter) {
         filteredProducts.clear();
-        filteredProducts.add(getProductsInCategory(ProductCategoryCode.MOTHERBOARD.getCode()));
+        filteredProducts.add(getProductsInCategory(ProductCategoryCode.MOTHERBOARD));
         if (filter.empty()) {
             return applyFilters();
         }
-        filterByPrice(filter.getPriceMinimum(), filter.getPriceMaximum(), ProductCategoryCode.MOTHERBOARD.getCode());
-        filterByProducers(ProductCategoryCode.MOTHERBOARD.getCode(), filter.getSelectedProducers());
+        filterByPrice(filter.getPriceMinimum(), filter.getPriceMaximum(), ProductCategoryCode.MOTHERBOARD);
+        filterByProducers(ProductCategoryCode.MOTHERBOARD, filter.getSelectedProducers());
         filterByListParam(((MotherboardFilter) filter).getSelectedSockets(), motherboardRepository::findBySocket_Socket);
         filterByListParam(((MotherboardFilter) filter).getSelectedStandards(), motherboardRepository::findByStandard_StandardName);
         filterByListParam(((MotherboardFilter) filter).getSelectedChipsets(), motherboardRepository::findByChipset);
@@ -47,9 +47,9 @@ public final class MotherboardService extends AbstractProductService<Motherboard
     @SuppressWarnings("unchecked")
     public MotherboardFilterResponse getAvailableFilters() {
         MotherboardFilterResponse response = new MotherboardFilterResponse();
-        response.setPriceMinimum(productRepository.getMinPriceFilter(ProductCategoryCode.MOTHERBOARD.getCode()));
-        response.setPriceMaximum(productRepository.getMaxPriceFilter(ProductCategoryCode.MOTHERBOARD.getCode()));
-        response.setProducers(productRepository.getProducerFilter(ProductCategoryCode.MOTHERBOARD.getCode()));
+        response.setPriceMinimum(productRepository.getMinPriceFilter(ProductCategoryCode.MOTHERBOARD));
+        response.setPriceMaximum(productRepository.getMaxPriceFilter(ProductCategoryCode.MOTHERBOARD));
+        response.setProducers(productRepository.getProducerFilter(ProductCategoryCode.MOTHERBOARD));
         response.setSocket(motherboardRepository.getSocketFilter());
         response.setStandard(motherboardRepository.getStandardFilter());
         response.setChipset(motherboardRepository.getChipsetFilter());
