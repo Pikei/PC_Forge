@@ -9,7 +9,7 @@ import org.springframework.lang.Nullable;
 import java.util.List;
 
 public interface ProcessorRepository extends JpaRepository<Processor, Long> {
-    List<Processor> findBySocket_Socket(String socket);
+    List<Processor> findBySocket_SocketName(String socketName);
 
     List<Processor> findByLine(String line);
 
@@ -26,7 +26,7 @@ public interface ProcessorRepository extends JpaRepository<Processor, Long> {
 
     List<Processor> findByPackaging(String packaging);
 
-    @Query("select p.socket.socket, count(*) from Processor p group by p.socket.socket order by p.socket.socket")
+    @Query("select p.socket.socketName, count(*) from Processor p group by p.socket.socketName order by p.socket.socketName")
     List<Object[]> getSocketFilter();
 
     @Query("select concat(p.producer, ' ', p.line), count(*) from Processor p group by concat(p.producer, ' ', p.line) order by concat(p.producer, ' ', p.line)")

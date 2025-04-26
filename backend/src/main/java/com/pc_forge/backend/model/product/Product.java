@@ -17,6 +17,11 @@ public abstract class Product {
     @Column(name = "ean", nullable = false, unique = true)
     private Long id;
 
+    @Size(max = 255)
+    @NotNull
+    @Column(name = "category", nullable = false, insertable = false, updatable = false)
+    private String category;
+
     @Size(max = 1000)
     @NotNull
     @Column(name = "name", nullable = false, length = 1000)
@@ -39,10 +44,5 @@ public abstract class Product {
     @NotNull
     @Column(name = "producer", nullable = false)
     private String producer;
-
-    @Size(max = 255)
-    @NotNull
-    @Column(name = "category", nullable = false, insertable = false, updatable = false)
-    private String category;
 
 }

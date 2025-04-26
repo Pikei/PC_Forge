@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface MotherboardRepository extends JpaRepository<Motherboard, Long> {
-    List<Motherboard> findBySocket_Socket(String socket);
+    List<Motherboard> findBySocket_SocketName(String socketName);
 
     List<Motherboard> findByStandard_StandardName(String standardName);
 
@@ -30,7 +30,7 @@ public interface MotherboardRepository extends JpaRepository<Motherboard, Long> 
 
     List<Motherboard> findByDepthBetween(Double depthStart, Double depthEnd);
 
-    @Query("select m.socket.socket, count(*) from Motherboard m group by m.socket.socket order by m.socket.socket")
+    @Query("select m.socket.socketName, count(*) from Motherboard m group by m.socket.socketName order by m.socket.socketName")
     List<Object[]> getSocketFilter();
 
     @Query("select m.standard.standardName, count(*) from Motherboard m group by m.standard.standardName order by m.standard.standardName")

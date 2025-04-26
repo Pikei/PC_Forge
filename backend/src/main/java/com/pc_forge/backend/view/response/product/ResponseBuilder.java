@@ -133,7 +133,7 @@ public class ResponseBuilder {
         response.setName(product.getName());
         response.setProducer(product.getProducer());
         response.setPrice(product.getPrice());
-        response.setSocket(product.getSocket().getSocket());
+        response.setSocket(product.getSocket().getSocketName());
         response.setCores(product.getCores());
         response.setThreads(product.getThreads());
         response.setUnlocked(product.getUnlocked());
@@ -170,6 +170,7 @@ public class ResponseBuilder {
         response.setLightning(product.getLightning());
         response.setFanDiameter(product.getFanDiameter());
         response.setNumberOfFans(product.getFans());
+        response.setNoiseLevel(product.getNoiseLevel());
         return response;
     }
 }

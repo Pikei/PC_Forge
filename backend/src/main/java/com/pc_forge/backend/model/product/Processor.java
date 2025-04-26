@@ -1,5 +1,8 @@
 package com.pc_forge.backend.model.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.pc_forge.backend.controller.api.constants.RequestParams;
 import com.pc_forge.backend.model.product.compatibility.CpuSocket;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -60,8 +63,14 @@ public final class Processor extends Product {
     private String packaging;
 
     @NotNull
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "socket_id", nullable = false)
     private CpuSocket socket;
 
+    @Transient
+    @JsonProperty(RequestParams.SOCKET)
+    public String getSocketName() {
+        return socket.getSocketName();
+    }
 }

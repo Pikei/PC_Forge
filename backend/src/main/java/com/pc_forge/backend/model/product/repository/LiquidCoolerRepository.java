@@ -1,6 +1,5 @@
 package com.pc_forge.backend.model.product.repository;
 
-import com.pc_forge.backend.model.product.AirCooler;
 import com.pc_forge.backend.model.product.LiquidCooler;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -9,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface LiquidCoolerRepository extends JpaRepository<LiquidCooler, Long> {
-    @Query("select l from LiquidCooler l join CoolerSocketCompatibility c on l.id = c.ean.id join CpuSocket s on c.socket.id = s.id where s.socket like :socket")
+    @Query("select l from LiquidCooler l join CoolerSocketCompatibility c on l.id = c.ean.id join CpuSocket s on c.socket.socketId = s.socketId where s.socketName like :socket")
     List<LiquidCooler> findBySocket(@Param("socket") String socket);
 
     List<LiquidCooler> findByFans(Integer fans);
@@ -23,7 +22,7 @@ public interface LiquidCoolerRepository extends JpaRepository<LiquidCooler, Long
     List<LiquidCooler> findByCoolerSize(Integer coolerSize);
 
 
-    @Query("select s.socket, count(*) from LiquidCooler l join CoolerSocketCompatibility c on l.id = c.ean.id join CpuSocket s on c.socket.id = s.id group by s.socket order by s.socket")
+    @Query("select s.socketName, count(*) from LiquidCooler l join CoolerSocketCompatibility c on l.id = c.ean.id join CpuSocket s on c.socket.socketId = s.socketId group by s.socketName order by s.socketName")
     List<Object[]> getSocketFiler();
 
     @Query("select l.fans, count(*) from LiquidCooler l group by l.fans order by l.fans")

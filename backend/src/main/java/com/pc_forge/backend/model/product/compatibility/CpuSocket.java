@@ -18,11 +18,11 @@ public class CpuSocket {
     @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "socket_id", nullable = false)
-    private Integer id;
+    private Integer socketId;
 
     @Size(max = 100)
     @NotNull
     @Column(name = "socket", nullable = false, length = 100)
-    private String socket;
+    private String socketName;
 
 }

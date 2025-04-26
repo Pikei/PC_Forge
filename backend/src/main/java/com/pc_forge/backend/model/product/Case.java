@@ -1,5 +1,7 @@
 package com.pc_forge.backend.model.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.pc_forge.backend.model.product.compatibility.MotherboardStandard;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -7,6 +9,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -143,5 +148,21 @@ public final class Case extends Product {
     @NotNull
     @Column(name = "usb_c", nullable = false)
     private Integer usbC;
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "case_mb_compatibility",
+            joinColumns = @JoinColumn(name = "ean"),
+            inverseJoinColumns = @JoinColumn(name = "standard_id")
+    )
+    private List<MotherboardStandard> supportedMbStandards;
+
+    @Transient
+    public List<String> getSupportedStandardNames() {
+        return supportedMbStandards.stream()
+                .map(MotherboardStandard::getStandardName)
+                .collect(Collectors.toList());
+    }
 
 }

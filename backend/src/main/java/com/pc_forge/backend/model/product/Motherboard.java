@@ -1,5 +1,8 @@
 package com.pc_forge.backend.model.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.pc_forge.backend.controller.api.constants.RequestParams;
 import com.pc_forge.backend.model.product.compatibility.CpuSocket;
 import com.pc_forge.backend.model.product.compatibility.MotherboardStandard;
 import io.hypersistence.utils.hibernate.type.array.ListArrayType;
@@ -71,14 +74,28 @@ public final class Motherboard extends Product {
     private Double depth;
 
     @NotNull
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "standard_id", nullable = false)
     private MotherboardStandard standard;
 
+    @Transient
+    @JsonProperty(RequestParams.MOTHERBOARD_STANDARD)
+    public String getMotherboardStandardName() {
+        return standard.getStandardName();
+    }
+
     @NotNull
+    @JsonIgnore
     @JoinColumn(name = "socket_id", nullable = false)
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private CpuSocket socket;
+
+    @Transient
+    @JsonProperty(RequestParams.SOCKET)
+    public String getSocketName() {
+        return socket.getSocketName();
+    }
 
     @Type(ListArrayType.class)
     @Column(name = "expansion_slots", nullable = false, columnDefinition = "_varchar (Types#ARRAY)")

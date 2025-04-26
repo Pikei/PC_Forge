@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface AirCoolerRepository extends JpaRepository<AirCooler, Long> {
 
-    @Query("select a from AirCooler a join CoolerSocketCompatibility c on a.id = c.ean.id join CpuSocket s on c.socket.id = s.id where s.socket like :socket")
+    @Query("select a from AirCooler a join CoolerSocketCompatibility c on a.id = c.ean.id join CpuSocket s on c.socket.socketId = s.socketId where s.socketName like :socket")
     List<AirCooler> findBySocket(@Param("socket") String socket);
 
     List<AirCooler> findByFans(Integer fans);
@@ -49,7 +49,7 @@ public interface AirCoolerRepository extends JpaRepository<AirCooler, Long> {
     @Query("select a.depth from AirCooler a order by a.depth desc limit 1")
     Integer getMaxDepth();
 
-    @Query("select s.socket, count(*) from AirCooler a join CoolerSocketCompatibility c on a.id = c.ean.id join CpuSocket s on c.socket.id = s.id group by s.socket order by s.socket")
+    @Query("select s.socketName, count(*) from AirCooler a join CoolerSocketCompatibility c on a.id = c.ean.id join CpuSocket s on c.socket.socketId = s.socketId group by s.socketName order by s.socketName")
     List<Object[]> getSocketFiler();
 
     @Query("select a.fans, count(*) from AirCooler a group by a.fans order by a.fans")
