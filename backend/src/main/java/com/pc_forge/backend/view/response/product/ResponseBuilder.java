@@ -45,10 +45,10 @@ public class ResponseBuilder {
         response.setName(product.getName());
         response.setProducer(product.getProducer());
         response.setPrice(product.getPrice());
-        response.setColor(product.getColor());
-        response.setLightning(product.getLightning());
         response.setCaseType(product.getCaseType());
+        response.setColor(product.getColor());
         response.setHasWindow(product.getHasWindow());
+        response.setLightning(product.getLightning());
         return response;
     }
 
@@ -170,7 +170,6 @@ public class ResponseBuilder {
         response.setLightning(product.getLightning());
         response.setFanDiameter(product.getFanDiameter());
         response.setNumberOfFans(product.getFans());
-        //TODO Socket procesora
         return response;
     }
 }

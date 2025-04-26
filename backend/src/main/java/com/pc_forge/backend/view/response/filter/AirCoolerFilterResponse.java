@@ -32,5 +32,5 @@ public final class AirCoolerFilterResponse extends CoolerFilterResponse {
     private Integer maxDepth;
 
     @JsonProperty(RequestParams.VERTICAL_INSTALLATION)
-    private Boolean verticalInstallation;
+    private List<Object[]> verticalInstallation;
 }

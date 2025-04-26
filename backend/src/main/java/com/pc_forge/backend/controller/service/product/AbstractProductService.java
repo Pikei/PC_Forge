@@ -33,7 +33,6 @@ public abstract class AbstractProductService<T extends Product> {
         }
     }
 
-
     public List<T> getProductsInCategory(String category) {
         return productRepository.findByCategory(category);
     }

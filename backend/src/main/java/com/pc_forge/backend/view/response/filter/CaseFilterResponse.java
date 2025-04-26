@@ -16,6 +16,9 @@ public final class CaseFilterResponse extends ProductFilterResponse {
     @JsonProperty(RequestParams.CASE_TYPE)
     private List<Object[]> caseType;
 
+    @JsonProperty(RequestParams.MOTHERBOARD_STANDARD)
+    private List<Object[]> mbStandards;
+
     @JsonProperty(RequestParams.WIDTH_MINIMUM)
     private Double widthMinimum;
 

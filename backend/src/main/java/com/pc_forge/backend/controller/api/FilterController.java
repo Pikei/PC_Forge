@@ -24,13 +24,20 @@ public class FilterController {
     private final CaseService caseService;
     private final SsdService ssdService;
     private final HddService hddService;
+    private final AirCoolerService airCoolerService;
+    private final LiquidCoolerService liquidCoolerService;
 
     public FilterController(CommonProductService productService,
                             ProcessorService processorService,
                             MotherboardService motherboardService,
                             MemoryService memoryService,
                             GraphicsCardService graphicsCardService,
-                            PowerSupplyService powerSupplyService, CaseService caseService, SsdService ssdService, HddService hddService) {
+                            PowerSupplyService powerSupplyService,
+                            CaseService caseService,
+                            SsdService ssdService,
+                            HddService hddService,
+                            AirCoolerService airCoolerService,
+                            LiquidCoolerService liquidCoolerService) {
         this.productService = productService;
         this.processorService = processorService;
         this.motherboardService = motherboardService;
@@ -40,6 +47,8 @@ public class FilterController {
         this.caseService = caseService;
         this.ssdService = ssdService;
         this.hddService = hddService;
+        this.airCoolerService = airCoolerService;
+        this.liquidCoolerService = liquidCoolerService;
     }
 
     @GetMapping(UrlPath.SEARCH)
@@ -90,5 +99,15 @@ public class FilterController {
     @GetMapping(UrlPath.HDD)
     public ResponseEntity<HddFilterResponse> getHDDFilters() {
         return ResponseEntity.ok(hddService.getAvailableFilters());
+    }
+
+    @GetMapping(UrlPath.AIR_COOLER)
+    public ResponseEntity<AirCoolerFilterResponse> getAirCoolerFilters() {
+        return ResponseEntity.ok(airCoolerService.getAvailableFilters());
+    }
+
+    @GetMapping(UrlPath.LIQUID_COOLER)
+    public ResponseEntity<LiquidCoolerFilterResponse> getLiquidCoolerFilters() {
+        return ResponseEntity.ok(liquidCoolerService.getAvailableFilters());
     }
 }

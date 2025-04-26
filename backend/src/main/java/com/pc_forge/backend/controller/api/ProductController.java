@@ -25,12 +25,20 @@ public class ProductController {
     private final CaseService caseService;
     private final SsdService ssdService;
     private final HddService hddService;
+    private final AirCoolerService airCoolerService;
+    private final LiquidCoolerService liquidCoolerService;
 
     public ProductController(CommonProductService productService,
                              ProcessorService processorService,
                              MotherboardService motherboardService,
                              MemoryService memoryService,
-                             GraphicsCardService graphicsCardService, PowerSupplyService powerSupplyService, CaseService caseService, SsdService ssdService, HddService hddService) {
+                             GraphicsCardService graphicsCardService,
+                             PowerSupplyService powerSupplyService,
+                             CaseService caseService,
+                             SsdService ssdService,
+                             HddService hddService,
+                             AirCoolerService airCoolerService,
+                             LiquidCoolerService liquidCoolerService) {
         this.productService = productService;
         this.processorService = processorService;
         this.motherboardService = motherboardService;
@@ -40,6 +48,8 @@ public class ProductController {
         this.caseService = caseService;
         this.ssdService = ssdService;
         this.hddService = hddService;
+        this.airCoolerService = airCoolerService;
+        this.liquidCoolerService = liquidCoolerService;
     }
 
     @GetMapping(UrlPath.PRODUCT + "/{id}")
@@ -127,6 +137,22 @@ public class ProductController {
         Map<String, String[]> params = request.getParameterMap();
         HddFilter filter = new HddFilter(params);
         List<HardDiskDrive> products = hddService.getFilteredProducts(filter);
+        return ResponseBuilder.generateProductList(products);
+    }
+
+    @GetMapping(UrlPath.CATEGORY + UrlPath.AIR_COOLER)
+    public ResponseEntity<List<ProductResponse>> getFilteredAirCoolers(HttpServletRequest request) {
+        Map<String, String[]> params = request.getParameterMap();
+        AirCoolerFilter filter = new AirCoolerFilter(params);
+        List<AirCooler> products = airCoolerService.getFilteredProducts(filter);
+        return ResponseBuilder.generateProductList(products);
+    }
+
+    @GetMapping(UrlPath.CATEGORY + UrlPath.LIQUID_COOLER)
+    public ResponseEntity<List<ProductResponse>> getFilteredLiquidCoolers(HttpServletRequest request) {
+        Map<String, String[]> params = request.getParameterMap();
+        LiquidCoolerFilter filter = new LiquidCoolerFilter(params);
+        List<LiquidCooler> products = liquidCoolerService.getFilteredProducts(filter);
         return ResponseBuilder.generateProductList(products);
     }
 }

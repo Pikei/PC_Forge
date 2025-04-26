@@ -13,7 +13,7 @@ public abstract class CoolerFilter extends ProductFilter {
     private List<String> selectedSockets;
     private List<Integer> selectedFans;
     private List<Integer> selectedFanDiameters;
-    private Double maxNoiseLevel;
+    private List<Double> noiseLevel;
     private Boolean lightning;
 
     public CoolerFilter(Map<String, String[]> requestParameters) {
@@ -25,7 +25,7 @@ public abstract class CoolerFilter extends ProductFilter {
         result = result && (selectedSockets == null || selectedSockets.isEmpty());
         result = result && (selectedFans == null || selectedFans.isEmpty());
         result = result && (selectedFanDiameters == null || selectedFanDiameters.isEmpty());
-        result = result && maxNoiseLevel == null;
+        result = result && (noiseLevel == null || noiseLevel.isEmpty());
         result = result && (lightning == null);
         return result;
     }
@@ -35,7 +35,7 @@ public abstract class CoolerFilter extends ProductFilter {
         selectedSockets = getStringListFromRequestParam(RequestParams.SOCKET);
         selectedFans = getIntegerListFromRequestParam(RequestParams.NUMBER_OF_FANS);
         selectedFanDiameters = getIntegerListFromRequestParam(RequestParams.FAN_DIAMETER);
-        maxNoiseLevel = getDoubleFromRequestParam(RequestParams.NOISE_LEVEL);
+        noiseLevel = getDoubleListFromRequestParam(RequestParams.NOISE_LEVEL);
         lightning = getBooleanFromRequestParam(RequestParams.LIGHTNING);
     }
 }

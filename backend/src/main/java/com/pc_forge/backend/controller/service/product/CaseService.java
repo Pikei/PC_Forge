@@ -33,6 +33,7 @@ public final class CaseService extends AbstractProductService<Case> {
         filterByProducers(ProductCategoryCode.CASE, filter.getSelectedProducers());
         filterByListParam(((CaseFilter) filter).getSelectedColors(), caseRepository::findByColor);
         filterByListParam(((CaseFilter) filter).getSelectedCaseTypes(), caseRepository::findByCaseType);
+        filterByListParam(((CaseFilter) filter).getSelectedCompatibleMbStandards(), caseRepository::findByCompatibleMbStandard);
         filterByWidth(((CaseFilter) filter).getMinWidth(), ((CaseFilter) filter).getMaxWidth());
         filterByHeight(((CaseFilter) filter).getMinHeight(), ((CaseFilter) filter).getMaxHeight());
         filterByDepth(((CaseFilter) filter).getMinDepth(), ((CaseFilter) filter).getMaxDepth());
@@ -63,6 +64,7 @@ public final class CaseService extends AbstractProductService<Case> {
         response.setProducers(productRepository.getProducerFilter(ProductCategoryCode.POWER_SUPPLY));
         response.setColor(caseRepository.getColorFilter());
         response.setCaseType(caseRepository.getCaseTypeFilter());
+        response.setMbStandards(caseRepository.getMbStandardFilter());
         response.setWidthMinimum(caseRepository.getMinWidth());
         response.setWidthMaximum(caseRepository.getMaxWidth());
         response.setHeightMaximum(caseRepository.getMinHeight());
@@ -110,7 +112,7 @@ public final class CaseService extends AbstractProductService<Case> {
         if (max == null) {
             max = caseRepository.getMaxHeight();
         }
-        filteredProducts.add(caseRepository.findByDepthBetween(min, max));
+        filteredProducts.add(caseRepository.findByHeightBetween(min, max));
     }
 
     private void filterByDepth(Double min, Double max) {

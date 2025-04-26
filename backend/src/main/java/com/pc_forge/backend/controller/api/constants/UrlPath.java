@@ -13,5 +13,6 @@ public class UrlPath {
     public static final String CASE = "/pc-case";
     public static final String SSD = "/ssd";
     public static final String HDD = "/hdd";
-
+    public static final String AIR_COOLER = "/air-cooler";
+    public static final String LIQUID_COOLER = "/liquid-cooler";
 }

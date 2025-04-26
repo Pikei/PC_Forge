@@ -82,11 +82,11 @@ public final class Case extends Product {
 
     @NotNull
     @Column(name = "max_gpu_length", nullable = false)
-    private Short maxGpuLength;
+    private Integer maxGpuLength;
 
     @NotNull
     @Column(name = "max_cpu_cooler_height", nullable = false)
-    private Short maxCpuCoolerHeight;
+    private Integer maxCpuCoolerHeight;
 
     @NotNull
     @Column(name = "extension_slots", nullable = false)

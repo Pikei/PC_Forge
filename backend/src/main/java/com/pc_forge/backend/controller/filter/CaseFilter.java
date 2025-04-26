@@ -12,6 +12,7 @@ import java.util.Map;
 public final class CaseFilter extends ProductFilter {
     private List<String> selectedColors;
     private List<String> selectedCaseTypes;
+    private List<String> selectedCompatibleMbStandards;
     private Double minHeight;
     private Double maxHeight;
     private Double minWidth;
@@ -44,6 +45,7 @@ public final class CaseFilter extends ProductFilter {
         boolean result = checkCommonFilterFieldsIfEmpty();
         result = result && (selectedColors == null || selectedColors.isEmpty());
         result = result && (selectedCaseTypes == null || selectedCaseTypes.isEmpty());
+        result = result && (selectedCompatibleMbStandards == null || selectedCompatibleMbStandards.isEmpty());
         result = result && minHeight == null && maxHeight == null;
         result = result && minWidth == null && maxWidth == null;
         result = result && minDepth == null && maxDepth == null;
@@ -69,6 +71,7 @@ public final class CaseFilter extends ProductFilter {
         setCommonFilters();
         selectedColors = getStringListFromRequestParam(RequestParams.COLOR);
         selectedCaseTypes = getStringListFromRequestParam(RequestParams.CASE_TYPE);
+        selectedCompatibleMbStandards = getStringListFromRequestParam(RequestParams.MOTHERBOARD_STANDARD);
         minHeight = getDoubleFromRequestParam(RequestParams.HEIGHT_MINIMUM);
         maxHeight = getDoubleFromRequestParam(RequestParams.HEIGHT_MAXIMUM);
         minWidth = getDoubleFromRequestParam(RequestParams.WIDTH_MINIMUM);

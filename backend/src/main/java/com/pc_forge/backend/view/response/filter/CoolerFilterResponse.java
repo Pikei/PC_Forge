@@ -20,8 +20,8 @@ public abstract class CoolerFilterResponse extends ProductFilterResponse {
     private List<Object[]> fanDiameters;
 
     @JsonProperty(RequestParams.NOISE_LEVEL)
-    private Double maxNoiseLevel;
+    private List<Object[]> noiseLevel;
 
     @JsonProperty(RequestParams.LIGHTNING)
-    private Boolean lightning;
+    private List<Object[]> lightning;
 }

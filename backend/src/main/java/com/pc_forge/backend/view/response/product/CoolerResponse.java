@@ -12,4 +12,5 @@ public final class CoolerResponse extends ProductResponse {
     private Integer fanDiameter;
     private Integer numberOfFans;
     private List<String> socket;
+    private Double noiseLevel;
 }

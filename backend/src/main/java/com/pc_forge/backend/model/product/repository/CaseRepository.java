@@ -4,6 +4,7 @@ import com.pc_forge.backend.model.product.Case;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -11,6 +12,9 @@ public interface CaseRepository extends JpaRepository<Case, Long> {
     List<Case> findByColor(String color);
 
     List<Case> findByCaseType(String caseType);
+
+    @Query("select c from Case c join CaseMbCompatibility comp on c.id = comp.ean.id join MotherboardStandard mb on mb.id = comp.standard.id where mb.standardName like :standard")
+    List<Case> findByCompatibleMbStandard(@Param("standard") String mbStandard);
 
     List<Case> findByWidthBetween(Double widthStart, Double widthEnd);
 
@@ -54,23 +58,9 @@ public interface CaseRepository extends JpaRepository<Case, Long> {
     @Query("select c.caseType, count(*) from Case c group by c.caseType order by c.caseType")
     List<Object[]> getCaseTypeFilter();
 
-    @Query("select c.width from Case c order by c.width asc limit 1")
-    Integer getWidthMinimumFilter();
+    @Query("select mb.standardName, count(*) from Case c join CaseMbCompatibility comp on c.id = comp.ean.id join MotherboardStandard mb on comp.standard.id = mb.id group by mb.standardName order by mb.standardName")
+    List<Object[]> getMbStandardFilter();
 
-    @Query("select c.width from Case c order by c.width desc limit 1")
-    Integer getWidthMaximumFilter();
-
-    @Query("select c.height from Case c order by c.height asc limit 1")
-    Integer getHeightMinimumFilter();
-
-    @Query("select c.height from Case c order by c.height desc limit 1")
-    Integer getHeightMaximumFilter();
-
-    @Query("select c.depth from Case c order by c.depth asc limit 1")
-    Integer getDepthMinimumFilter();
-
-    @Query("select c.depth from Case c order by c.depth desc limit 1")
-    Integer getDepthMaximumFilter();
 
     @Query("select c.hasWindow, count(*) from Case c group by c.hasWindow order by c.hasWindow")
     List<Object[]> getWindowFilter();
