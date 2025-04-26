@@ -169,6 +169,8 @@ public class ResponseBuilder {
         response.setPrice(product.getPrice());
         response.setLightning(product.getLightning());
         response.setFanDiameter(product.getFanDiameter());
+        response.setNumberOfFans(product.getFans());
+        //TODO Socket procesora
         return response;
     }
 }

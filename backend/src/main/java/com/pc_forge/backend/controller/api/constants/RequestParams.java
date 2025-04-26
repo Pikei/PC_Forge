@@ -66,4 +66,8 @@ public class RequestParams {
     public static final String READ_SPEED = "read_speed";
     public static final String WRITE_SPEED = "write_speed";
     public static final String ROTATIONAL_SPEED = "rotational_speed";
+    public static final String NOISE_LEVEL = "noise_lvl";
+    public static final String BASE_MATERIAL = "base";
+    public static final String VERTICAL_INSTALLATION = "vert";
+    public static final String COOLER_SIZE = "cooler_size";
 }
