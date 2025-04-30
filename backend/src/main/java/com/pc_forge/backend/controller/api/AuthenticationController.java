@@ -23,7 +23,7 @@ public class AuthenticationController {
         this.userService = userService;
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/register")
     public ResponseEntity<Void> register(@Valid @RequestBody RegistrationBody registration) {
         try {
             userService.createAccount(registration);

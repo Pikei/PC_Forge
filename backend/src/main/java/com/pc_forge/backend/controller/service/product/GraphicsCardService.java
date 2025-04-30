@@ -65,7 +65,7 @@ public final class GraphicsCardService extends AbstractProductService<GraphicsCa
         response.setLightning(graphicsCardRepository.getLightningFilter());
         response.setLengthMinimum(graphicsCardRepository.getMinLengthFilter());
         response.setLengthMaximum(graphicsCardRepository.getMaxLengthFilter());
-        return null;
+        return response;
     }
 
     private void filterByLength(Integer minLength, Integer maxLength) {

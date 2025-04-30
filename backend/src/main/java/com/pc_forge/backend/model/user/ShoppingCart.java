@@ -9,19 +9,17 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "order_detail", schema = "public")
-public class OrderDetail {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_detail_id", nullable = false)
-    private Integer id;
+@Table(name = "shopping_cart", schema = "public")
+public class ShoppingCart {
+    @EmbeddedId
+    private ShoppingCartId id;
 
-    @NotNull
+    @MapsId("userId")
     @ManyToOne(optional = false)
-    @JoinColumn(name = "order_id", nullable = false)
-    private Order order;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @NotNull
+    @MapsId("productEan")
     @ManyToOne(optional = false)
     @JoinColumn(name = "product_ean", nullable = false)
     private Product product;
@@ -29,9 +27,5 @@ public class OrderDetail {
     @NotNull
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
-
-    @NotNull
-    @Column(name = "cost", nullable = false)
-    private Double cost;
 
 }
