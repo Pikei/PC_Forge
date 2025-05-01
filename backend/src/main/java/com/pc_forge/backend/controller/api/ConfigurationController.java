@@ -1,17 +1,19 @@
 package com.pc_forge.backend.controller.api;
 
+import com.pc_forge.backend.controller.exceptions.ConfigurationAlreadyExists;
+import com.pc_forge.backend.controller.exceptions.ConfigurationDoesNotExistException;
+import com.pc_forge.backend.controller.exceptions.ProductDoesNotExistException;
+import com.pc_forge.backend.controller.exceptions.ProductNotCompatibleException;
 import com.pc_forge.backend.controller.service.ConfigurationService;
 import com.pc_forge.backend.model.entity.user.User;
+import com.pc_forge.backend.view.body.configuration.ConfigurationBody;
 import com.pc_forge.backend.view.response.configuration.ConfigurationResponse;
 import com.pc_forge.backend.view.response.configuration.ConfigurationShortResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,11 +39,53 @@ public class ConfigurationController {
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        ConfigurationResponse response = configurationService.getConfiguration(user, name);
-        if (response == null) {
+        try {
+            return ResponseEntity.ok(configurationService.getConfiguration(user, name));
+        } catch (ConfigurationDoesNotExistException e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/add-to-cart/{name}")
+    public ResponseEntity<Void> addConfigurationToCart(@AuthenticationPrincipal User user, @PathVariable String name) {
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        try {
+            configurationService.addConfigurationToCart(user, name);
+            return ResponseEntity.ok().build();
+        } catch (ConfigurationDoesNotExistException e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/remove/{name}")
+    public ResponseEntity<Void> removeConfiguration(@AuthenticationPrincipal User user, @PathVariable String name) {
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        try {
+            configurationService.deleteConfiguration(user, name);
+            return ResponseEntity.ok().build();
+        } catch (ConfigurationDoesNotExistException e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/save")
+    public ResponseEntity<Void> addConfigurationToCart(@AuthenticationPrincipal User user, @Valid @RequestBody ConfigurationBody configuration) {
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        try {
+            configurationService.addConfiguration(user, configuration);
+            return ResponseEntity.ok().build();
+        } catch (ConfigurationAlreadyExists | ProductDoesNotExistException | ProductNotCompatibleException e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }

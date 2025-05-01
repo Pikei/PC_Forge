@@ -24,7 +24,7 @@ public class ShoppingCartService {
         this.commonProductRepository = commonProductRepository;
     }
 
-    public void addProductToCart(User user, Long productId) {
+    public void addProductToCart(User user, Long productId) throws ProductDoesNotExistException {
         Optional<Product> optionalProduct = commonProductRepository.findById(productId);
         if (optionalProduct.isEmpty()) {
             throw new ProductDoesNotExistException("Product with id " + productId + " does not exist");
@@ -44,7 +44,7 @@ public class ShoppingCartService {
         shoppingCartRepository.save(productInShoppingCart);
     }
 
-    public void removeProductFromCart(User user, Long productId) {
+    public void removeProductFromCart(User user, Long productId) throws ProductDoesNotExistException {
         Optional<Product> optionalProduct = commonProductRepository.findById(productId);
         if (optionalProduct.isEmpty()) {
             throw new ProductDoesNotExistException("Product with id " + productId + " does not exist");
