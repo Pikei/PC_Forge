@@ -2,9 +2,9 @@ package com.pc_forge.backend.controller.service.product;
 
 import com.pc_forge.backend.controller.filter.MotherboardFilter;
 import com.pc_forge.backend.controller.filter.ProductFilter;
-import com.pc_forge.backend.model.product.Motherboard;
-import com.pc_forge.backend.model.product.repository.MotherboardRepository;
-import com.pc_forge.backend.model.product.repository.ProductRepository;
+import com.pc_forge.backend.model.entity.product.mb.Motherboard;
+import com.pc_forge.backend.model.repository.product.mb.MotherboardRepository;
+import com.pc_forge.backend.model.repository.product.ProductRepository;
 import com.pc_forge.backend.controller.api.constants.ProductCategoryCode;
 import com.pc_forge.backend.view.response.filter.MotherboardFilterResponse;
 import org.springframework.stereotype.Service;

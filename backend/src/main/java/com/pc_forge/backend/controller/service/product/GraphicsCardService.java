@@ -3,9 +3,9 @@ package com.pc_forge.backend.controller.service.product;
 import com.pc_forge.backend.controller.api.constants.ProductCategoryCode;
 import com.pc_forge.backend.controller.filter.GpuFilter;
 import com.pc_forge.backend.controller.filter.ProductFilter;
-import com.pc_forge.backend.model.product.GraphicsCard;
-import com.pc_forge.backend.model.product.repository.GraphicsCardRepository;
-import com.pc_forge.backend.model.product.repository.ProductRepository;
+import com.pc_forge.backend.model.entity.product.gpu.GraphicsCard;
+import com.pc_forge.backend.model.repository.product.gpu.GraphicsCardRepository;
+import com.pc_forge.backend.model.repository.product.ProductRepository;
 import com.pc_forge.backend.view.response.filter.GpuFilterResponse;
 import org.springframework.stereotype.Service;
 

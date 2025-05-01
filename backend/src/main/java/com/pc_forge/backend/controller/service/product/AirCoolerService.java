@@ -3,9 +3,9 @@ package com.pc_forge.backend.controller.service.product;
 import com.pc_forge.backend.controller.api.constants.ProductCategoryCode;
 import com.pc_forge.backend.controller.filter.AirCoolerFilter;
 import com.pc_forge.backend.controller.filter.ProductFilter;
-import com.pc_forge.backend.model.product.AirCooler;
-import com.pc_forge.backend.model.product.repository.AirCoolerRepository;
-import com.pc_forge.backend.model.product.repository.ProductRepository;
+import com.pc_forge.backend.model.entity.product.cooler.AirCooler;
+import com.pc_forge.backend.model.repository.product.cooler.AirCoolerRepository;
+import com.pc_forge.backend.model.repository.product.ProductRepository;
 import com.pc_forge.backend.view.response.filter.AirCoolerFilterResponse;
 import org.springframework.stereotype.Service;
 

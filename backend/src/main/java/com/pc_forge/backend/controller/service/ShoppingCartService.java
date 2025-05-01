@@ -1,13 +1,13 @@
 package com.pc_forge.backend.controller.service;
 
 import com.pc_forge.backend.controller.exceptions.ProductDoesNotExistException;
-import com.pc_forge.backend.model.product.Product;
-import com.pc_forge.backend.model.product.repository.CommonProductRepository;
-import com.pc_forge.backend.model.user.ShoppingCart;
-import com.pc_forge.backend.model.user.ShoppingCartId;
-import com.pc_forge.backend.model.user.User;
-import com.pc_forge.backend.model.user.repository.ShoppingCartRepository;
-import com.pc_forge.backend.view.response.ProductOrderResponse;
+import com.pc_forge.backend.model.entity.product.Product;
+import com.pc_forge.backend.model.repository.product.CommonProductRepository;
+import com.pc_forge.backend.model.entity.cart.ShoppingCart;
+import com.pc_forge.backend.model.entity.cart.ShoppingCartId;
+import com.pc_forge.backend.model.entity.user.User;
+import com.pc_forge.backend.model.repository.cart.ShoppingCartRepository;
+import com.pc_forge.backend.view.response.order.ProductOrderResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

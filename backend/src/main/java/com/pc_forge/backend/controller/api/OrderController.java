@@ -1,9 +1,9 @@
 package com.pc_forge.backend.controller.api;
 
 import com.pc_forge.backend.controller.service.OrderService;
-import com.pc_forge.backend.model.user.User;
-import com.pc_forge.backend.view.body.AddressBody;
-import com.pc_forge.backend.view.response.OrderResponse;
+import com.pc_forge.backend.model.entity.user.User;
+import com.pc_forge.backend.view.body.order.AddressBody;
+import com.pc_forge.backend.view.response.order.OrderResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

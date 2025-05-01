@@ -3,13 +3,10 @@ package com.pc_forge.backend.controller.service.product;
 import com.pc_forge.backend.controller.api.constants.ProductCategoryCode;
 import com.pc_forge.backend.controller.filter.HddFilter;
 import com.pc_forge.backend.controller.filter.ProductFilter;
-import com.pc_forge.backend.controller.filter.SsdFilter;
-import com.pc_forge.backend.model.product.HardDiskDrive;
-import com.pc_forge.backend.model.product.repository.HardDiskDriveRepository;
-import com.pc_forge.backend.model.product.repository.ProductRepository;
+import com.pc_forge.backend.model.entity.product.drive.HardDiskDrive;
+import com.pc_forge.backend.model.repository.product.drive.HardDiskDriveRepository;
+import com.pc_forge.backend.model.repository.product.ProductRepository;
 import com.pc_forge.backend.view.response.filter.HddFilterResponse;
-import com.pc_forge.backend.view.response.filter.ProductFilterResponse;
-import com.pc_forge.backend.view.response.filter.SsdFilterResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

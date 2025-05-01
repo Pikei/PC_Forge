@@ -3,9 +3,9 @@ package com.pc_forge.backend.controller.service.product;
 import com.pc_forge.backend.controller.api.constants.ProductCategoryCode;
 import com.pc_forge.backend.controller.filter.LiquidCoolerFilter;
 import com.pc_forge.backend.controller.filter.ProductFilter;
-import com.pc_forge.backend.model.product.LiquidCooler;
-import com.pc_forge.backend.model.product.repository.LiquidCoolerRepository;
-import com.pc_forge.backend.model.product.repository.ProductRepository;
+import com.pc_forge.backend.model.entity.product.cooler.LiquidCooler;
+import com.pc_forge.backend.model.repository.product.cooler.LiquidCoolerRepository;
+import com.pc_forge.backend.model.repository.product.ProductRepository;
 import com.pc_forge.backend.view.response.filter.LiquidCoolerFilterResponse;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ public final class LiquidCoolerService extends AbstractProductService<LiquidCool
 
     private final LiquidCoolerRepository liquidCoolerRepository;
 
-    public LiquidCoolerService(ProductRepository<LiquidCooler> productRepository, LiquidCoolerRepository repository, LiquidCoolerRepository liquidCoolerRepository) {
+    public LiquidCoolerService(ProductRepository<LiquidCooler> productRepository, LiquidCoolerRepository liquidCoolerRepository) {
         super(productRepository);
         this.liquidCoolerRepository = liquidCoolerRepository;
     }

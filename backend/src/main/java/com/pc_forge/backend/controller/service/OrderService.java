@@ -1,11 +1,20 @@
 package com.pc_forge.backend.controller.service;
 
-import com.pc_forge.backend.model.product.Product;
-import com.pc_forge.backend.model.user.*;
-import com.pc_forge.backend.model.user.repository.*;
-import com.pc_forge.backend.view.body.AddressBody;
-import com.pc_forge.backend.view.response.OrderResponse;
-import com.pc_forge.backend.view.response.ProductOrderResponse;
+import com.pc_forge.backend.model.entity.product.Product;
+import com.pc_forge.backend.model.entity.user.Address;
+import com.pc_forge.backend.model.entity.user.User;
+import com.pc_forge.backend.model.entity.order.Order;
+import com.pc_forge.backend.model.entity.order.OrderDetail;
+import com.pc_forge.backend.model.entity.order.OrderStatus;
+import com.pc_forge.backend.model.entity.cart.ShoppingCart;
+import com.pc_forge.backend.model.repository.cart.ShoppingCartRepository;
+import com.pc_forge.backend.model.repository.order.OrderDetailRepository;
+import com.pc_forge.backend.model.repository.order.OrderRepository;
+import com.pc_forge.backend.model.repository.order.OrderStatusRepository;
+import com.pc_forge.backend.model.repository.user.AddressRepository;
+import com.pc_forge.backend.view.body.order.AddressBody;
+import com.pc_forge.backend.view.response.order.OrderResponse;
+import com.pc_forge.backend.view.response.order.ProductOrderResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -107,7 +116,7 @@ public class OrderService {
         for (OrderDetail orderDetail : orderDetails) {
             productOrder.add(getProductOrderResponse(orderDetail));
         }
-        orderResponse.setProductOrderResponses(productOrder);
+        orderResponse.setOrderedProducts(productOrder);
         return orderResponse;
     }
 

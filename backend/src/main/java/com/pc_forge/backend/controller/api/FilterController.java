@@ -2,7 +2,6 @@ package com.pc_forge.backend.controller.api;
 
 import com.pc_forge.backend.controller.api.constants.UrlPath;
 import com.pc_forge.backend.controller.service.product.*;
-import com.pc_forge.backend.model.product.repository.PowerSupplyRepository;
 import com.pc_forge.backend.view.response.filter.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

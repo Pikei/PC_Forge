@@ -2,8 +2,8 @@ package com.pc_forge.backend.controller.security;
 
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.pc_forge.backend.controller.service.JWTService;
-import com.pc_forge.backend.model.user.User;
-import com.pc_forge.backend.model.user.repository.UserRepository;
+import com.pc_forge.backend.model.entity.user.User;
+import com.pc_forge.backend.model.repository.user.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

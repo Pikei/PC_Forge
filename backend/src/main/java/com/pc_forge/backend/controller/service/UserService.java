@@ -1,10 +1,10 @@
 package com.pc_forge.backend.controller.service;
 
 import com.pc_forge.backend.controller.exceptions.UserAlreadyExistsException;
-import com.pc_forge.backend.model.user.User;
-import com.pc_forge.backend.model.user.repository.UserRepository;
-import com.pc_forge.backend.view.body.LoginBody;
-import com.pc_forge.backend.view.body.RegistrationBody;
+import com.pc_forge.backend.model.entity.user.User;
+import com.pc_forge.backend.model.repository.user.UserRepository;
+import com.pc_forge.backend.view.body.auth.LoginBody;
+import com.pc_forge.backend.view.body.auth.RegistrationBody;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -21,7 +21,7 @@ public class UserService {
         this.jwtService = jwtService;
     }
 
-    public User createAccount(RegistrationBody registration) throws UserAlreadyExistsException {
+    public void createAccount(RegistrationBody registration) throws UserAlreadyExistsException {
         if (userRepository.findByEmailIgnoreCase(registration.getEmail()).isPresent()) {
             throw new UserAlreadyExistsException("Email \"" + registration.getEmail() + "\" is already linked to another user");
         }
@@ -36,7 +36,7 @@ public class UserService {
         user.setFirstName(registration.getFirstName());
         user.setLastName(registration.getLastName());
         user.setPhoneNumber(registration.getPhoneNumber());
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     public String login(LoginBody login) {

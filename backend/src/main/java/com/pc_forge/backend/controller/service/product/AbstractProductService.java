@@ -1,9 +1,8 @@
 package com.pc_forge.backend.controller.service.product;
 
-import com.pc_forge.backend.controller.api.constants.ProductCategoryCode;
 import com.pc_forge.backend.controller.filter.ProductFilter;
-import com.pc_forge.backend.model.product.Product;
-import com.pc_forge.backend.model.product.repository.ProductRepository;
+import com.pc_forge.backend.model.entity.product.Product;
+import com.pc_forge.backend.model.repository.product.ProductRepository;
 import com.pc_forge.backend.view.response.filter.ProductFilterResponse;
 
 import java.util.*;

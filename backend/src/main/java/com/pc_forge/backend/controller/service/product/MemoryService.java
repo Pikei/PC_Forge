@@ -3,9 +3,9 @@ package com.pc_forge.backend.controller.service.product;
 import com.pc_forge.backend.controller.api.constants.ProductCategoryCode;
 import com.pc_forge.backend.controller.filter.MemoryFilter;
 import com.pc_forge.backend.controller.filter.ProductFilter;
-import com.pc_forge.backend.model.product.Memory;
-import com.pc_forge.backend.model.product.repository.MemoryRepository;
-import com.pc_forge.backend.model.product.repository.ProductRepository;
+import com.pc_forge.backend.model.entity.product.ram.Memory;
+import com.pc_forge.backend.model.repository.product.ram.MemoryRepository;
+import com.pc_forge.backend.model.repository.product.ProductRepository;
 import com.pc_forge.backend.view.response.filter.MemoryFilterResponse;
 import org.springframework.stereotype.Service;
 

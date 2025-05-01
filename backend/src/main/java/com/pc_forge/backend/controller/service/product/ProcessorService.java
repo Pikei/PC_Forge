@@ -2,9 +2,9 @@ package com.pc_forge.backend.controller.service.product;
 
 import com.pc_forge.backend.controller.filter.ProcessorFilter;
 import com.pc_forge.backend.controller.filter.ProductFilter;
-import com.pc_forge.backend.model.product.Processor;
-import com.pc_forge.backend.model.product.repository.ProcessorRepository;
-import com.pc_forge.backend.model.product.repository.ProductRepository;
+import com.pc_forge.backend.model.entity.product.cpu.Processor;
+import com.pc_forge.backend.model.repository.product.cpu.ProcessorRepository;
+import com.pc_forge.backend.model.repository.product.ProductRepository;
 import com.pc_forge.backend.controller.api.constants.ProductCategoryCode;
 import com.pc_forge.backend.view.response.filter.ProcessorFilterResponse;
 import lombok.Getter;

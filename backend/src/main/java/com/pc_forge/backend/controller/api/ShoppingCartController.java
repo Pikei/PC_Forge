@@ -2,9 +2,9 @@ package com.pc_forge.backend.controller.api;
 
 import com.pc_forge.backend.controller.exceptions.ProductDoesNotExistException;
 import com.pc_forge.backend.controller.service.ShoppingCartService;
-import com.pc_forge.backend.model.user.User;
-import com.pc_forge.backend.view.body.ShoppingCartBody;
-import com.pc_forge.backend.view.response.ProductOrderResponse;
+import com.pc_forge.backend.model.entity.user.User;
+import com.pc_forge.backend.view.body.order.ShoppingCartBody;
+import com.pc_forge.backend.view.response.order.ProductOrderResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

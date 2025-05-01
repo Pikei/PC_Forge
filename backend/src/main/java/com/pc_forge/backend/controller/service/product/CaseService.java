@@ -3,9 +3,9 @@ package com.pc_forge.backend.controller.service.product;
 import com.pc_forge.backend.controller.api.constants.ProductCategoryCode;
 import com.pc_forge.backend.controller.filter.CaseFilter;
 import com.pc_forge.backend.controller.filter.ProductFilter;
-import com.pc_forge.backend.model.product.Case;
-import com.pc_forge.backend.model.product.repository.CaseRepository;
-import com.pc_forge.backend.model.product.repository.ProductRepository;
+import com.pc_forge.backend.model.entity.product.pc_case.Case;
+import com.pc_forge.backend.model.repository.product.pc_case.CaseRepository;
+import com.pc_forge.backend.model.repository.product.ProductRepository;
 import com.pc_forge.backend.view.response.filter.CaseFilterResponse;
 import org.springframework.stereotype.Service;
 
