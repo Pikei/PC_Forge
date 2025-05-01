@@ -31,7 +31,7 @@ public class ShoppingCartController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Void> addItem(@Valid @AuthenticationPrincipal User user, @RequestBody ShoppingCartBody product) {
+    public ResponseEntity<Void> addItem(@Valid @AuthenticationPrincipal User user, @Valid @RequestBody ShoppingCartBody product) {
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

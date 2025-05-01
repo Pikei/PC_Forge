@@ -39,7 +39,7 @@ public class ResponseBuilder {
         return ResponseEntity.ok(productResponses);
     }
 
-    private static ProductResponse getProductResponse(Product product) {
+    public static ProductResponse getProductResponse(Product product) {
         if (product == null) {
             return null;
         }
