@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -24,6 +27,9 @@ public class User {
     @Column(name = "email", nullable = false, length = 200)
     private String email;
 
+    @Column(name = "verified", nullable = false)
+    private Boolean verified = false;
+
     @JsonIgnore
     @Column(name = "password", nullable = false, length = 1000)
     private String password;
@@ -36,5 +42,9 @@ public class User {
 
     @Column(name = "phone_number", length = Integer.MAX_VALUE)
     private String phoneNumber;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("id desc")
+    private List<VerificationToken> verificationTokens = new ArrayList<>();
 
 }

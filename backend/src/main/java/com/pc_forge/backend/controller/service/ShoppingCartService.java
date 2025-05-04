@@ -89,4 +89,8 @@ public class ShoppingCartService {
         response.setProductQuantity(shoppingCart.getQuantity());
         return response;
     }
+
+    public void clearCart(User user) {
+        shoppingCartRepository.deleteById_UserId(user.getId());
+    }
 }

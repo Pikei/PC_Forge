@@ -58,4 +58,13 @@ public class ShoppingCartController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/clear")
+    public ResponseEntity<Void> clearCart(@AuthenticationPrincipal User user) {
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        shoppingCartService.clearCart(user);
+        return ResponseEntity.ok().build();
+    }
+
 }

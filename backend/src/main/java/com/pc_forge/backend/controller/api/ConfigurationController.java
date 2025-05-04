@@ -83,7 +83,7 @@ public class ConfigurationController {
         try {
             configurationService.addConfiguration(user, configuration);
             return ResponseEntity.ok().build();
-        } catch (ConfigurationAlreadyExists | ProductDoesNotExistException | ProductNotCompatibleException e) {
+        } catch (ConfigurationAlreadyExists e) {
             System.out.println(e.getMessage());
             return ResponseEntity.badRequest().build();
         }

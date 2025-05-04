@@ -23,6 +23,7 @@ public class JWTService {
 
     private Algorithm algorithm;
     private static final String USERNAME_KEY = "username";
+    private static final String EMAIL = "email";
 
     @PostConstruct
     private void postConstruct() throws UnsupportedEncodingException {
@@ -32,6 +33,14 @@ public class JWTService {
     public String createJWT(User user) {
         return JWT.create()
                 .withClaim(USERNAME_KEY, user.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis() + (1000L * 3600 * expiration)))
+                .withIssuer(issuer)
+                .sign(algorithm);
+    }
+
+    public String generateVerificationJWT(User user) {
+        return JWT.create()
+                .withClaim(EMAIL, user.getEmail())
                 .withExpiresAt(new Date(System.currentTimeMillis() + (1000L * 3600 * expiration)))
                 .withIssuer(issuer)
                 .sign(algorithm);

@@ -34,7 +34,7 @@ public class OrderController {
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        String message = "Deleted " + orderService.newOrder(user, addressBody) + " items from " + user.getUsername() + "'s shopping cart.";
-        return ResponseEntity.ok(message);
+        orderService.newOrder(user, addressBody);
+        return ResponseEntity.ok().build();
     }
 }

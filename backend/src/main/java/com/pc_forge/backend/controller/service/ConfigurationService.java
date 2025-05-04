@@ -67,7 +67,7 @@ public class ConfigurationService {
         return response;
     }
 
-    public ConfigurationResponse getConfiguration(User user, String name) {
+    public ConfigurationResponse getConfiguration(User user, String name) throws ConfigurationDoesNotExistException {
         var optionalConfiguration = configurationRepository.findByUser_IdAndConfigName(user.getId(), name);
         if (optionalConfiguration.isEmpty()) {
             throw new ConfigurationDoesNotExistException("Configuration " + name + " does not exist");
@@ -103,10 +103,9 @@ public class ConfigurationService {
             shoppingCartService.addProductToCart(user, configuration.getPcCase().getId());
             shoppingCartService.addProductToCart(user, configuration.getHardDiskDrive().getId());
             shoppingCartService.addProductToCart(user, configuration.getSolidStateDrive().getId());
-        } catch (ConfigurationDoesNotExistException e) {
+        } catch (ProductDoesNotExistException e) {
             System.out.println(e.getMessage());
         }
-
     }
 
     public void deleteConfiguration(User user, String name) throws ConfigurationDoesNotExistException {
@@ -127,17 +126,21 @@ public class ConfigurationService {
             throw new ConfigurationAlreadyExists("Configuration " + name + " already exists");
         }
         configuration.setConfigName(configurationBody.getConfigName());
-        configuration.setMotherboard(getProductFromConfigBody(configurationBody.getMotherboardId()));
-        configuration.setProcessor(getProductFromConfigBody(configurationBody.getProcessorId()));
-        configuration.setMemory(getProductFromConfigBody(configurationBody.getMemoryId()));
-        configuration.setGraphicsCard(getProductFromConfigBody(configurationBody.getGraphicsCardId()));
-        configuration.setPowerSupply(getProductFromConfigBody(configurationBody.getPowerSupplyId()));
-        configuration.setCooler(getProductFromConfigBody(configurationBody.getCoolerId()));
-        configuration.setPcCase(getProductFromConfigBody(configurationBody.getCaseId()));
-        configuration.setHardDiskDrive(getProductFromConfigBody(configurationBody.getHardDiskDriveId()));
-        configuration.setSolidStateDrive(getProductFromConfigBody(configurationBody.getSolidStateDriveId()));
-        validateConfigCompatibility(configuration);
-        configurationRepository.save(configuration);
+        try {
+            configuration.setMotherboard(getProductFromConfigBody(configurationBody.getMotherboardId()));
+            configuration.setProcessor(getProductFromConfigBody(configurationBody.getProcessorId()));
+            configuration.setMemory(getProductFromConfigBody(configurationBody.getMemoryId()));
+            configuration.setGraphicsCard(getProductFromConfigBody(configurationBody.getGraphicsCardId()));
+            configuration.setPowerSupply(getProductFromConfigBody(configurationBody.getPowerSupplyId()));
+            configuration.setCooler(getProductFromConfigBody(configurationBody.getCoolerId()));
+            configuration.setPcCase(getProductFromConfigBody(configurationBody.getCaseId()));
+            configuration.setHardDiskDrive(getProductFromConfigBody(configurationBody.getHardDiskDriveId()));
+            configuration.setSolidStateDrive(getProductFromConfigBody(configurationBody.getSolidStateDriveId()));
+            validateConfigCompatibility(configuration);
+            configurationRepository.save(configuration);
+        } catch (ProductDoesNotExistException | ProductNotCompatibleException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @SuppressWarnings("unchecked")

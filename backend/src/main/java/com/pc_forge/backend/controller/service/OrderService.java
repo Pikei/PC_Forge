@@ -49,12 +49,12 @@ public class OrderService {
     }
 
     @Transactional
-    public long newOrder(User user, AddressBody addressBody) {
+    public void newOrder(User user, AddressBody addressBody) {
         Address address = createAddress(addressBody);
         Order order = createOrder(user, address);
         saveOrderDetails(order);
         //TODO: API do płatności
-        return shoppingCartRepository.deleteById_UserId(user.getId());
+        shoppingCartRepository.deleteById_UserId(user.getId());
     }
 
     private void saveOrderDetails(Order order) {

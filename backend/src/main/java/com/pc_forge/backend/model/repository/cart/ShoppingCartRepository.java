@@ -16,6 +16,6 @@ public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Shop
     @Transactional
     @Modifying
     @Query("delete from ShoppingCart s where s.id.userId = :userId")
-    int deleteById_UserId(@Param("userId") Integer userId);
+    void deleteById_UserId(@Param("userId") Integer userId);
 
 }
