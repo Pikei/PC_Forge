@@ -1,6 +1,7 @@
 package com.pc_forge.backend.controller.service;
 
 import com.pc_forge.backend.controller.exceptions.EmailFailureException;
+import com.pc_forge.backend.model.entity.user.User;
 import com.pc_forge.backend.model.entity.user.VerificationToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
@@ -34,6 +35,20 @@ public class EmailService {
         message.setSubject("Weryfikacja adresu");
         message.setText("Kliknij w link poniżej aby potwierdzić swój adres email: \n"
                 + frontendUrl + "/verify?token=" + token.getToken());
+        try {
+            mailSender.send(message);
+        } catch (MailException e) {
+            System.out.println(e.getMessage());
+            throw new EmailFailureException("Email could not be send");
+        }
+    }
+
+    public void sendPasswordResetEmail(User user, String token) throws EmailFailureException {
+        SimpleMailMessage message = getSimpleMailMessage();
+        message.setTo(user.getEmail());
+        message.setSubject("Reset hasła");
+        message.setText("Kliknij w link poniżej aby zresetować swoje hasło: \n"
+                + frontendUrl + "/password/reset?token=" + token);
         try {
             mailSender.send(message);
         } catch (MailException e) {

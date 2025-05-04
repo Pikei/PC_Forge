@@ -2,8 +2,6 @@ package com.pc_forge.backend.controller.api;
 
 import com.pc_forge.backend.controller.exceptions.ConfigurationAlreadyExists;
 import com.pc_forge.backend.controller.exceptions.ConfigurationDoesNotExistException;
-import com.pc_forge.backend.controller.exceptions.ProductDoesNotExistException;
-import com.pc_forge.backend.controller.exceptions.ProductNotCompatibleException;
 import com.pc_forge.backend.controller.service.ConfigurationService;
 import com.pc_forge.backend.model.entity.user.User;
 import com.pc_forge.backend.view.body.configuration.ConfigurationBody;

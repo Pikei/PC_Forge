@@ -2,10 +2,12 @@ package com.pc_forge.backend.controller.api;
 
 import com.pc_forge.backend.controller.exceptions.EmailFailureException;
 import com.pc_forge.backend.controller.exceptions.UserAlreadyExistsException;
+import com.pc_forge.backend.controller.exceptions.UserDoesNotExistException;
 import com.pc_forge.backend.controller.exceptions.UserNotVerifiedException;
 import com.pc_forge.backend.controller.service.UserService;
 import com.pc_forge.backend.model.entity.user.User;
 import com.pc_forge.backend.view.body.auth.LoginBody;
+import com.pc_forge.backend.view.body.auth.ResetPasswordBody;
 import com.pc_forge.backend.view.response.auth.LoginResponse;
 import com.pc_forge.backend.view.body.auth.RegistrationBody;
 import jakarta.transaction.Transactional;
@@ -74,5 +76,38 @@ public class AuthenticationController {
     @GetMapping("/profile")
     public User getProfile(@AuthenticationPrincipal User user) {
         return user;
+    }
+
+    @PostMapping("/delete-account")
+    public ResponseEntity<Void> deleteAccount(@AuthenticationPrincipal User user) {
+        userService.deleteAccount(user);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/password/forgot")
+    public ResponseEntity<Void> forgotPassword(@RequestParam String email) {
+        try {
+            userService.forgotPassword(email);
+            return ResponseEntity.ok().build();
+        } catch (EmailFailureException e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (UserDoesNotExistException e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PostMapping("/password/reset")
+    public ResponseEntity<Void> resetPassword(@Valid @RequestBody ResetPasswordBody resetPasswordBody) {
+        try {
+            userService.resetPassword(resetPasswordBody);
+            return ResponseEntity.ok().build();
+        } catch (UserDoesNotExistException e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

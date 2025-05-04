@@ -2,6 +2,7 @@ package com.pc_forge.backend.controller.service;
 
 import com.pc_forge.backend.controller.exceptions.EmailFailureException;
 import com.pc_forge.backend.controller.exceptions.UserAlreadyExistsException;
+import com.pc_forge.backend.controller.exceptions.UserDoesNotExistException;
 import com.pc_forge.backend.controller.exceptions.UserNotVerifiedException;
 import com.pc_forge.backend.model.entity.user.User;
 import com.pc_forge.backend.model.entity.user.VerificationToken;
@@ -9,6 +10,7 @@ import com.pc_forge.backend.model.repository.user.UserRepository;
 import com.pc_forge.backend.model.repository.user.VerificationTokenRepository;
 import com.pc_forge.backend.view.body.auth.LoginBody;
 import com.pc_forge.backend.view.body.auth.RegistrationBody;
+import com.pc_forge.backend.view.body.auth.ResetPasswordBody;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -23,18 +25,20 @@ public class UserService {
     private final JWTService jwtService;
     private final EmailService emailService;
     private final VerificationTokenRepository verificationTokenRepository;
+    private final OrderService orderService;
 
     public UserService(
             UserRepository userRepository,
             SecurityService securityService,
             JWTService jwtService,
             EmailService emailService,
-            VerificationTokenRepository verificationTokenRepository) {
+            VerificationTokenRepository verificationTokenRepository, OrderService orderService) {
         this.userRepository = userRepository;
         this.securityService = securityService;
         this.jwtService = jwtService;
         this.emailService = emailService;
         this.verificationTokenRepository = verificationTokenRepository;
+        this.orderService = orderService;
     }
 
     public void createAccount(RegistrationBody registration) throws UserAlreadyExistsException, EmailFailureException {
@@ -103,5 +107,35 @@ public class UserService {
             return true;
         }
         return false;
+    }
+
+    @Transactional
+    public void deleteAccount(User user) {
+        orderService.deleteOrder(user);
+
+        userRepository.delete(user);
+    }
+
+    public void forgotPassword(String email) throws EmailFailureException, UserDoesNotExistException {
+        Optional<User> optionalUser = userRepository.findByEmailIgnoreCase(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            String token = jwtService.generatePasswordResetJWT(user);
+            emailService.sendPasswordResetEmail(user, token);
+        } else {
+            throw new UserDoesNotExistException("User with email " + email + " does not exist");
+        }
+    }
+
+    public void resetPassword(ResetPasswordBody resetPasswordBody) throws UserDoesNotExistException {
+        String email = jwtService.getResetPasswordEmail(resetPasswordBody.getToken());
+        Optional<User> optionalUser = userRepository.findByEmailIgnoreCase(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setPassword(securityService.hashPassword(resetPasswordBody.getPassword()));
+            userRepository.save(user);
+        } else {
+            throw new UserDoesNotExistException("User with email " + email + " does not exist");
+        }
     }
 }

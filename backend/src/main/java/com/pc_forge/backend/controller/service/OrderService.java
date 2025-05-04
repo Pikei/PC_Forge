@@ -131,4 +131,13 @@ public class OrderService {
         response.setProducer(product.getProducer());
         return response;
     }
+
+    @Transactional
+    public void deleteOrder(User user) {
+        List<Order> orders = orderRepository.findByUser_Id(user.getId());
+        for (Order order : orders) {
+            orderDetailRepository.deleteByOrder(order.getId());
+            orderRepository.delete(order);
+        }
+    }
 }

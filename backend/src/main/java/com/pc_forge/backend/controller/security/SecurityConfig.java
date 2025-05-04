@@ -24,12 +24,14 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtRequestFilter, AuthorizationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/profile").authenticated()
-                        .requestMatchers("/cart/**").authenticated()
-                        .requestMatchers("/order/**").authenticated()
-                        .requestMatchers("/configurations/**").authenticated()
-                        .requestMatchers("/profile").authenticated()
-                        .anyRequest().permitAll()
+                                .requestMatchers("/profile").authenticated()
+                                .requestMatchers("/cart/**").authenticated()
+                                .requestMatchers("/order/**").authenticated()
+                                .requestMatchers("/configurations/**").authenticated()
+                                .requestMatchers("/profile").authenticated()
+                                .requestMatchers("/delete-account").authenticated()
+//                        .requestMatchers("/password/**").authenticated()
+                                .anyRequest().permitAll()
                 )
                 .build();
     }
