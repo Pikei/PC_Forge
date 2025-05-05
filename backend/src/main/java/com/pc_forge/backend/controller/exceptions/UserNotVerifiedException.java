@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class UserNotVerifiedException extends Exception {
-    private Boolean newEmailSent;
+    private final Boolean newEmailSent;
 
     public UserNotVerifiedException(Boolean newEmailSent) {
         this.newEmailSent = newEmailSent;

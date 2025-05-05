@@ -1,11 +1,11 @@
 package com.pc_forge.backend.controller.service;
 
-import com.pc_forge.backend.controller.exceptions.EmailFailureException;
-import com.pc_forge.backend.controller.exceptions.UserAlreadyExistsException;
-import com.pc_forge.backend.controller.exceptions.UserDoesNotExistException;
-import com.pc_forge.backend.controller.exceptions.UserNotVerifiedException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.pc_forge.backend.controller.exceptions.*;
+import com.pc_forge.backend.model.entity.user.ResetPasswordToken;
 import com.pc_forge.backend.model.entity.user.User;
 import com.pc_forge.backend.model.entity.user.VerificationToken;
+import com.pc_forge.backend.model.repository.user.ResetPasswordTokenRepository;
 import com.pc_forge.backend.model.repository.user.UserRepository;
 import com.pc_forge.backend.model.repository.user.VerificationTokenRepository;
 import com.pc_forge.backend.view.body.auth.LoginBody;
@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,21 +25,25 @@ public class UserService {
     private final SecurityService securityService;
     private final JWTService jwtService;
     private final EmailService emailService;
-    private final VerificationTokenRepository verificationTokenRepository;
     private final OrderService orderService;
+    private final VerificationTokenRepository verificationTokenRepository;
+    private final ResetPasswordTokenRepository resetPasswordTokenRepository;
 
     public UserService(
             UserRepository userRepository,
             SecurityService securityService,
             JWTService jwtService,
             EmailService emailService,
-            VerificationTokenRepository verificationTokenRepository, OrderService orderService) {
+            OrderService orderService,
+            VerificationTokenRepository verificationTokenRepository,
+            ResetPasswordTokenRepository resetPasswordTokenRepository) {
         this.userRepository = userRepository;
         this.securityService = securityService;
         this.jwtService = jwtService;
         this.emailService = emailService;
-        this.verificationTokenRepository = verificationTokenRepository;
         this.orderService = orderService;
+        this.verificationTokenRepository = verificationTokenRepository;
+        this.resetPasswordTokenRepository = resetPasswordTokenRepository;
     }
 
     public void createAccount(RegistrationBody registration) throws UserAlreadyExistsException, EmailFailureException {
@@ -112,7 +117,6 @@ public class UserService {
     @Transactional
     public void deleteAccount(User user) {
         orderService.deleteOrder(user);
-
         userRepository.delete(user);
     }
 
@@ -121,21 +125,43 @@ public class UserService {
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             String token = jwtService.generatePasswordResetJWT(user);
+            ResetPasswordToken resetPasswordToken = new ResetPasswordToken();
+            resetPasswordToken.setToken(token);
+            resetPasswordToken.setCreated(new Timestamp(System.currentTimeMillis()));
+            resetPasswordToken.setUser(user);
+            resetPasswordTokenRepository.save(resetPasswordToken);
             emailService.sendPasswordResetEmail(user, token);
         } else {
             throw new UserDoesNotExistException("User with email " + email + " does not exist");
         }
     }
 
-    public void resetPassword(ResetPasswordBody resetPasswordBody) throws UserDoesNotExistException {
-        String email = jwtService.getResetPasswordEmail(resetPasswordBody.getToken());
-        Optional<User> optionalUser = userRepository.findByEmailIgnoreCase(email);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            user.setPassword(securityService.hashPassword(resetPasswordBody.getPassword()));
-            userRepository.save(user);
-        } else {
-            throw new UserDoesNotExistException("User with email " + email + " does not exist");
+    @Transactional
+    public void resetPassword(ResetPasswordBody resetPasswordBody) throws UserDoesNotExistException, TokenException {
+        String email;
+        try {
+            email = jwtService.getResetPasswordEmail(resetPasswordBody.getToken());
+        } catch (TokenExpiredException e) {
+            throw new TokenException("URL expired");
         }
+        Optional<User> optionalUser = userRepository.findByEmailIgnoreCase(email);
+        if (optionalUser.isEmpty()) {
+            throw new UserDoesNotExistException("User does not exist");
+        }
+        User user = optionalUser.get();
+        if (user.getResetTokens().isEmpty()) {
+            throw new TokenException("Invalid URL");
+        }
+        String userToken = user.getResetTokens().getFirst().getToken();
+        ResetPasswordToken savedToken = resetPasswordTokenRepository.findByToken(resetPasswordBody.getToken()).orElse(new ResetPasswordToken());
+        if (!userToken.equals(resetPasswordBody.getToken()) || !savedToken.getToken().equals(resetPasswordBody.getToken())) {
+            throw new TokenException("Invalid URL");
+        }
+        if (user.getResetTokens().getFirst().getCreated().before(new Timestamp(System.currentTimeMillis() - (1000 * 60 * 30)))) {
+            throw new TokenException("URL expired");
+        }
+        user.setPassword(securityService.hashPassword(resetPasswordBody.getPassword()));
+        userRepository.save(user);
+        resetPasswordTokenRepository.deleteByUser(user);
     }
 }

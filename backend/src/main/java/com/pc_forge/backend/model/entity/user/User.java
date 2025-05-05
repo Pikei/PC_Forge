@@ -47,4 +47,8 @@ public class User {
     @OrderBy("id desc")
     private List<VerificationToken> verificationTokens = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("id desc")
+    private List<ResetPasswordToken> resetTokens = new ArrayList<>();
+
 }

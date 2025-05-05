@@ -1,15 +1,13 @@
 package com.pc_forge.backend.controller.api;
 
-import com.pc_forge.backend.controller.exceptions.EmailFailureException;
-import com.pc_forge.backend.controller.exceptions.UserAlreadyExistsException;
-import com.pc_forge.backend.controller.exceptions.UserDoesNotExistException;
-import com.pc_forge.backend.controller.exceptions.UserNotVerifiedException;
+import com.pc_forge.backend.controller.exceptions.*;
 import com.pc_forge.backend.controller.service.UserService;
 import com.pc_forge.backend.model.entity.user.User;
 import com.pc_forge.backend.view.body.auth.LoginBody;
 import com.pc_forge.backend.view.body.auth.ResetPasswordBody;
 import com.pc_forge.backend.view.response.auth.LoginResponse;
 import com.pc_forge.backend.view.body.auth.RegistrationBody;
+import com.pc_forge.backend.view.response.auth.ResetPasswordResponse;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -41,7 +39,7 @@ public class AuthenticationController {
     @Transactional
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginBody login) {
-        String jwt = null;
+        String jwt;
         try {
             jwt = userService.login(login);
         } catch (UserNotVerifiedException e) {
@@ -101,13 +99,16 @@ public class AuthenticationController {
     }
 
     @PostMapping("/password/reset")
-    public ResponseEntity<Void> resetPassword(@Valid @RequestBody ResetPasswordBody resetPasswordBody) {
+    public ResponseEntity<ResetPasswordResponse> resetPassword(@Valid @RequestBody ResetPasswordBody resetPasswordBody) {
+        ResetPasswordResponse response = new ResetPasswordResponse();
         try {
             userService.resetPassword(resetPasswordBody);
-            return ResponseEntity.ok().build();
-        } catch (UserDoesNotExistException e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.badRequest().build();
+            response.setSuccess(true);
+            return ResponseEntity.ok(response);
+        } catch (UserDoesNotExistException | TokenException e) {
+            response.setSuccess(false);
+            response.setError(e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         }
     }
 }
