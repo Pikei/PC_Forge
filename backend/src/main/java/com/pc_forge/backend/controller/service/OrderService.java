@@ -1,5 +1,6 @@
 package com.pc_forge.backend.controller.service;
 
+import com.pc_forge.backend.controller.exceptions.OrderDoesNotExistException;
 import com.pc_forge.backend.model.entity.product.Product;
 import com.pc_forge.backend.model.entity.user.Address;
 import com.pc_forge.backend.model.entity.user.User;
@@ -16,6 +17,7 @@ import com.pc_forge.backend.view.body.order.AddressBody;
 import com.pc_forge.backend.view.response.order.OrderResponse;
 import com.pc_forge.backend.view.response.order.ProductOrderResponse;
 import jakarta.transaction.Transactional;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -48,37 +50,18 @@ public class OrderService {
         return response;
     }
 
-    @Transactional
-    public void newOrder(User user, AddressBody addressBody) {
-        Address address = createAddress(addressBody);
-        Order order = createOrder(user, address);
-        saveOrderDetails(order);
-        //TODO: API do płatności
-        shoppingCartRepository.deleteById_UserId(user.getId());
-    }
-
-    private void saveOrderDetails(Order order) {
-        for (ShoppingCart cart : shoppingCartRepository.findById_UserId(order.getUser().getId())) {
-            OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setOrder(order);
-            orderDetail.setProduct(cart.getProduct());
-            orderDetail.setQuantity(cart.getQuantity());
-            orderDetail.setCost(cart.getProduct().getPrice() * cart.getQuantity());
-            orderDetailRepository.save(orderDetail);
+    public Order getOrder(User user, Long orderId) throws OrderDoesNotExistException {
+        Optional<Order> order = orderRepository.findById(orderId);
+        if (order.isPresent() && order.get().getUser().getId().equals(user.getId())) {
+            return order.get();
+        } else {
+            throw new OrderDoesNotExistException("Order does not exist");
         }
     }
 
-    private Order createOrder(User user, Address address) {
-        Order order = new Order();
-        order.setUser(user);
-        order.setShippingAddress(address);
-        order.setOrderDate(LocalDate.now());
-        List<ShoppingCart> productsInShoppingCart = shoppingCartRepository.findById_UserId(user.getId());
-        order.setTotalCost(productsInShoppingCart.stream()
-                .mapToDouble(cart -> cart.getProduct().getPrice() * cart.getQuantity())
-                .sum());
-        Optional<OrderStatus> statusOptional = orderStatusRepository.findById(1);
-        statusOptional.ifPresent(order::setStatus);
+    public Order newOrder(User user, AddressBody addressBody) {
+        Address address = createAddress(addressBody);
+        Order order = createOrder(user, address);
         return orderRepository.save(order);
     }
 
@@ -98,7 +81,29 @@ public class OrderService {
         address.setHouseNumber(addressBody.getHouseNumber());
         address.setApartmentNumber(addressBody.getApartmentNumber());
         address.setPostalCode(addressBody.getPostalCode());
-        return addressRepository.save(address);
+        return address;
+    }
+
+    private Order createOrder(User user, Address address) {
+        Order order = new Order();
+        order.setUser(user);
+        order.setShippingAddress(address);
+        order.setOrderDate(LocalDate.now());
+        List<ShoppingCart> productsInShoppingCart = shoppingCartRepository.findById_UserId(user.getId());
+        order.setTotalCost(productsInShoppingCart.stream()
+                .mapToDouble(cart -> cart.getProduct().getPrice() * cart.getQuantity())
+                .sum());
+        Optional<OrderStatus> statusOptional = orderStatusRepository.findById(1);
+        statusOptional.ifPresent(order::setStatus);
+        for (ShoppingCart cart : productsInShoppingCart) {
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setOrder(order);
+            orderDetail.setProduct(cart.getProduct());
+            orderDetail.setQuantity(cart.getQuantity());
+            orderDetail.setCost(cart.getProduct().getPrice() * cart.getQuantity());
+            order.getOrderDetails().add(orderDetail);
+        }
+        return order;
     }
 
     private OrderResponse getOrderResponse(Order order) {
@@ -139,5 +144,38 @@ public class OrderService {
             orderDetailRepository.deleteByOrder(order.getId());
             orderRepository.delete(order);
         }
+    }
+
+    @Transactional
+    public String cancelOrder(User user, Long orderId) throws Exception {
+        Order order;
+        order = getOrder(user, orderId);
+        Optional<OrderStatus> statusWaitingForPaymentOptional = orderStatusRepository.findById(1);
+        if (statusWaitingForPaymentOptional.isPresent()) {
+            OrderStatus status = statusWaitingForPaymentOptional.get();
+            if (order.getStatus().equals(status)) {
+                orderRepository.delete(order);
+                return "ORDER_DELETED";
+            }
+        }
+        if (orderStatusRepository.getCancellableStatuses().contains(order.getStatus())) {
+            Optional<OrderStatus> statusCanceledOptional = orderStatusRepository.findById(7);
+            statusCanceledOptional.ifPresent(order::setStatus);
+            return "ORDER_CANCELLED";
+        }
+        throw new Exception("Order cannot be canceled");
+    }
+
+    @Transactional
+    public void paymentSucceeded(String sessionId) throws OrderDoesNotExistException {
+        Optional<Order> optionalOrder = orderRepository.findOrderBySessionId(sessionId);
+        if (optionalOrder.isEmpty()) {
+            throw new OrderDoesNotExistException("Order does not exists");
+        }
+        Order order = optionalOrder.get();
+        Optional<OrderStatus> statusOptional = orderStatusRepository.findById(2);
+        statusOptional.ifPresent(order::setStatus);
+        orderRepository.save(order);
+        shoppingCartRepository.deleteById_UserId(order.getUser().getId());
     }
 }

@@ -11,6 +11,8 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,7 +24,7 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id", nullable = false)
-    private Integer id;
+    private Long id;
 
     @NotNull
     @JsonIgnore
@@ -30,7 +32,6 @@ public class Order {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @NotNull
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "shipping_address_id", nullable = false)
@@ -53,6 +54,10 @@ public class Order {
     @JoinColumn(name = "status")
     private OrderStatus status;
 
+    @JsonIgnore
+    @Column(name = "session_id", length = Integer.MAX_VALUE)
+    private String sessionId;
+
     public String getAddress() {
         String addr = shippingAddress.getCity() + ", ";
         addr += shippingAddress.getStreet() + " " + shippingAddress.getHouseNumber();
@@ -66,5 +71,8 @@ public class Order {
     public String getCustomer() {
         return user.getFirstName() + " " + user.getLastName();
     }
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderDetail> orderDetails = new ArrayList<>();
 
 }

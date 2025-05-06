@@ -13,7 +13,7 @@ public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "address_id", nullable = false)
-    private Integer id;
+    private Long id;
 
     @NotNull
     @Column(name = "city", nullable = false, length = Integer.MAX_VALUE)

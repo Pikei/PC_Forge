@@ -8,14 +8,16 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface OrderRepository extends JpaRepository<Order, Integer> {
+public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("select o from Order o where o.user.id = ?1")
-    List<Order> findByUser_Id(Integer id);
+    List<Order> findByUser_Id(Long id);
 
     @Query("delete from Order o where o.user.id = ?1")
     @Modifying
     @Transactional
-    void deleteByUser(Integer userId);
+    void deleteByUser(Long userId);
 
+    Optional<Order> findOrderBySessionId(String sessionId);
 }

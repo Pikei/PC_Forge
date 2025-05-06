@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 public class OrderResponse {
-    private Integer id;
+    private Long id;
     private String customer;
     private String shippingAddress;
     private String orderStatus;

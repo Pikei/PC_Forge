@@ -11,11 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, ShoppingCartId> {
-    List<ShoppingCart> findById_UserId(Integer userId);
+    List<ShoppingCart> findById_UserId(Long userId);
 
     @Transactional
     @Modifying
     @Query("delete from ShoppingCart s where s.id.userId = :userId")
-    void deleteById_UserId(@Param("userId") Integer userId);
+    void deleteById_UserId(@Param("userId") Long userId);
 
 }

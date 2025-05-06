@@ -9,11 +9,11 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface OrderDetailRepository extends JpaRepository<OrderDetail, Integer> {
-    List<OrderDetail> findByOrder_Id(Integer id);
+public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> {
+    List<OrderDetail> findByOrder_Id(Long id);
 
     @Query("delete from OrderDetail o where o.order.id = ?1")
     @Modifying
     @Transactional
-    void deleteByOrder(Integer orderId);
+    void deleteByOrder(Long orderId);
 }

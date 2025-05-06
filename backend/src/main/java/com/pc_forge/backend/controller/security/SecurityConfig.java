@@ -30,7 +30,7 @@ public class SecurityConfig {
                                 .requestMatchers("/configurations/**").authenticated()
                                 .requestMatchers("/profile").authenticated()
                                 .requestMatchers("/delete-account").authenticated()
-//                        .requestMatchers("/password/**").authenticated()
+                        .requestMatchers("/payment/**").permitAll()
                                 .anyRequest().permitAll()
                 )
                 .build();

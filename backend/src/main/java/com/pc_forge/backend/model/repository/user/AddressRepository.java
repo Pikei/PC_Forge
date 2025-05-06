@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface AddressRepository extends JpaRepository<Address, Integer> {
+public interface AddressRepository extends JpaRepository<Address, Long> {
     @Query("""
             select a from Address a
             where a.city = :city and a.postalCode = :postalCode and a.street = :street and a.houseNumber = :houseNumber and a.apartmentNumber = :apartmentNumber""")

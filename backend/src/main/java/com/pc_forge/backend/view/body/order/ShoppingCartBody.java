@@ -9,6 +9,5 @@ import lombok.Setter;
 @Setter
 public class ShoppingCartBody {
     @NotNull
-    @NotBlank
     private Long productId;
 }

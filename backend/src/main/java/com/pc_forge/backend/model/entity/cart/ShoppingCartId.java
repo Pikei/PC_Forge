@@ -23,7 +23,7 @@ public class ShoppingCartId implements Serializable {
     private static final long serialVersionUID = 5435305916282428170L;
     @NotNull
     @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    private Long userId;
 
     @NotNull
     @Column(name = "product_ean", nullable = false)

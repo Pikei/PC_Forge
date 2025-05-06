@@ -16,7 +16,7 @@ public class OrderStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "status_id", nullable = false)
-    private Integer id;
+    private Long id;
 
     @NotNull
     @Column(name = "status_name", nullable = false, length = Integer.MAX_VALUE)

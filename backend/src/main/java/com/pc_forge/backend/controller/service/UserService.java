@@ -15,7 +15,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,12 +60,12 @@ public class UserService {
         user.setFirstName(registration.getFirstName());
         user.setLastName(registration.getLastName());
         user.setPhoneNumber(registration.getPhoneNumber());
-        VerificationToken verificationToken = verify(user);
+        VerificationToken verificationToken = generateVerificationToken(user);
         emailService.sendVerificationEmail(verificationToken);
         userRepository.save(user);
     }
 
-    public VerificationToken verify(User user) {
+    public VerificationToken generateVerificationToken(User user) {
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(jwtService.generateVerificationJWT(user));
         verificationToken.setCreated(new Timestamp(System.currentTimeMillis()));
@@ -86,7 +85,7 @@ public class UserService {
                     List<VerificationToken> tokens = user.getVerificationTokens();
                     boolean resend = tokens.isEmpty() || tokens.getFirst().getCreated().before(new Timestamp(System.currentTimeMillis() - (3600 * 1000)));
                     if (resend) {
-                        VerificationToken token = verify(user);
+                        VerificationToken token = generateVerificationToken(user);
                         verificationTokenRepository.save(token);
                         emailService.sendVerificationEmail(token);
                     }

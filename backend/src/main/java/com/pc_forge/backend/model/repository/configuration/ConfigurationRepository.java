@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ConfigurationRepository extends JpaRepository<Configuration, Long> {
-    Optional<Configuration> findByUser_IdAndConfigName(Integer id, String configName);
+    Optional<Configuration> findByUser_IdAndConfigName(Long id, String configName);
 
-    List<Configuration> findByUser_Id(Integer id);
+    List<Configuration> findByUser_Id(Long id);
 
 }

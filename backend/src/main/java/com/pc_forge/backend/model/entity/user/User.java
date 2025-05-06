@@ -19,7 +19,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
     @JsonIgnore
-    private Integer id;
+    private Long id;
 
     @Column(name = "username", nullable = false, length = 200)
     private String username;
@@ -43,10 +43,12 @@ public class User {
     @Column(name = "phone_number", length = Integer.MAX_VALUE)
     private String phoneNumber;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("id desc")
     private List<VerificationToken> verificationTokens = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("id desc")
     private List<ResetPasswordToken> resetTokens = new ArrayList<>();
