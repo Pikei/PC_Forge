@@ -1,32 +1,26 @@
 package com.pc_forge.backend.controller.service;
 
+import com.pc_forge.backend.controller.api.constants.ProductCategoryCode;
 import com.pc_forge.backend.controller.exceptions.ConfigurationAlreadyExists;
 import com.pc_forge.backend.controller.exceptions.ConfigurationDoesNotExistException;
 import com.pc_forge.backend.controller.exceptions.ProductDoesNotExistException;
-import com.pc_forge.backend.controller.exceptions.ProductNotCompatibleException;
 import com.pc_forge.backend.model.entity.configuration.Configuration;
 import com.pc_forge.backend.model.entity.product.Product;
 import com.pc_forge.backend.model.entity.product.cooler.AirCooler;
-import com.pc_forge.backend.model.entity.product.mb.Motherboard;
 import com.pc_forge.backend.model.entity.user.User;
 import com.pc_forge.backend.model.repository.configuration.ConfigurationRepository;
 import com.pc_forge.backend.model.repository.product.CommonProductRepository;
-import com.pc_forge.backend.model.repository.product.cpu.ProcessorRepository;
 import com.pc_forge.backend.view.body.configuration.ConfigurationBody;
+import com.pc_forge.backend.view.response.configuration.CompatibilityResponse;
 import com.pc_forge.backend.view.response.configuration.ConfigurationResponse;
 import com.pc_forge.backend.view.response.configuration.ConfigurationShortResponse;
 import com.pc_forge.backend.view.response.configuration.ProductConfigurationResponse;
 import com.pc_forge.backend.view.response.product.*;
 import com.pc_forge.backend.view.util.ResponseBuilder;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -116,7 +110,7 @@ public class ConfigurationService {
         configurationRepository.delete(optionalConfiguration.get());
     }
 
-    public void addConfiguration(User user, @Valid ConfigurationBody configurationBody) throws ConfigurationAlreadyExists {
+    public CompatibilityResponse addConfiguration(User user, ConfigurationBody configurationBody) throws ConfigurationAlreadyExists, ProductDoesNotExistException {
         var configuration = new Configuration();
         configuration.setUser(user);
         var name = configurationBody.getConfigName();
@@ -126,25 +120,27 @@ public class ConfigurationService {
             throw new ConfigurationAlreadyExists("Configuration " + name + " already exists");
         }
         configuration.setConfigName(configurationBody.getConfigName());
-        try {
-            configuration.setMotherboard(getProductFromConfigBody(configurationBody.getMotherboardId()));
-            configuration.setProcessor(getProductFromConfigBody(configurationBody.getProcessorId()));
-            configuration.setMemory(getProductFromConfigBody(configurationBody.getMemoryId()));
-            configuration.setGraphicsCard(getProductFromConfigBody(configurationBody.getGraphicsCardId()));
-            configuration.setPowerSupply(getProductFromConfigBody(configurationBody.getPowerSupplyId()));
-            configuration.setCooler(getProductFromConfigBody(configurationBody.getCoolerId()));
-            configuration.setPcCase(getProductFromConfigBody(configurationBody.getCaseId()));
-            configuration.setHardDiskDrive(getProductFromConfigBody(configurationBody.getHardDiskDriveId()));
-            configuration.setSolidStateDrive(getProductFromConfigBody(configurationBody.getSolidStateDriveId()));
-            validateConfigCompatibility(configuration);
+        configuration.setMotherboard(getProductFromConfigBody(configurationBody.getMotherboardId()));
+        configuration.setProcessor(getProductFromConfigBody(configurationBody.getProcessorId()));
+        configuration.setMemory(getProductFromConfigBody(configurationBody.getMemoryId()));
+        configuration.setGraphicsCard(getProductFromConfigBody(configurationBody.getGraphicsCardId()));
+        configuration.setPowerSupply(getProductFromConfigBody(configurationBody.getPowerSupplyId()));
+        configuration.setCooler(getProductFromConfigBody(configurationBody.getCoolerId()));
+        configuration.setPcCase(getProductFromConfigBody(configurationBody.getCaseId()));
+        configuration.setHardDiskDrive(getProductFromConfigBody(configurationBody.getHardDiskDriveId()));
+        configuration.setSolidStateDrive(getProductFromConfigBody(configurationBody.getSolidStateDriveId()));
+        CompatibilityResponse response = validateConfigCompatibility(configuration);
+        if (response.getCompatible()) {
             configurationRepository.save(configuration);
-        } catch (ProductDoesNotExistException | ProductNotCompatibleException e) {
-            System.out.println(e.getMessage());
         }
+        return response;
     }
 
     @SuppressWarnings("unchecked")
     private <T extends Product> T getProductFromConfigBody(Long productId) throws ProductDoesNotExistException {
+        if (productId == null) {
+            return null;
+        }
         var optionalProduct = commonProductRepository.findById(productId);
         if (optionalProduct.isEmpty()) {
             throw new ProductDoesNotExistException("Product " + productId + " does not exist");
@@ -152,63 +148,93 @@ public class ConfigurationService {
         return (T) optionalProduct.get();
     }
 
-    private void validateConfigCompatibility(Configuration configuration) throws ProductNotCompatibleException {
-        String message;
+    private CompatibilityResponse validateConfigCompatibility(Configuration configuration) {
+        CompatibilityResponse response = new CompatibilityResponse();
         if (!configuration.getMotherboard().getSupportedMemoryFrequencies().contains(configuration.getMemory().getFrequency())) {
-            message = "Memory frequency " + configuration.getMemory().getFrequency() + " is not supported by motherboard";
-            throw new ProductNotCompatibleException(message);
+            response.setCompatible(false);
+            response.setFirstProductCategoryCode(ProductCategoryCode.MOTHERBOARD);
+            response.setSecondProductCategoryCode(ProductCategoryCode.RAM);
+            response.setMessage("Częstotliwość pamięci " + configuration.getMemory().getFrequency() + "MHz nie jest wspierana przez tą płytę główną");
+            return response;
         }
         if (!configuration.getMotherboard().getMemoryStandard().equals(configuration.getMemory().getMemoryType())) {
-            message = "Memory type " + configuration.getMemory().getMemoryType() + " is not supported by motherboard";
-            throw new ProductNotCompatibleException(message);
+            response.setCompatible(false);
+            response.setFirstProductCategoryCode(ProductCategoryCode.MOTHERBOARD);
+            response.setSecondProductCategoryCode(ProductCategoryCode.RAM);
+            response.setMessage("Typ pamięci " + configuration.getMemory().getMemoryType() + " nie jest wspierany przez tą płytę główną");
+            return response;
         }
         if (configuration.getMotherboard().getMemorySlots() < configuration.getMemory().getNumberOfModules()) {
-            message = "Number of memory modules: " + configuration.getMemory().getNumberOfModules() +
-                    " is greater than number of memory slots on motherboard (" +
-                    configuration.getMotherboard().getMemorySlots() + ")";
-            throw new ProductNotCompatibleException(message);
+            response.setCompatible(false);
+            response.setFirstProductCategoryCode(ProductCategoryCode.MOTHERBOARD);
+            response.setSecondProductCategoryCode(ProductCategoryCode.RAM);
+            response.setMessage("Liczba wybranych modułów pamięci przekracza liczbę slotów na płycie głównej");
+            return response;
         }
         if (configuration.getMotherboard().getMaxMemoryCapacity() < configuration.getMemory().getTotalCapacity()) {
-            message = "Memory capacity: " + configuration.getMemory().getTotalCapacity() + " is greater than maximum supported by motherboard";
-            throw new ProductNotCompatibleException(message);
+            response.setCompatible(false);
+            response.setFirstProductCategoryCode(ProductCategoryCode.MOTHERBOARD);
+            response.setSecondProductCategoryCode(ProductCategoryCode.RAM);
+            response.setMessage("Pojemność łączna pamięci przekracza maksymalną pojemność dla tej płyty głównej");
+            return response;
         }
         if (!configuration.getMotherboard().getSocket().equals(configuration.getProcessor().getSocket())) {
-            message = "Socket mismatch. Motherboard socket: " + configuration.getMotherboard().getSocketName()
-                    + " CPU socket: " + configuration.getProcessor().getSocketName();
-            throw new ProductNotCompatibleException(message);
+            response.setCompatible(false);
+            response.setFirstProductCategoryCode(ProductCategoryCode.MOTHERBOARD);
+            response.setSecondProductCategoryCode(ProductCategoryCode.PROCESSOR);
+            response.setMessage("Procesor ma inne gniazdo niż wybrana płyta główna");
+            return response;
         }
         if (!configuration.getPcCase().getSupportedMbStandards().contains(configuration.getMotherboard().getStandard())) {
-            message = "Motherboard standard " + configuration.getMotherboard().getStandard().getStandardName() + " not compatible with pc case";
-            throw new ProductNotCompatibleException(message);
+            response.setCompatible(false);
+            response.setFirstProductCategoryCode(ProductCategoryCode.CASE);
+            response.setSecondProductCategoryCode(ProductCategoryCode.MOTHERBOARD);
+            response.setMessage("Wybrana płyta główna nie pasuje do obudowy");
+            return response;
         }
         if (configuration.getCooler() == null) {
             if (configuration.getProcessor().getCoolerIncluded() == false) {
-                message = "The processor does not include cooling, nor was it selected in the configuration";
-                throw new ProductNotCompatibleException(message);
+                response.setCompatible(false);
+                response.setFirstProductCategoryCode(ProductCategoryCode.PROCESSOR);
+                response.setSecondProductCategoryCode(ProductCategoryCode.AIR_COOLER);
+                response.setMessage("Procesor nie zawiera załączonego chłodzenia ani nie zostało ono wybrane w konfiguracji");
+                return response;
             }
         }
         assert configuration.getCooler() != null;
         if (!configuration.getCooler().getCompatibleSockets().contains(configuration.getMotherboard().getSocket())) {
-            message = "Socket " + configuration.getMotherboard().getSocketName() + " is not compatible with Cooler";
-            throw new ProductNotCompatibleException(message);
+            response.setCompatible(false);
+            response.setFirstProductCategoryCode(configuration.getCooler().getCategory());
+            response.setSecondProductCategoryCode(ProductCategoryCode.MOTHERBOARD);
+            response.setMessage("Wybrane chłodzenie pasuje do gniazda procesora na tej płycie głównej");
+            return response;
         }
         if (configuration.getCooler() instanceof AirCooler) {
             if (configuration.getPcCase().getMaxCpuCoolerHeight() < ((AirCooler) configuration.getCooler()).getHeight()) {
-                message = "Cooler height is greater than maximum on this pc case";
-                throw new ProductNotCompatibleException(message);
+                response.setCompatible(false);
+                response.setFirstProductCategoryCode(ProductCategoryCode.CASE);
+                response.setSecondProductCategoryCode(ProductCategoryCode.AIR_COOLER);
+                response.setMessage("Wybrany układ chłodzenia jest zbyt wysoki dla tej obudowy");
+                return response;
             }
         }
 
         if (configuration.getSolidStateDrive() == null && configuration.getHardDiskDrive() == null) {
-            message = "Drive not selected";
-            throw new ProductNotCompatibleException(message);
+            response.setCompatible(false);
+            response.setFirstProductCategoryCode(ProductCategoryCode.SSD);
+            response.setSecondProductCategoryCode(ProductCategoryCode.HDD);
+            response.setMessage("Nie wybrano żadnego dysku");
+            return response;
         }
 
         Integer psPower;
         if (configuration.getPowerSupply() == null) {
             if (configuration.getPcCase().getPowerSupply() != null || configuration.getPcCase().getPsPower() == 0) {
-                message = "Case does not include a power supply, nor is one selected in the configuration";
-                throw new ProductNotCompatibleException(message);
+                response.setCompatible(false);
+                response.setFirstProductCategoryCode(ProductCategoryCode.POWER_SUPPLY);
+                response.setSecondProductCategoryCode(ProductCategoryCode.CASE);
+                response.setMessage("Obudowa nie zawiera załączonego zasilacza ani nie został on wybrany w konfiguracji");
+                return response;
             }
             psPower = configuration.getPcCase().getPsPower();
         } else {
@@ -218,21 +244,36 @@ public class ConfigurationService {
 
         if (configuration.getGraphicsCard() == null) {
             if (configuration.getProcessor().getIntegratedGraphicsUnit() != null && !configuration.getProcessor().getIntegratedGraphicsUnit().isEmpty()) {
-                message = "Graphics card is not selected and the processor does not have an integrated graphics unit";
-                throw new ProductNotCompatibleException(message);
+                response.setCompatible(false);
+                response.setFirstProductCategoryCode(ProductCategoryCode.GRAPHICS_CARD);
+                response.setSecondProductCategoryCode(ProductCategoryCode.PROCESSOR);
+                response.setMessage("Procesor nie posiada zintegrowanego układu graficznego ani nie wybrano karty graficznej");
+                return response;
             }
         }
 
         assert configuration.getGraphicsCard() != null;
         if (configuration.getPcCase().getMaxGpuLength() < configuration.getGraphicsCard().getCardLength()) {
-            message = "Graphics card length is greater than maximum on this pc case";
-            throw new ProductNotCompatibleException(message);
+            response.setCompatible(false);
+            response.setFirstProductCategoryCode(ProductCategoryCode.GRAPHICS_CARD);
+            response.setSecondProductCategoryCode(ProductCategoryCode.CASE);
+            response.setMessage("Karta graficzna jest zbyt długa dla tej obudowy");
+            return response;
         }
 
         if (psPower < configuration.getGraphicsCard().getRecommendedPsPower()) {
-            message = "Power supply power is less than recommended for the selected graphics card";
-            throw new ProductNotCompatibleException(message);
+            response.setCompatible(false);
+            response.setFirstProductCategoryCode(ProductCategoryCode.GRAPHICS_CARD);
+            response.setSecondProductCategoryCode(ProductCategoryCode.POWER_SUPPLY);
+            response.setMessage("Moc zasilacza jest mniejsza niż minimalna zalecana dla tej karty graficznej " +
+                    "( " + configuration.getGraphicsCard().getRecommendedPsPower() + "W )");
+            return response;
         }
+        response.setCompatible(true);
+        response.setFirstProductCategoryCode(null);
+        response.setSecondProductCategoryCode(null);
+        response.setMessage(null);
+        return response;
     }
 
 }

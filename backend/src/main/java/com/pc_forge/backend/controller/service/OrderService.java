@@ -1,6 +1,6 @@
 package com.pc_forge.backend.controller.service;
 
-import com.pc_forge.backend.controller.exceptions.OrderDoesNotExistException;
+import com.pc_forge.backend.controller.exceptions.InvalidOrderDataException;
 import com.pc_forge.backend.model.entity.product.Product;
 import com.pc_forge.backend.model.entity.user.Address;
 import com.pc_forge.backend.model.entity.user.User;
@@ -17,7 +17,6 @@ import com.pc_forge.backend.view.body.order.AddressBody;
 import com.pc_forge.backend.view.response.order.OrderResponse;
 import com.pc_forge.backend.view.response.order.ProductOrderResponse;
 import jakarta.transaction.Transactional;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -50,12 +49,12 @@ public class OrderService {
         return response;
     }
 
-    public Order getOrder(User user, Long orderId) throws OrderDoesNotExistException {
+    public Order getOrder(User user, Long orderId) throws InvalidOrderDataException {
         Optional<Order> order = orderRepository.findById(orderId);
         if (order.isPresent() && order.get().getUser().getId().equals(user.getId())) {
             return order.get();
         } else {
-            throw new OrderDoesNotExistException("Order does not exist");
+            throw new InvalidOrderDataException("Order does not exist");
         }
     }
 
@@ -147,7 +146,7 @@ public class OrderService {
     }
 
     @Transactional
-    public String cancelOrder(User user, Long orderId) throws Exception {
+    public boolean cancelOrder(User user, Long orderId) throws InvalidOrderDataException {
         Order order;
         order = getOrder(user, orderId);
         Optional<OrderStatus> statusWaitingForPaymentOptional = orderStatusRepository.findById(1);
@@ -155,22 +154,23 @@ public class OrderService {
             OrderStatus status = statusWaitingForPaymentOptional.get();
             if (order.getStatus().equals(status)) {
                 orderRepository.delete(order);
-                return "ORDER_DELETED";
+                return false;
             }
         }
         if (orderStatusRepository.getCancellableStatuses().contains(order.getStatus())) {
             Optional<OrderStatus> statusCanceledOptional = orderStatusRepository.findById(7);
             statusCanceledOptional.ifPresent(order::setStatus);
-            return "ORDER_CANCELLED";
+            orderRepository.save(order);
+            return true;
         }
-        throw new Exception("Order cannot be canceled");
+        throw new InvalidOrderDataException("Order cannot be canceled");
     }
 
     @Transactional
-    public void paymentSucceeded(String sessionId) throws OrderDoesNotExistException {
+    public void paymentSucceeded(String sessionId) throws InvalidOrderDataException {
         Optional<Order> optionalOrder = orderRepository.findOrderBySessionId(sessionId);
         if (optionalOrder.isEmpty()) {
-            throw new OrderDoesNotExistException("Order does not exists");
+            throw new InvalidOrderDataException("Order does not exists");
         }
         Order order = optionalOrder.get();
         Optional<OrderStatus> statusOptional = orderStatusRepository.findById(2);

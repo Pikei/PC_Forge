@@ -1,13 +1,12 @@
 package com.pc_forge.backend.controller.security;
 
-import jakarta.servlet.http.HttpServletResponse;
+import com.pc_forge.backend.controller.api.constants.UrlPath;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
-import org.springframework.web.servlet.HandlerMapping;
 
 @Configuration
 public class SecurityConfig {
@@ -24,13 +23,12 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtRequestFilter, AuthorizationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/profile").authenticated()
-                                .requestMatchers("/cart/**").authenticated()
-                                .requestMatchers("/order/**").authenticated()
-                                .requestMatchers("/configurations/**").authenticated()
-                                .requestMatchers("/profile").authenticated()
-                                .requestMatchers("/delete-account").authenticated()
-                        .requestMatchers("/payment/**").permitAll()
+                        .requestMatchers(UrlPath.PROFILE).authenticated()
+                        .requestMatchers(UrlPath.SHOPPING_CART + "/**").authenticated()
+                        .requestMatchers(UrlPath.ORDER + "/**").authenticated()
+                        .requestMatchers(UrlPath.DELETE_ACCOUNT).authenticated()
+                        .requestMatchers(UrlPath.CONFIGURATIONS + "/**").authenticated()
+                        .requestMatchers(UrlPath.PAYMENT + "/**").authenticated()
                                 .anyRequest().permitAll()
                 )
                 .build();

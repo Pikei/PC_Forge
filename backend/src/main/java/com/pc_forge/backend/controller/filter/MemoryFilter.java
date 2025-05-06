@@ -38,7 +38,7 @@ public final class MemoryFilter extends ProductFilter {
     public void setFilter() {
         setCommonFilters();
         selectedTypes = getStringListFromRequestParam(RequestParams.RAM_TYPE);
-        selectedCapacities = getIntegerListFromRequestParam(RequestParams.CAPACITY);
+        selectedCapacities = getIntegerListFromRequestParam(RequestParams.RAM_CAPACITY);
         selectedFrequencies = getIntegerListFromRequestParam(RequestParams.FREQUENCY);
         selectedModules = getIntegerListFromRequestParam(RequestParams.NUMBER_OF_MODULES);
         selectedLatencies = getStringListFromRequestParam(RequestParams.LATENCY);

@@ -1,5 +1,7 @@
 package com.pc_forge.backend.controller.service;
 
+import com.pc_forge.backend.controller.api.constants.RequestParams;
+import com.pc_forge.backend.controller.api.constants.UrlPath;
 import com.pc_forge.backend.controller.exceptions.EmailFailureException;
 import com.pc_forge.backend.model.entity.user.User;
 import com.pc_forge.backend.model.entity.user.VerificationToken;
@@ -34,7 +36,7 @@ public class EmailService {
         message.setTo(token.getUser().getEmail());
         message.setSubject("Weryfikacja adresu");
         message.setText("Kliknij w link poniżej aby potwierdzić swój adres email: \n"
-                + frontendUrl + "/verify?token=" + token.getToken());
+                + frontendUrl + UrlPath.VERIFY + "?" + RequestParams.TOKEN + "=" + token.getToken());
         try {
             mailSender.send(message);
         } catch (MailException e) {
@@ -48,7 +50,7 @@ public class EmailService {
         message.setTo(user.getEmail());
         message.setSubject("Reset hasła");
         message.setText("Kliknij w link poniżej aby zresetować swoje hasło: \n"
-                + frontendUrl + "/password/reset?token=" + token);
+                + frontendUrl + UrlPath.PASSWORD_RESET + "?" + RequestParams.TOKEN + "=" + token);
         try {
             mailSender.send(message);
         } catch (MailException e) {

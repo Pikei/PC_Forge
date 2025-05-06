@@ -24,20 +24,83 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Kontroler obsługujący żądania związane pobieraniem danych o produktach.
+ */
 @RestController
 public class ProductController {
+    /**
+     * Serwis obsługujący logikę związaną ze wszystkimi produktami
+     */
     private final CommonProductService productService;
+
+
+    /**
+     * Serwis obsługujący logikę związaną z pobieraniem informacji o procesorach
+     */
     private final ProcessorService processorService;
+
+
+    /**
+     * Serwis obsługujący logikę związaną z pobieraniem informacji o płytach głównych
+     */
     private final MotherboardService motherboardService;
+
+    /**
+     * Serwis obsługujący logikę związaną z pobieraniem informacji o pamięciach RAM
+     */
     private final MemoryService memoryService;
+
+    /**
+     * Serwis obsługujący logikę związaną z pobieraniem informacji o kartach graficznych
+     */
     private final GraphicsCardService graphicsCardService;
+
+    /**
+     * Serwis obsługujący logikę związaną z pobieraniem informacji o zasilaczach
+     */
     private final PowerSupplyService powerSupplyService;
+
+    /**
+     * Serwis obsługujący logikę związaną z pobieraniem informacji o obudowach komputerowych
+     */
     private final CaseService caseService;
+
+    /**
+     * Serwis obsługujący logikę związaną z pobieraniem informacji o dyskach SSD
+     */
     private final SsdService ssdService;
+
+    /**
+     * Serwis obsługujący logikę związaną z pobieraniem informacji o dyskach HDD
+     */
     private final HddService hddService;
+
+    /**
+     * Serwis obsługujący logikę związaną z pobieraniem informacji o układach chłodzenia powietrzem
+     */
     private final AirCoolerService airCoolerService;
+
+    /**
+     * Serwis obsługujący logikę związaną z pobieraniem informacji o układach chłodzenia cieczą
+     */
     private final LiquidCoolerService liquidCoolerService;
 
+    /**
+     * Konstruktor klasy kontrolera produktów
+     *
+     * @param productService      serwis ogólny dla wszystkich kategorii produktów
+     * @param processorService    serwis procesorów
+     * @param motherboardService  serwis płyt głównych
+     * @param memoryService       serwis pamięci RAM
+     * @param graphicsCardService serwis kart graficznych
+     * @param powerSupplyService  serwis zasilaczy
+     * @param caseService         serwis obudów komputerowych
+     * @param ssdService          serwis dysków SSD
+     * @param hddService          serwis dysków HDD
+     * @param airCoolerService    serwis układów chłodzenia powietrzem
+     * @param liquidCoolerService serwis układów chłodzenia cieczą
+     */
     public ProductController(CommonProductService productService,
                              ProcessorService processorService,
                              MotherboardService motherboardService,
@@ -62,6 +125,14 @@ public class ProductController {
         this.liquidCoolerService = liquidCoolerService;
     }
 
+    /**
+     * Pobiera szczegółowe dane o produkcie na podstawie jego ID.
+     *
+     * @param id ID produktu
+     * @return Odpowiedź HTTP zawierająca obiekt klasy dziedziczącej z {@link Product}, jeśli zostanie znaleziony.
+     *         Zwraca kod 404 (Not Found), jeśli produkt nie zostanie znaleziony
+     *         lub jeśli ID nie jest prawidłowym numerem.
+     */
     @GetMapping(UrlPath.PRODUCT + "/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable String id) {
         try {
@@ -76,6 +147,15 @@ public class ProductController {
         }
     }
 
+    /**
+     * Wyszukuje produkty po nazwie, z opcjonalnym filtrowaniem po kategorii.
+     *
+     * @param name     Nazwa produktu do wyszukania.
+     * @param category Kod kategorii produktu określony w {@link com.pc_forge.backend.controller.api.constants.ProductCategoryCode}.
+     *                 Jest to parametr opcjonalny. Jego brak spowoduje wyszukanie produktów zawierających w nazwie podany ciąg znaków
+     *                 spośród wszystkich kategorii. Podanie kodu kategorii zawęzi obszar poszukiwań.
+     * @return Lista {@link ProductResponse}, czyli DTO produktów zawierających uproszczone dane, tworzone przez {@link ResponseBuilder}
+     */
     @GetMapping(UrlPath.PRODUCT + UrlPath.SEARCH + "/{name}")
     public ResponseEntity<List<ProductResponse>> getProductsByName(
             @PathVariable String name,
@@ -85,6 +165,14 @@ public class ProductController {
         return ResponseBuilder.generateProductList(products);
     }
 
+    /**
+     * Pobiera listę procesorów, filtrując je na podstawie parametrów zapytania.
+     *
+     * @param request Obiekt {@link HttpServletRequest} zawierający parametry zapytania użyte do filtrowania procesorów.
+     *                Na podstawie przekazanych parametrów tworzony jest obiekt {@link ProcessorFilter}
+     *                służący do filtrowania wyników.
+     * @return Odpowiedź HTTP zawierająca listę {@link ProductResponse}, czyli DTO mających uproszczone dane produktów.
+     */
     @GetMapping(UrlPath.CATEGORY + UrlPath.PROCESSOR)
     public ResponseEntity<List<ProductResponse>> getFilteredProcessors(HttpServletRequest request
     ) {
@@ -94,6 +182,14 @@ public class ProductController {
         return ResponseBuilder.generateProductList(products);
     }
 
+    /**
+     * Pobiera listę płyt głównych, filtrując je na podstawie parametrów zapytania.
+     *
+     * @param request Obiekt {@link HttpServletRequest} zawierający parametry zapytania użyte do filtrowania płyt głównych.
+     *                Na podstawie przekazanych parametrów tworzony jest obiekt {@link MotherboardFilter}
+     *                służący do filtrowania wyników.
+     * @return Odpowiedź HTTP zawierająca listę {@link ProductResponse}, czyli DTO mających uproszczone dane produktów.
+     */
     @GetMapping(UrlPath.CATEGORY + UrlPath.MOTHERBOARD)
     public ResponseEntity<List<ProductResponse>> getFilteredMotherboards(HttpServletRequest request) {
         Map<String, String[]> params = request.getParameterMap();
@@ -102,6 +198,15 @@ public class ProductController {
         return ResponseBuilder.generateProductList(products);
     }
 
+    /**
+     * Pobiera listę pamięci RAM, filtrując je na podstawie parametrów zapytania.
+     *
+     * @param request Obiekt {@link HttpServletRequest} zawierający parametry zapytania użyte do filtrowania pamięci RAM.
+     *                Na podstawie przekazanych parametrów tworzony jest obiekt {@link MemoryFilter}
+     *                służący do filtrowania wyników.
+     * @return Odpowiedź HTTP zawierająca listę {@link ProductResponse}, czyli DTO mających uproszczone dane produktów.
+     *
+     */
     @GetMapping(UrlPath.CATEGORY + UrlPath.MEMORY)
     public ResponseEntity<List<ProductResponse>> getFilteredMemories(HttpServletRequest request) {
         Map<String, String[]> params = request.getParameterMap();
@@ -110,6 +215,15 @@ public class ProductController {
         return ResponseBuilder.generateProductList(products);
     }
 
+    /**
+     * Pobiera listę kart graficznych, filtrując je na podstawie parametrów zapytania.
+     *
+     * @param request Obiekt {@link HttpServletRequest} zawierający parametry zapytania użyte do filtrowania kart graficznych.
+     *                Na podstawie przekazanych parametrów tworzony jest obiekt {@link GpuFilter}
+     *                służący do filtrowania wyników.
+     * @return Odpowiedź HTTP zawierająca listę {@link ProductResponse}, czyli DTO mających uproszczone dane produktów.
+     *
+     */
     @GetMapping(UrlPath.CATEGORY + UrlPath.GRAPHICS_CARD)
     public ResponseEntity<List<ProductResponse>> getFilteredGraphicCards(HttpServletRequest request) {
         Map<String, String[]> params = request.getParameterMap();
@@ -118,6 +232,14 @@ public class ProductController {
         return ResponseBuilder.generateProductList(products);
     }
 
+    /**
+     * Pobiera listę zasilaczy, filtrując je na podstawie parametrów zapytania.
+     *
+     * @param request Obiekt {@link HttpServletRequest} zawierający parametry zapytania użyte do filtrowania zasilaczy.
+     *                Na podstawie przekazanych parametrów tworzony jest obiekt {@link PowerSupplyFilter}
+     *                służący do filtrowania wyników.
+     * @return Odpowiedź HTTP zawierająca listę {@link ProductResponse}, czyli DTO mających uproszczone dane produktów.
+     */
     @GetMapping(UrlPath.CATEGORY + UrlPath.POWER_SUPPLY)
     public ResponseEntity<List<ProductResponse>> getFilteredPowerSupplies(HttpServletRequest request) {
         Map<String, String[]> params = request.getParameterMap();
@@ -126,6 +248,14 @@ public class ProductController {
         return ResponseBuilder.generateProductList(products);
     }
 
+    /**
+     * Pobiera listę obudów komputerowych, filtrując je na podstawie parametrów zapytania.
+     *
+     * @param request Obiekt {@link HttpServletRequest} zawierający parametry zapytania użyte do filtrowania obudów.
+     *                Na podstawie przekazanych parametrów tworzony jest obiekt {@link CaseFilter}
+     *                służący do filtrowania wyników.
+     * @return Odpowiedź HTTP zawierająca listę {@link ProductResponse}, czyli DTO mających uproszczone dane produktów.
+     */
     @GetMapping(UrlPath.CATEGORY + UrlPath.CASE)
     public ResponseEntity<List<ProductResponse>> getFilteredCases(HttpServletRequest request) {
         Map<String, String[]> params = request.getParameterMap();
@@ -134,6 +264,14 @@ public class ProductController {
         return ResponseBuilder.generateProductList(products);
     }
 
+    /**
+     * Pobiera listę dysków SSD, filtrując je na podstawie parametrów zapytania.
+     *
+     * @param request Obiekt {@link HttpServletRequest} zawierający parametry zapytania użyte do filtrowania dysków SSD.
+     *                Na podstawie przekazanych parametrów tworzony jest obiekt {@link SsdFilter}
+     *                służący do filtrowania wyników.
+     * @return Odpowiedź HTTP zawierająca listę {@link ProductResponse}, czyli DTO mających uproszczone dane produktów.
+     */
     @GetMapping(UrlPath.CATEGORY + UrlPath.SSD)
     public ResponseEntity<List<ProductResponse>> getFilteredSSDs(HttpServletRequest request) {
         Map<String, String[]> params = request.getParameterMap();
@@ -142,6 +280,14 @@ public class ProductController {
         return ResponseBuilder.generateProductList(products);
     }
 
+    /**
+     * Pobiera listę dysków HDD, filtrując je na podstawie parametrów zapytania.
+     *
+     * @param request Obiekt {@link HttpServletRequest} zawierający parametry zapytania użyte do filtrowania dysków HDD.
+     *                Na podstawie przekazanych parametrów tworzony jest obiekt {@link HddFilter}
+     *                służący do filtrowania wyników.
+     * @return Odpowiedź HTTP zawierająca listę {@link ProductResponse}, czyli DTO mających uproszczone dane produktów.
+     */
     @GetMapping(UrlPath.CATEGORY + UrlPath.HDD)
     public ResponseEntity<List<ProductResponse>> getFilteredHDDs(HttpServletRequest request) {
         Map<String, String[]> params = request.getParameterMap();
@@ -150,6 +296,14 @@ public class ProductController {
         return ResponseBuilder.generateProductList(products);
     }
 
+    /**
+     * Pobiera listę chłodzeń powietrznych, filtrując je na podstawie parametrów zapytania.
+     *
+     * @param request Obiekt {@link HttpServletRequest} zawierający parametry zapytania użyte do filtrowania chłodzeń powietrznych.
+     *                Na podstawie przekazanych parametrów tworzony jest obiekt {@link AirCoolerFilter}
+     *                służący do filtrowania wyników.
+     * @return Odpowiedź HTTP zawierająca listę {@link ProductResponse}, czyli DTO mających uproszczone dane produktów.
+     */
     @GetMapping(UrlPath.CATEGORY + UrlPath.AIR_COOLER)
     public ResponseEntity<List<ProductResponse>> getFilteredAirCoolers(HttpServletRequest request) {
         Map<String, String[]> params = request.getParameterMap();
@@ -158,6 +312,14 @@ public class ProductController {
         return ResponseBuilder.generateProductList(products);
     }
 
+    /**
+     * Pobiera listę chłodzeń cieczą, filtrując je na podstawie parametrów zapytania.
+     *
+     * @param request Obiekt {@link HttpServletRequest} zawierający parametry zapytania użyte do filtrowania chłodzeń cieczą.
+     *                Na podstawie przekazanych parametrów tworzony jest obiekt {@link LiquidCoolerFilter}
+     *                służący do filtrowania wyników.
+     * @return Odpowiedź HTTP zawierająca listę {@link ProductResponse}, czyli DTO mających uproszczone dane produktów.
+     */
     @GetMapping(UrlPath.CATEGORY + UrlPath.LIQUID_COOLER)
     public ResponseEntity<List<ProductResponse>> getFilteredLiquidCoolers(HttpServletRequest request) {
         Map<String, String[]> params = request.getParameterMap();

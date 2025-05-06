@@ -1,5 +1,8 @@
 package com.pc_forge.backend.controller.service;
 
+import com.pc_forge.backend.controller.api.constants.RequestParams;
+import com.pc_forge.backend.controller.api.constants.UrlPath;
+import com.pc_forge.backend.controller.exceptions.InvalidOrderDataException;
 import com.pc_forge.backend.controller.exceptions.PaymentException;
 import com.pc_forge.backend.model.entity.order.Order;
 import com.pc_forge.backend.model.entity.order.OrderDetail;
@@ -35,8 +38,8 @@ public class PaymentService {
                 .setSubmitType(SessionCreateParams.SubmitType.PAY)
                 .addAllLineItem(items)
                 .setCustomerEmail(order.getUser().getEmail())
-                .setSuccessUrl(frontendUrl + "/payment/success?session_id={CHECKOUT_SESSION_ID}")
-                .setCancelUrl(frontendUrl + "/payment/cancel")
+                .setSuccessUrl(frontendUrl + UrlPath.PAYMENT + UrlPath.SUCCESS + "?" + RequestParams.SESSION_ID + "={CHECKOUT_SESSION_ID")
+                .setCancelUrl(frontendUrl + UrlPath.PAYMENT + UrlPath.CANCEL)
                 .build();
         try {
             Session session = Session.create(params);
@@ -65,10 +68,10 @@ public class PaymentService {
         return items;
     }
 
-    public String refundPayment(Long orderId) throws PaymentException {
+    public String refundPayment(Long orderId) throws PaymentException, InvalidOrderDataException {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
         if (optionalOrder.isEmpty()) {
-            throw new PaymentException("Order does not exist");
+            throw new InvalidOrderDataException("Order does not exist");
         }
 
         Order order = optionalOrder.get();

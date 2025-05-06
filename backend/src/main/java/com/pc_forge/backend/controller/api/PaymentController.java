@@ -1,45 +1,61 @@
 package com.pc_forge.backend.controller.api;
 
-import com.pc_forge.backend.controller.exceptions.OrderDoesNotExistException;
+import com.pc_forge.backend.controller.api.constants.RequestParams;
+import com.pc_forge.backend.controller.api.constants.UrlPath;
+import com.pc_forge.backend.controller.exceptions.InvalidOrderDataException;
 import com.pc_forge.backend.controller.service.OrderService;
-import com.pc_forge.backend.view.response.payment.PaymentResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Kontroler odbierający informację o powodzeniu i anulowaniu płatności
+ */
 @RestController
-@RequestMapping("/payment")
+@RequestMapping(UrlPath.PAYMENT)
 public class PaymentController {
+    /**
+     * Serwis odpowiedzialny za aktualizację statusu zamówienia
+     */
     private final OrderService orderService;
 
+    /**
+     * Konstruktor kontrolera płatności.
+     *
+     * @param orderService Serwis zamówień.
+     */
     public PaymentController(OrderService orderService) {
         this.orderService = orderService;
     }
 
-    @GetMapping("/success")
-    public ResponseEntity<PaymentResponse> paymentSuccess(@RequestParam("session_id") String sessionId) {
-        PaymentResponse response = new PaymentResponse();
+    /**
+     * Metoda obsługująca sukces płatności. Ustawia status zamówienia na 2 - Opłacone.
+     *
+     * @param sessionId ID sesji płatności
+     * @return Odpowiedź ze statusem HTTP 200 (OK) w przypadku sukcesu.
+     * Jeśli nie udało się odnaleźć zamówienia po identyfikatorze sesji,
+     * zwracana jest odpowiedź ze statusem HTTP 404 (NOT_FOUND)
+     */
+    @GetMapping(UrlPath.SUCCESS)
+    public ResponseEntity<Void> paymentSuccess(@RequestParam(RequestParams.SESSION_ID) String sessionId) {
         try {
             orderService.paymentSucceeded(sessionId);
-            response.setSuccess(true);
-            response.setStatus("PAYMENT_SUCCESSFUL");
-            return ResponseEntity.ok(response);
-        } catch (OrderDoesNotExistException e) {
-            response.setSuccess(false);
-            response.setStatus("ORDER_DOES_NOT_EXIST");
-            response.setMessage(e.getMessage());
+            return ResponseEntity.ok().build();
+        } catch (InvalidOrderDataException e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.notFound().build();
         }
     }
 
-    @GetMapping("/cancel")
-    public ResponseEntity<PaymentResponse> paymentCancel() {
-        PaymentResponse response = new PaymentResponse();
-        response.setSuccess(false);
-        response.setStatus("PAYMENT_CANCELED");
-        response.setMessage("Payment canceled");
-        return ResponseEntity.ok(response);
+    /**
+     * Metoda obsługująca anulowanie płatności. Zwraca informację o anulowaniu płatności.
+     *
+     * @return Odpowiedź ze statusem HTTP 200 (OK) i komunikatem o anulowaniu płatności.
+     */
+    @GetMapping(UrlPath.CANCEL)
+    public ResponseEntity<String> paymentCancel() {
+        return ResponseEntity.ok("Płatność anulowana");
     }
 }
