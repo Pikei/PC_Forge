@@ -145,7 +145,7 @@ public class UserService {
         }
         Optional<User> optionalUser = userRepository.findByEmailIgnoreCase(email);
         if (optionalUser.isEmpty()) {
-            throw new UserDoesNotExistException("User does not exist");
+            throw new UserDoesNotExistException("User with email " + email + " does not exist");
         }
         User user = optionalUser.get();
         if (user.getResetTokens().isEmpty()) {

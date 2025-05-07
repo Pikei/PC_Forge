@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 public class ConfigurationResponse {
     private String name;
+    private Double price;
     private ProcessorResponse processor;
     private MotherboardResponse motherboard;
     private MemoryResponse memory;

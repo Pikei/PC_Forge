@@ -7,24 +7,69 @@ import lombok.Setter;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Klasa filtra zasilacza dziedzicząca z {@link ProductFilter}. Zawiera wartości, po których będą filtrowane wyniki
+ */
 @Getter
 @Setter
 public final class PowerSupplyFilter extends ProductFilter {
+    /**
+     * Lista wybranych mocy zasilacza
+     */
     private List<Integer> selectedPowers;
+
+    /**
+     * Lista wybranych certyfikatów sprawności
+     */
     private List<String> selectedCertificates;
+
+    /**
+     * Lista wybranych sprawności
+     */
     private List<Integer> selectedEfficiencies;
+
+    /**
+     * Lista wybranych typów chłodzenia zasilacza
+     */
     private List<String> selectedCoolingTypes;
+
+    /**
+     * Lista wybranych średnic wiatraków zasilacza
+     */
     private List<Integer> selectedFanDiameters;
+
+    /**
+     * Lista wybranych typów zabezpieczeń
+     */
     private List<String> selectedProtections;
+
+    /**
+     * Flaga określająca czy zasilacz ma modularne okablowanie, czy nie
+     */
     private Boolean modularCabling;
+
+    /**
+     * Flaga określająca czy zasilacz ma podświetlenie
+     */
     private Boolean lightning;
 
-
+    /**
+     * Konstruktor klasy filtra zasilacza. Ustawia pola w klasie wywołując metodę {@link #setFilter()}
+     *
+     * @param requestParameters mapa parametrów zapytania HTTP
+     */
     public PowerSupplyFilter(Map<String, String[]> requestParameters) {
         super(requestParameters);
         setFilter();
     }
 
+    /**
+     * Metoda nadpisywana z {@link ProductFilter}.
+     * Określa czy filtr zasilacza jest pusty lub nie (nie zostały przekazane żadne parametry filtrowania w żądaniu).
+     * Wywołuje metodę {@link #checkCommonFilterFieldsIfEmpty()} z klasy nadrzędnej.
+     *
+     * @return Jeśli filtr jest pusty zwracane jest {@code true}, w przeciwnym razie {@code false}
+     */
     @Override
     public Boolean empty() {
         boolean result = checkCommonFilterFieldsIfEmpty();
@@ -39,6 +84,12 @@ public final class PowerSupplyFilter extends ProductFilter {
         return result;
     }
 
+    /**
+     * Metoda nadpisywana z {@link ProductFilter}. Ustawia pola filtra zasilacza na podstawie
+     * otrzymanej w konstruktorze mapy parametrów HTTP, pobierając z niej pożądane wartości.
+     * Wywołuje metodę {@link #setCommonFilters()} z klasy nadrzędnej,
+     * ustawiającą pola wspólne dla wszystkich typów produktów.
+     */
     @Override
     public void setFilter() {
         setCommonFilters();

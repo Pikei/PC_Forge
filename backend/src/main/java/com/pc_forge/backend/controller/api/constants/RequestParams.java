@@ -66,7 +66,7 @@ public class RequestParams {
     public static final String COOLER_INCLUDED = "cooler";
 
     /**
-     * Parametr określający standard płyty głównej (np ATX, Micro-ATX)
+     * Parametr określający standard płyty głównej (np. ATX, Micro-ATX)
      */
     public static final String MOTHERBOARD_STANDARD = "standard";
 
@@ -76,7 +76,7 @@ public class RequestParams {
     public static final String CHIPSET = "chipset";
 
     /**
-     * Parametr określający typ pamięci RAM (np DDR4, DDR5)
+     * Parametr określający typ pamięci RAM (np. DDR4, DDR5)
      */
     public static final String RAM_TYPE = "ram_type";
 

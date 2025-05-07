@@ -1,7 +1,6 @@
 package com.pc_forge.backend.controller.service;
 
 import com.pc_forge.backend.controller.api.constants.ProductCategoryCode;
-import com.pc_forge.backend.controller.exceptions.ConfigurationAlreadyExists;
 import com.pc_forge.backend.controller.exceptions.ConfigurationDoesNotExistException;
 import com.pc_forge.backend.controller.exceptions.ProductDoesNotExistException;
 import com.pc_forge.backend.model.entity.configuration.Configuration;
@@ -21,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -69,6 +69,7 @@ public class ConfigurationService {
         var configuration = optionalConfiguration.get();
         var response = new ConfigurationResponse();
         response.setName(configuration.getConfigName());
+        response.setPrice(configuration.getTotalPrice());
         response.setProcessor((ProcessorResponse) ResponseBuilder.getProductResponse(configuration.getProcessor()));
         response.setMotherboard((MotherboardResponse) ResponseBuilder.getProductResponse(configuration.getMotherboard()));
         response.setMemory((MemoryResponse) ResponseBuilder.getProductResponse(configuration.getMemory()));
@@ -110,14 +111,14 @@ public class ConfigurationService {
         configurationRepository.delete(optionalConfiguration.get());
     }
 
-    public CompatibilityResponse addConfiguration(User user, ConfigurationBody configurationBody) throws ConfigurationAlreadyExists, ProductDoesNotExistException {
-        var configuration = new Configuration();
-        configuration.setUser(user);
-        var name = configurationBody.getConfigName();
-        if (configurationRepository.findByUser_IdAndConfigName(user.getId(), name).isEmpty()) {
-            configuration.setConfigName(name);
+    public CompatibilityResponse saveOrEditConfiguration(User user, ConfigurationBody configurationBody) throws ProductDoesNotExistException, ClassCastException {
+        Optional<Configuration> optionalConfiguration = configurationRepository.findByUser_IdAndConfigName(user.getId(), configurationBody.getConfigName());
+        Configuration configuration;
+        if (optionalConfiguration.isEmpty()) {
+            configuration = new Configuration();
+            configuration.setUser(user);
         } else {
-            throw new ConfigurationAlreadyExists("Configuration " + name + " already exists");
+            configuration = optionalConfiguration.get();
         }
         configuration.setConfigName(configurationBody.getConfigName());
         configuration.setMotherboard(getProductFromConfigBody(configurationBody.getMotherboardId()));
@@ -275,5 +276,4 @@ public class ConfigurationService {
         response.setMessage(null);
         return response;
     }
-
 }

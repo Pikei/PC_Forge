@@ -38,7 +38,7 @@ public class PaymentService {
                 .setSubmitType(SessionCreateParams.SubmitType.PAY)
                 .addAllLineItem(items)
                 .setCustomerEmail(order.getUser().getEmail())
-                .setSuccessUrl(frontendUrl + UrlPath.PAYMENT + UrlPath.SUCCESS + "?" + RequestParams.SESSION_ID + "={CHECKOUT_SESSION_ID")
+                .setSuccessUrl(frontendUrl + UrlPath.PAYMENT + UrlPath.SUCCESS + "?" + RequestParams.SESSION_ID + "={CHECKOUT_SESSION_ID}")
                 .setCancelUrl(frontendUrl + UrlPath.PAYMENT + UrlPath.CANCEL)
                 .build();
         try {

@@ -74,7 +74,7 @@ public class ShoppingCartController {
      * lub odpowiedź ze statusem HTTP 400 (BAD_REQUEST) w przypadku podania nieprawidłowego identyfikatora produktu
      */
     @PostMapping(UrlPath.REMOVE)
-    public ResponseEntity<Void> removeItem(@Valid @AuthenticationPrincipal User user, @RequestBody ShoppingCartBody product) {
+    public ResponseEntity<Void> removeItem(@Valid @AuthenticationPrincipal User user, @Valid @RequestBody ShoppingCartBody product) {
         try {
             shoppingCartService.removeProductFromCart(user, product.getProductId());
         } catch (ProductDoesNotExistException e) {

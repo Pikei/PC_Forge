@@ -13,13 +13,13 @@ import java.util.Date;
 
 @Service
 public class JWTService {
-    @Value("${JWT_KEY}")
+    @Value("${security.jwt.key}")
     private String key;
 
-    @Value("${JWT_ISSUER}")
+    @Value("${security.jwt.issuer}")
     private String issuer;
 
-    @Value("${JWT_EXPIRATION_HOURS}")
+    @Value("${security.jwt.expiration}")
     private Integer expiration;
 
     private Algorithm algorithm;
@@ -61,7 +61,7 @@ public class JWTService {
         return jwt.getClaim(RESET_PASSWORD_KEY).asString();
     }
 
-    public String verifyJWT(String token) {
+    public String getUsernameClaim(String token) {
         DecodedJWT jwt = JWT.require(algorithm).withIssuer(issuer).build().verify(token);
         return jwt.getClaim(USERNAME_KEY).asString();
     }

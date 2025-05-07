@@ -7,28 +7,94 @@ import lombok.Setter;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Klasa filtra płyty głównej dziedzicząca z {@link ProductFilter}. Zawiera wartości, po których będą filtrowane wyniki
+ */
 @Getter
 @Setter
 public final class MotherboardFilter extends ProductFilter {
+    /**
+     * Lista wybranych gniazd procesora
+     */
     private List<String> selectedSockets;
+
+    /**
+     * Lista wybranych standardów płyty głównej
+     */
     private List<String> selectedStandards;
+
+    /**
+     * Lista wybranych chipsetów płyty głównej
+     */
     private List<String> selectedChipsets;
+
+    /**
+     * Lista wybranych standardów pamięci RAM
+     */
     private List<String> selectedMemoryStandards;
+
+    /**
+     * Lista wybranych liczb slotów pamięci RAM
+     */
     private List<Integer> selectedMemorySlots;
+
+    /**
+     * Lista wybranych maksymalnych pojemności pamięci RAM
+     */
     private List<Integer> selectedMaxMemoryCapacity;
+
+    /**
+     * Lista wybranych częstotliwości pamięci RAM
+     */
     private List<Integer> selectedFrequencies;
+
+    /**
+     * Flaga określająca czy płyta główna ma moduł Bluetooth, czy nie
+     */
     private Boolean bluetooth;
+
+    /**
+     * Flaga określająca czy płyta główna ma moduł Wi-Fi, czy nie
+     */
     private Boolean wifi;
+
+    /**
+     * Minimalna szerokość płyty głównej
+     */
     private Double minWidth;
+
+    /**
+     * Maksymalna szerokość płyty głównej
+     */
     private Double maxWidth;
+
+    /**
+     * Minimalna głębokość płyty głównej
+     */
     private Double minDepth;
+
+    /**
+     * Maksymalna głębokość płyty głównej
+     */
     private Double maxDepth;
 
+    /**
+     * Konstruktor klasy filtra płyty głównej. Ustawia pola w klasie wywołując metodę {@link #setFilter()}
+     *
+     * @param requestParameters mapa parametrów zapytania HTTP
+     */
     public MotherboardFilter(Map<String, String[]> requestParameters) {
         super(requestParameters);
         setFilter();
     }
 
+    /**
+     * Metoda nadpisywana z {@link ProductFilter}.
+     * Określa czy filtr płyty głównej jest pusty lub nie (nie zostały przekazane żadne parametry filtrowania w żądaniu).
+     * Wywołuje metodę {@link #checkCommonFilterFieldsIfEmpty()} z klasy nadrzędnej.
+     *
+     * @return Jeśli filtr jest pusty zwracane jest {@code true}, w przeciwnym razie {@code false}
+     */
     @Override
     public Boolean empty() {
         boolean result = checkCommonFilterFieldsIfEmpty();
@@ -46,6 +112,12 @@ public final class MotherboardFilter extends ProductFilter {
         return result;
     }
 
+    /**
+     * Metoda nadpisywana z {@link ProductFilter}. Ustawia pola filtra płyty głównej na podstawie
+     * otrzymanej w konstruktorze mapy parametrów HTTP, pobierając z niej pożądane wartości.
+     * Wywołuje metodę {@link #setCommonFilters()} z klasy nadrzędnej,
+     * ustawiającą pola wspólne dla wszystkich typów produktów.
+     */
     @Override
     public void setFilter() {
         setCommonFilters();

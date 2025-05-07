@@ -1,7 +1,6 @@
 package com.pc_forge.backend.controller.api;
 
 import com.pc_forge.backend.controller.api.constants.UrlPath;
-import com.pc_forge.backend.controller.exceptions.ConfigurationAlreadyExists;
 import com.pc_forge.backend.controller.exceptions.ConfigurationDoesNotExistException;
 import com.pc_forge.backend.controller.exceptions.ProductDoesNotExistException;
 import com.pc_forge.backend.controller.service.ConfigurationService;
@@ -96,7 +95,7 @@ public class ConfigurationController {
      * Jeśli wskazana konfiguracja nie istnieje, zostanie zwrócona odpowiedź ze statusem HTTP 404 (NOT_FOUND).
      * Jeśli użytkownik nie jest uwierzytelniony, Spring Security zwróci odpowiedź ze statusem HTTP 403 (FORBIDDEN).
      */
-    @PostMapping(UrlPath.REMOVE + "{name}")
+    @PostMapping(UrlPath.REMOVE + "/{name}")
     public ResponseEntity<Void> removeConfiguration(@AuthenticationPrincipal User user, @PathVariable String name) {
         try {
             configurationService.deleteConfiguration(user, name);
@@ -118,22 +117,14 @@ public class ConfigurationController {
      * Jeśli użytkownik nie jest uwierzytelniony, Spring Security zwróci odpowiedź ze statusem HTTP 403 (FORBIDDEN).
      */
     @PostMapping(UrlPath.SAVE)
-    public ResponseEntity<CompatibilityResponse> addConfigurationToCart(@AuthenticationPrincipal User user, @Valid @RequestBody ConfigurationBody configuration) {
+    public ResponseEntity<CompatibilityResponse> saveConfiguration(@AuthenticationPrincipal User user, @Valid @RequestBody ConfigurationBody configuration) {
         try {
-            var response = configurationService.addConfiguration(user, configuration);
+            var response = configurationService.saveOrEditConfiguration(user, configuration);
             if (response.getCompatible()) {
-                return ResponseEntity.ok(response);
+                return ResponseEntity.ok().build();
             }
             return ResponseEntity.badRequest().body(response);
-        } catch (ConfigurationAlreadyExists e) {
-            System.out.println(e.getMessage());
-            CompatibilityResponse response = new CompatibilityResponse();
-            response.setCompatible(false);
-            response.setFirstProductCategoryCode(null);
-            response.setSecondProductCategoryCode(null);
-            response.setMessage("Konfiguracja o tej nazwie już istnieje");
-            return ResponseEntity.badRequest().body(response);
-        } catch (ProductDoesNotExistException e) {
+        } catch (ClassCastException | ProductDoesNotExistException e) {
             System.out.println(e.getMessage());
             return ResponseEntity.badRequest().build();
         }

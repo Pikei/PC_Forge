@@ -7,39 +7,149 @@ import lombok.Setter;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Klasa filtra obudowy dziedzicząca z {@link ProductFilter}. Zawiera wartości, po których będą filtrowane wyniki
+ */
 @Getter
 @Setter
 public final class CaseFilter extends ProductFilter {
+    /**
+     * Lista wybranych kolorów obudowy
+     */
     private List<String> selectedColors;
+
+    /**
+     * Lista wybranych typów obudowy
+     */
     private List<String> selectedCaseTypes;
+
+    /**
+     * Lista wybranych standardów płyt głównych kompatybilnych z obudową
+     */
     private List<String> selectedCompatibleMbStandards;
+
+    /**
+     * Minimalna wysokość obudowy
+     */
     private Double minHeight;
+
+    /**
+     * Maksymalna wysokość obudowy
+     */
     private Double maxHeight;
+
+    /**
+     * Minimalna szerokość obudowy
+     */
     private Double minWidth;
+
+    /**
+     * Maksymalna szerokość obudowy
+     */
     private Double maxWidth;
+
+    /**
+     * Minimalna głębokość obudowy
+     */
     private Double minDepth;
+
+    /**
+     * Maksymalna głębokość obudowy
+     */
     private Double maxDepth;
+
+    /**
+     * Flaga określająca czy obudowa ma okno, czy nie
+     */
     private Boolean hasWindow;
+
+    /**
+     * Flaga określająca czy obudowa ma zasilacz, czy nie
+     */
     private Boolean hasPowerSupply;
+
+    /**
+     * Lista wybranych mocy załączonego zasilacza
+     */
     private List<Integer> selectedPsPowers;
+
+    /**
+     * Maksymalna długość karty graficznej
+     */
     private Integer maxGpuLength;
+
+    /**
+     * Maksymalna wysokość układu chłodzenia procesora
+     */
     private Integer maxCpuCoolerHeight;
+
+    /**
+     * Lista wybranych wiatraków na panelu przednim
+     */
     private List<String> selectedFrontFans;
+
+    /**
+     * Lista wybranych wiatraków na panelu tylnym
+     */
     private List<String> selectedBackFans;
+
+    /**
+     * Lista wybranych wiatraków na panelu bocznym
+     */
     private List<String> selectedSideFans;
+
+    /**
+     * Lista wybranych wiatraków na panelu dolnym
+     */
     private List<String> selectedBottomFans;
+
+    /**
+     * Lista wybranych wiatraków na panelu górnym
+     */
     private List<String> selectedTopFans;
+
+    /**
+     * Lista wybranych liczb portów USB 2.0
+     */
     private List<Integer> selectedUsb20;
+
+    /**
+     * Lista wybranych liczb portów USB 3.0
+     */
     private List<Integer> selectedUsb30;
+
+    /**
+     * Lista wybranych liczb portów USB 3.1
+     */
     private List<Integer> selectedUsb31;
+
+    /**
+     * Lista wybranych liczb portów USB 3.2
+     */
     private List<Integer> selectedUsb32;
+
+    /**
+     * Lista wybranych liczb portów USB-C
+     */
     private List<Integer> selectedUsbC;
 
+    /**
+     * Konstruktor klasy filtra obudowy. Ustawia pola w klasie wywołując metodę {@link #setFilter()}
+     *
+     * @param requestParameters mapa parametrów zapytania HTTP
+     */
     public CaseFilter(Map<String, String[]> requestParameters) {
         super(requestParameters);
         setFilter();
     }
 
+    /**
+     * Metoda nadpisywana z {@link ProductFilter}.
+     * Określa czy filtr obudowy jest pusty lub nie (nie zostały przekazane żadne parametry filtrowania w żądaniu).
+     * Wywołuje metodę {@link #checkCommonFilterFieldsIfEmpty()} z klasy nadrzędnej.
+     *
+     * @return Jeśli filtr jest pusty zwracane jest {@code true}, w przeciwnym razie {@code false}
+     */
     @Override
     public Boolean empty() {
         boolean result = checkCommonFilterFieldsIfEmpty();
@@ -66,6 +176,12 @@ public final class CaseFilter extends ProductFilter {
         return result;
     }
 
+    /**
+     * Metoda nadpisywana z {@link ProductFilter}. Ustawia pola filtra obudowy na podstawie
+     * otrzymanej w konstruktorze mapy parametrów HTTP, pobierając z niej pożądane wartości.
+     * Wywołuje metodę {@link #setCommonFilters()} z klasy nadrzędnej,
+     * ustawiającą pola wspólne dla wszystkich typów produktów.
+     */
     @Override
     public void setFilter() {
         setCommonFilters();
