@@ -16,6 +16,7 @@ import com.pc_forge.backend.view.response.configuration.ConfigurationShortRespon
 import com.pc_forge.backend.view.response.configuration.ProductConfigurationResponse;
 import com.pc_forge.backend.view.response.product.*;
 import com.pc_forge.backend.view.util.ResponseBuilder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,19 +24,49 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Klasa serwisu konfiguracji. Implementuje logikę związaną z konfiguracją PC użytkownika.
+ */
 @Service
 public class ConfigurationService {
+    /**
+     * Repozytorium/DAO konfiguracji. Służy do wywoływania kwerend związanych z konfiguracjami.
+     */
     private final ConfigurationRepository configurationRepository;
-    private final ShoppingCartService shoppingCartService;
+
+    /**
+     * Repozytorium/DAO produktu. Służy do wywoływania kwerend związanych z pobieraniem danych o produktach.
+     */
     private final CommonProductRepository commonProductRepository;
 
-    public ConfigurationService(ConfigurationRepository configurationRepository, ShoppingCartService shoppingCartService, CommonProductRepository commonProductRepository) {
+
+    /**
+     * Serwis koszyka zakupowego użytkownika. Odpowiada za dodanie produktów z konfiguracji do koszyka.
+     */
+    private final ShoppingCartService shoppingCartService;
+
+    /**
+     * Konstruktor konfiguracji. Wstrzykuje odpowiednie zależności do serwisu.
+     *
+     * @param configurationRepository Repozytorium/DAO konfiguracji
+     * @param commonProductRepository Repozytorium/DAO produktu
+     * @param shoppingCartService     Serwis koszyka zakupowego użytkownika
+     */
+    public ConfigurationService(ConfigurationRepository configurationRepository, CommonProductRepository commonProductRepository, ShoppingCartService shoppingCartService) {
         this.configurationRepository = configurationRepository;
-        this.shoppingCartService = shoppingCartService;
         this.commonProductRepository = commonProductRepository;
+        this.shoppingCartService = shoppingCartService;
 
     }
 
+
+    /**
+     * Metoda odpowiedzialna za pobranie wszystkich konfiguracji dla użytkownika w formie uproszczonego DTO.
+     * W zwracanej odpowiedzi znajdują się wyłącznie podstawowe informacje o produktach.
+     *
+     * @param user obiekt zalogowanego użytkownika dostarczony przez Spring Security
+     * @return Lista zawierająca skrócone informacje o konfiguracjach użytkownika.
+     */
     public List<ConfigurationShortResponse> getAllConfigurations(User user) {
         List<ConfigurationShortResponse> configListResponse;
         List<Configuration> configurations = configurationRepository.findByUser_Id(user.getId());
@@ -43,6 +74,14 @@ public class ConfigurationService {
         return configListResponse;
     }
 
+
+    /**
+     * Metoda tworząca krótką odpowiedź zawierającą podstawowe informacje o produktach zawartych w konfiguracji użytkownika.
+     * Jest wywoływana przez metodę {@link #getAllConfigurations(User)}
+     *
+     * @param configuration Obiekt konfiguracji użytkownika
+     * @return odpowiedź zawierająca podstawowe informacje o produktach w konkretnej konfiguracji
+     */
     private ConfigurationShortResponse getConfigurationShortResponse(Configuration configuration) {
         ConfigurationShortResponse response = new ConfigurationShortResponse();
         response.setName(configuration.getConfigName());
@@ -61,6 +100,17 @@ public class ConfigurationService {
         return response;
     }
 
+    /**
+     * Metoda odpowiedzialna za pobranie bardziej szczegółowych informacji o konfiguracji niż ma to miejsce w
+     * {@link #getAllConfigurations(User)}. Zwraca podstawowe informacje o parametrach produktów.
+     * Służy do pobierania danych o produktach w jednej konkretnej konfiguracji znalezionej po jej nazwie i użytkowniku.
+     * Użytkownik może mieć jedną konfigurację zapisaną pod wskazaną nazwą.
+     *
+     * @param user Obiekt zalogowanego użytkownika dostarczony przez Spring Security.
+     * @param name Nazwa konfiguracji
+     * @return Obiekt konfiguracji użytkownika
+     * @throws ConfigurationDoesNotExistException w przypadku, gdy nie istnieje konfiguracja o wskazanej nazwie.
+     */
     public ConfigurationResponse getConfiguration(User user, String name) throws ConfigurationDoesNotExistException {
         var optionalConfiguration = configurationRepository.findByUser_IdAndConfigName(user.getId(), name);
         if (optionalConfiguration.isEmpty()) {
@@ -82,6 +132,14 @@ public class ConfigurationService {
         return response;
     }
 
+
+    /**
+     * Metoda dodająca produkty z konfiguracji do koszyka użytkownika.
+     *
+     * @param user Obiekt zalogowanego użytkownika dostarczony przez Spring Security.
+     * @param name Nazwa konfiguracji
+     * @throws ConfigurationDoesNotExistException w przypadku, gdy nie istnieje konfiguracja o wskazanej nazwie.
+     */
     public void addConfigurationToCart(User user, String name) throws ConfigurationDoesNotExistException {
         var optionalConfiguration = configurationRepository.findByUser_IdAndConfigName(user.getId(), name);
         if (optionalConfiguration.isEmpty()) {
@@ -103,6 +161,13 @@ public class ConfigurationService {
         }
     }
 
+    /**
+     * Metoda usuwająca na stałe zapisaną konfigurację użytkownika.
+     *
+     * @param user Obiekt zalogowanego użytkownika dostarczony przez Spring Security.
+     * @param name Nazwa konfiguracji
+     * @throws ConfigurationDoesNotExistException w przypadku, gdy nie istnieje konfiguracja o wskazanej nazwie.
+     */
     public void deleteConfiguration(User user, String name) throws ConfigurationDoesNotExistException {
         var optionalConfiguration = configurationRepository.findByUser_IdAndConfigName(user.getId(), name);
         if (optionalConfiguration.isEmpty()) {
@@ -111,6 +176,24 @@ public class ConfigurationService {
         configurationRepository.delete(optionalConfiguration.get());
     }
 
+    /**
+     * Metoda zapisująca nową lub edytująca istniejącą konfigurację. Pobiera nazwę z Request body i sprawdza,
+     * czy konfiguracja o wskazanej nazwie już istnieje, czy jeszcze nie. Jeśli konfiguracja istnieje,
+     * jej obiekt jest pobierany z bazy danych, a jeśli nie to tworzony jest nowy obiekt konfiguracji.
+     * Następnie pobierane są identyfikatory produktów z request body i dodawane do obiektu konfiguracji.
+     * Po dodaniu produktów są one walidowane pod kątem kompatybilności. Jeśli konfiguracja jest poprawna,
+     * zostaje zapisana w bazie danych.
+     *
+     * @param user              Obiekt zalogowanego użytkownika dostarczony przez Spring Security.
+     * @param configurationBody Obiekt zawierający identyfikatory produktów i nazwę konfiguracji. Dostarczany jest jako
+     *                          request body.
+     * @return obiekt klasy {@link CompatibilityResponse} zawierający informacje o tym, czy produkty są kompatybilne,
+     * oraz dodatkowe informacje w przypadku braku zgodności produktów.
+     * @throws ProductDoesNotExistException w przypadku próby odwołania się do identyfikatora produktu
+     *                                      nieistniejącego w bazie danych
+     * @throws ClassCastException           w przypadku, gdy otrzymane Request body jest błędne
+     *                                      i posiada błędne identyfikatory produktów przypisane do złych pól
+     */
     public CompatibilityResponse saveOrEditConfiguration(User user, ConfigurationBody configurationBody) throws ProductDoesNotExistException, ClassCastException {
         Optional<Configuration> optionalConfiguration = configurationRepository.findByUser_IdAndConfigName(user.getId(), configurationBody.getConfigName());
         Configuration configuration;
@@ -137,6 +220,15 @@ public class ConfigurationService {
         return response;
     }
 
+    /**
+     * Metoda pobierająca odpowiednią encję produktu, pobraną na podstawie jej identyfikatora.
+     *
+     * @param productId identyfikator produktu
+     * @param <T>       typ generyczny, klasa dziedzicząca po {@link Product}
+     * @return obiekt klasy dziedziczącej po {@link Product}
+     * @throws ProductDoesNotExistException w przypadku próby odwołania się do identyfikatora produktu
+     *                                      nieistniejącego w bazie danych
+     */
     @SuppressWarnings("unchecked")
     private <T extends Product> T getProductFromConfigBody(Long productId) throws ProductDoesNotExistException {
         if (productId == null) {
@@ -149,6 +241,13 @@ public class ConfigurationService {
         return (T) optionalProduct.get();
     }
 
+    /**
+     * Metoda walidująca kompatybilność produktów w konfiguracji.
+     *
+     * @param configuration obiekt konfiguracji
+     * @return obiekt klasy {@link CompatibilityResponse}, zawierający informację o tym, czy produkty są ze sobą kompatybilne,
+     * oraz dodatkowe informacje dla użytkownika w przypadku, gdy wystąpiła niezgodność.
+     */
     private CompatibilityResponse validateConfigCompatibility(Configuration configuration) {
         CompatibilityResponse response = new CompatibilityResponse();
         if (!configuration.getMotherboard().getSupportedMemoryFrequencies().contains(configuration.getMemory().getFrequency())) {
@@ -266,8 +365,7 @@ public class ConfigurationService {
             response.setCompatible(false);
             response.setFirstProductCategoryCode(ProductCategoryCode.GRAPHICS_CARD);
             response.setSecondProductCategoryCode(ProductCategoryCode.POWER_SUPPLY);
-            response.setMessage("Moc zasilacza jest mniejsza niż minimalna zalecana dla tej karty graficznej " +
-                    "( " + configuration.getGraphicsCard().getRecommendedPsPower() + "W )");
+            response.setMessage("Moc zasilacza jest mniejsza niż minimalna zalecana dla tej karty graficznej " + "( " + configuration.getGraphicsCard().getRecommendedPsPower() + "W )");
             return response;
         }
         response.setCompatible(true);
@@ -275,5 +373,22 @@ public class ConfigurationService {
         response.setSecondProductCategoryCode(null);
         response.setMessage(null);
         return response;
+    }
+
+    /**
+     * Metoda sprawdzająca, czy konfiguracja o wskazanej nazwie już istnieje, czy jeszcze nie. Używana w celu utwierdzenia,
+     * że użytkownik chce nadpisać lub usunąć istniejącą konfigurację, bądź zapisać nową.
+     *
+     * @param user Obiekt zalogowanego użytkownika dostarczony przez Spring Security.
+     * @param name Nazwa konfiguracji
+     * @return Odpowiedź HTTP o statusie 200 (OK) zawierającą {@code true} jeśli konfiguracja o wskazanej nazwie
+     * już istnieje i jest przypisana do konta zalogowanego użytkownika, {@code false} w przeciwnym razie.
+     */
+    public ResponseEntity<Boolean> check_if_exist(User user, String name) {
+        Optional<Configuration> optionalConfiguration = configurationRepository.findByUser_IdAndConfigName(user.getId(), name);
+        if (optionalConfiguration.isPresent()) {
+            return ResponseEntity.ok(true);
+        }
+        return ResponseEntity.ok(false);
     }
 }

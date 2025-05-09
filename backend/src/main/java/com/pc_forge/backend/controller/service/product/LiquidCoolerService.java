@@ -11,16 +11,37 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Klasa serwisu układu chłodzenia cieczą. Dziedziczy z klasy {@link AbstractProductService},
+ * przekazując klasę {@link LiquidCooler} jako typ produktu w klasie nadrzędnej. Jest odpowiedzialna za pobieranie
+ * dostępnych filtrów i stosowanie ich w zależności od otrzymanych parametrów w odebranym żądaniu HTTP.
+ */
 @Service
 public final class LiquidCoolerService extends AbstractProductService<LiquidCooler> {
 
+    /**
+     * Repozytorium/DAO układu chłodzenia cieczą
+     */
     private final LiquidCoolerRepository liquidCoolerRepository;
 
+    /**
+     * Konstruktor klasy serwisowej dla układu chłodzenia cieczą.
+     * Wstrzykuje odpowiednie repozytoria do serwisu.
+     *
+     * @param productRepository      repozytorium produktu
+     * @param liquidCoolerRepository repozytorium układu chłodzenia cieczą
+     */
     public LiquidCoolerService(ProductRepository<LiquidCooler> productRepository, LiquidCoolerRepository liquidCoolerRepository) {
         super(productRepository);
         this.liquidCoolerRepository = liquidCoolerRepository;
     }
 
+    /**
+     * Metoda nadpisywana z klasy nadrzędnej. Odpowiada za pobieranie dostępnych filtrów dla układu chłodzenia cieczą.
+     *
+     * @param filter obiekt filtra produktu
+     * @return Lista odfiltrowanych produktów
+     */
     @Override
     public List<LiquidCooler> getFilteredProducts(ProductFilter filter) {
         filteredProducts.clear();
@@ -39,6 +60,12 @@ public final class LiquidCoolerService extends AbstractProductService<LiquidCool
         return applyFilters();
     }
 
+    /**
+     * Metoda nadpisywana z klasy nadrzędnej. Ustawia pola w klasie DTO filtra,
+     * pobierając dane za pomocą kwerend zawartych w repozytorium produktu.
+     *
+     * @return Obiekt klasy {@link LiquidCoolerFilterResponse} zawierający informację o dostępnych filtrach
+     */
     @Override
     @SuppressWarnings("unchecked")
     public LiquidCoolerFilterResponse getAvailableFilters() {

@@ -11,15 +11,37 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Klasa serwisu karty graficznej. Dziedziczy z klasy {@link AbstractProductService},
+ * przekazując klasę {@link GraphicsCardService} jako typ produktu w klasie nadrzędnej. Jest odpowiedzialna za pobieranie
+ * dostępnych filtrów i stosowanie ich w zależności od otrzymanych parametrów w odebranym żądaniu HTTP.
+ */
 @Service
 public final class GraphicsCardService extends AbstractProductService<GraphicsCard> {
+
+    /**
+     * Repozytorium/DAO karty graficznej
+     */
     private final GraphicsCardRepository graphicsCardRepository;
 
+    /**
+     * Konstruktor klasy serwisowej dla karty graficznej.
+     * Wstrzykuje odpowiednie repozytoria do serwisu.
+     *
+     * @param productRepository      repozytorium produktu
+     * @param graphicsCardRepository repozytorium karty graficznej
+     */
     public GraphicsCardService(ProductRepository<GraphicsCard> productRepository, GraphicsCardRepository graphicsCardRepository) {
         super(productRepository);
         this.graphicsCardRepository = graphicsCardRepository;
     }
 
+    /**
+     * Metoda nadpisywana z klasy nadrzędnej. Odpowiada za pobieranie dostępnych filtrów dla karty graficznej.
+     *
+     * @param filter obiekt filtra produktu
+     * @return Lista odfiltrowanych produktów
+     */
     @Override
     public List<GraphicsCard> getFilteredProducts(ProductFilter filter) {
         filteredProducts.clear();
@@ -44,6 +66,12 @@ public final class GraphicsCardService extends AbstractProductService<GraphicsCa
         return applyFilters();
     }
 
+    /**
+     * Metoda nadpisywana z klasy nadrzędnej. Ustawia pola w klasie DTO filtra,
+     * pobierając dane za pomocą kwerend zawartych w repozytorium produktu.
+     *
+     * @return Obiekt klasy {@link GpuFilterResponse} zawierający informację o dostępnych filtrach
+     */
     @Override
     @SuppressWarnings("unchecked")
     public GpuFilterResponse getAvailableFilters() {
@@ -68,6 +96,14 @@ public final class GraphicsCardService extends AbstractProductService<GraphicsCa
         return response;
     }
 
+    /**
+     * Metoda filtruje produkty po długości, pobierając wartości pomiędzy przekazanym minimum a maksimum.
+     *
+     * @param minLength Długość minimalna odebrana z parametru HTTP.
+     *                  W przypadku gdy nie podano długości minimalnej, ustawiana jest największa długość.
+     * @param maxLength Długość minimalna maksymalna odebrana z parametru HTTP.
+     *                  W przypadku gdy nie podano długości maksymalnej, ustawiana jest największa długość.
+     */
     private void filterByLength(Integer minLength, Integer maxLength) {
         if (minLength == null) {
             minLength = graphicsCardRepository.getMinLengthFilter();

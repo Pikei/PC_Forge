@@ -10,6 +10,7 @@ import com.pc_forge.backend.view.body.auth.ResetPasswordBody;
 import com.pc_forge.backend.view.response.auth.LoginResponse;
 import com.pc_forge.backend.view.body.auth.RegistrationBody;
 import com.pc_forge.backend.view.response.auth.ResetPasswordResponse;
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

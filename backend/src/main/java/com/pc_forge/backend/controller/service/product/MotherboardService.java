@@ -3,23 +3,46 @@ package com.pc_forge.backend.controller.service.product;
 import com.pc_forge.backend.controller.filter.MotherboardFilter;
 import com.pc_forge.backend.controller.filter.ProductFilter;
 import com.pc_forge.backend.model.entity.product.mb.Motherboard;
+import com.pc_forge.backend.model.entity.product.ram.Memory;
 import com.pc_forge.backend.model.repository.product.mb.MotherboardRepository;
 import com.pc_forge.backend.model.repository.product.ProductRepository;
 import com.pc_forge.backend.controller.api.constants.ProductCategoryCode;
+import com.pc_forge.backend.view.response.filter.MemoryFilterResponse;
 import com.pc_forge.backend.view.response.filter.MotherboardFilterResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Klasa serwisu płyty głównej. Dziedziczy z klasy {@link AbstractProductService},
+ * przekazując klasę {@link Motherboard} jako typ produktu w klasie nadrzędnej. Jest odpowiedzialna za pobieranie
+ * dostępnych filtrów i stosowanie ich w zależności od otrzymanych parametrów w odebranym żądaniu HTTP.
+ */
 @Service
 public final class MotherboardService extends AbstractProductService<Motherboard> {
+    /**
+     * Repozytorium/DAO płyty głównej
+     */
     private final MotherboardRepository motherboardRepository;
 
+    /**
+     * Konstruktor klasy serwisowej dla płyty głównej.
+     * Wstrzykuje odpowiednie repozytoria do serwisu.
+     *
+     * @param productRepository     repozytorium produktu
+     * @param motherboardRepository repozytorium płyty głównej
+     */
     public MotherboardService(ProductRepository<Motherboard> productRepository, MotherboardRepository motherboardRepository) {
         super(productRepository);
         this.motherboardRepository = motherboardRepository;
     }
 
+    /**
+     * Metoda nadpisywana z klasy nadrzędnej. Odpowiada za pobieranie dostępnych filtrów dla płyty głównej.
+     *
+     * @param filter obiekt filtra produktu
+     * @return Lista odfiltrowanych produktów
+     */
     @Override
     public List<Motherboard> getFilteredProducts(ProductFilter filter) {
         filteredProducts.clear();
@@ -43,6 +66,12 @@ public final class MotherboardService extends AbstractProductService<Motherboard
         return applyFilters();
     }
 
+    /**
+     * Metoda nadpisywana z klasy nadrzędnej. Ustawia pola w klasie DTO filtra,
+     * pobierając dane za pomocą kwerend zawartych w repozytorium produktu.
+     *
+     * @return Obiekt klasy {@link MotherboardFilterResponse} zawierający informację o dostępnych filtrach
+     */
     @Override
     @SuppressWarnings("unchecked")
     public MotherboardFilterResponse getAvailableFilters() {
@@ -66,6 +95,14 @@ public final class MotherboardService extends AbstractProductService<Motherboard
         return response;
     }
 
+    /**
+     * Metoda filtruje produkty po szerokości, pobierając wartości pomiędzy przekazanym minimum a maksimum.
+     *
+     * @param min Szerokość minimalna odebrana z parametru HTTP.
+     *            W przypadku gdy nie podano szerokości minimalnej, ustawiana jest największa szerokość.
+     * @param max Szerokość minimalna maksymalna odebrana z parametru HTTP.
+     *            W przypadku gdy nie podano szerokości maksymalnej, ustawiana jest największa szerokość.
+     */
     private void filterByWidth(Double min, Double max) {
         if (min == null) {
             min = motherboardRepository.getMinWidth();
@@ -76,6 +113,14 @@ public final class MotherboardService extends AbstractProductService<Motherboard
         filteredProducts.add(motherboardRepository.findByWidthBetween(min, max));
     }
 
+    /**
+     * Metoda filtruje produkty po głębokości, pobierając wartości pomiędzy przekazanym minimum a maksimum.
+     *
+     * @param min Głębokość minimalna odebrana z parametru HTTP.
+     *            W przypadku gdy nie podano głębokości minimalnej, ustawiana jest największa głębokość.
+     * @param max Głębokość minimalna maksymalna odebrana z parametru HTTP.
+     *            W przypadku gdy nie podano głębokości maksymalnej, ustawiana jest największa głębokość.
+     */
     private void filterByDepth(Double min, Double max) {
         if (min == null) {
             min = motherboardRepository.getMinDepth();

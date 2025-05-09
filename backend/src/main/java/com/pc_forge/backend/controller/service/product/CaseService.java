@@ -12,16 +12,37 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.function.Function;
 
+/**
+ * Klasa serwisu obudowy. Dziedziczy z klasy {@link AbstractProductService},
+ * przekazując klasę {@link Case} jako typ produktu w klasie nadrzędnej. Jest odpowiedzialna za pobieranie
+ * dostępnych filtrów i stosowanie ich w zależności od otrzymanych parametrów w odebranym żądaniu HTTP.
+ */
 @Service
 public final class CaseService extends AbstractProductService<Case> {
 
+    /**
+     * Repozytorium/DAO obudowy
+     */
     private final CaseRepository caseRepository;
 
+    /**
+     * Konstruktor klasy serwisowej dla obudowy.
+     * Wstrzykuje odpowiednie repozytoria do serwisu.
+     *
+     * @param productRepository repozytorium produktu
+     * @param caseRepository    repozytorium obudowy
+     */
     public CaseService(ProductRepository<Case> productRepository, CaseRepository caseRepository) {
         super(productRepository);
         this.caseRepository = caseRepository;
     }
 
+    /**
+     * Metoda nadpisywana z klasy nadrzędnej. Odpowiada za pobieranie dostępnych filtrów dla obudowy.
+     *
+     * @param filter obiekt filtra produktu
+     * @return Lista odfiltrowanych produktów
+     */
     @Override
     public List<Case> getFilteredProducts(ProductFilter filter) {
         filteredProducts.clear();
@@ -55,6 +76,12 @@ public final class CaseService extends AbstractProductService<Case> {
         return applyFilters();
     }
 
+    /**
+     * Metoda nadpisywana z klasy nadrzędnej. Ustawia pola w klasie DTO filtra,
+     * pobierając dane za pomocą kwerend zawartych w repozytorium produktu.
+     *
+     * @return Obiekt klasy {@link CaseFilterResponse} zawierający informację o dostępnych filtrach
+     */
     @Override
     @SuppressWarnings("unchecked")
     public CaseFilterResponse getAvailableFilters() {
@@ -89,6 +116,14 @@ public final class CaseService extends AbstractProductService<Case> {
         return response;
     }
 
+    /**
+     * Metoda filtruje produkty po szerokości, pobierając wartości pomiędzy przekazanym minimum a maksimum.
+     *
+     * @param min Szerokość minimalna odebrana z parametru HTTP.
+     *            W przypadku gdy nie podano szerokości minimalnej, ustawiana jest największa szerokość.
+     * @param max Szerokość minimalna maksymalna odebrana z parametru HTTP.
+     *            W przypadku gdy nie podano szerokości maksymalnej, ustawiana jest największa szerokość.
+     */
     private void filterByWidth(Double min, Double max) {
         if (min == null && max == null) {
             return;
@@ -102,6 +137,14 @@ public final class CaseService extends AbstractProductService<Case> {
         filteredProducts.add(caseRepository.findByWidthBetween(min, max));
     }
 
+    /**
+     * Metoda filtruje produkty po wysokości, pobierając wartości pomiędzy przekazanym minimum a maksimum.
+     *
+     * @param min Wysokość minimalna odebrana z parametru HTTP.
+     *            W przypadku gdy nie podano wysokości minimalnej, ustawiana jest największa wysokość.
+     * @param max Wysokość minimalna maksymalna odebrana z parametru HTTP.
+     *            W przypadku gdy nie podano wysokości maksymalnej, ustawiana jest największa wysokość.
+     */
     private void filterByHeight(Double min, Double max) {
         if (min == null && max == null) {
             return;
@@ -115,6 +158,14 @@ public final class CaseService extends AbstractProductService<Case> {
         filteredProducts.add(caseRepository.findByHeightBetween(min, max));
     }
 
+    /**
+     * Metoda filtruje produkty po głębokości, pobierając wartości pomiędzy przekazanym minimum a maksimum.
+     *
+     * @param min Głębokość minimalna odebrana z parametru HTTP.
+     *            W przypadku gdy nie podano głębokości minimalnej, ustawiana jest największa głębokość.
+     * @param max Głębokość minimalna maksymalna odebrana z parametru HTTP.
+     *            W przypadku gdy nie podano głębokości maksymalnej, ustawiana jest największa głębokość.
+     */
     private void filterByDepth(Double min, Double max) {
         if (min == null && max == null) {
             return;

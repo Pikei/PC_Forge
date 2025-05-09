@@ -13,17 +13,39 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Klasa serwisu procesora. Dziedziczy z klasy {@link AbstractProductService},
+ * przekazując klasę {@link Processor} jako typ produktu w klasie nadrzędnej. Jest odpowiedzialna za pobieranie
+ * dostępnych filtrów i stosowanie ich w zależności od otrzymanych parametrów w odebranym żądaniu HTTP.
+ */
 @Getter
 @Setter
 @Service
 public final class ProcessorService extends AbstractProductService<Processor> {
+
+    /**
+     * Repozytorium/DAO procesora
+     */
     private final ProcessorRepository processorRepository;
 
+    /**
+     * Konstruktor klasy serwisowej dla procesora.
+     * Wstrzykuje odpowiednie repozytoria do serwisu.
+     *
+     * @param productRepository   repozytorium produktu
+     * @param processorRepository repozytorium procesora
+     */
     public ProcessorService(ProductRepository<Processor> productRepository, ProcessorRepository processorRepository) {
         super(productRepository);
         this.processorRepository = processorRepository;
     }
 
+    /**
+     * Metoda nadpisywana z klasy nadrzędnej. Odpowiada za pobieranie dostępnych filtrów dla procesora.
+     *
+     * @param filter obiekt filtra produktu
+     * @return Lista odfiltrowanych produktów
+     */
     @Override
     public List<Processor> getFilteredProducts(ProductFilter filter) {
         filteredProducts.clear();
@@ -44,6 +66,12 @@ public final class ProcessorService extends AbstractProductService<Processor> {
         return applyFilters();
     }
 
+    /**
+     * Metoda nadpisywana z klasy nadrzędnej. Ustawia pola w klasie DTO filtra,
+     * pobierając dane za pomocą kwerend zawartych w repozytorium produktu.
+     *
+     * @return Obiekt klasy {@link ProcessorFilterResponse} zawierający informację o dostępnych filtrach
+     */
     @Override
     @SuppressWarnings("unchecked")
     public ProcessorFilterResponse getAvailableFilters() {

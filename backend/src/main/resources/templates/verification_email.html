@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Mail weryfikacyjny</title>
+    <style>
+        body {
+            background-color: white;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            padding: 30px;
+        }
+
+        .container {
+            background-color: #efefef;
+            padding: 30px;
+            max-width: 350px;
+            margin: auto;
+        }
+
+        .logo, .text, .social {
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            max-width: 70%;
+        }
+
+        .btn {
+            background-color: #000;
+            color: #fff;
+            padding: 20px;
+            width: 80%;
+            font-size: 16px;
+            text-decoration: none;
+            border: 2px solid #000;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            cursor: pointer;
+            background-color: #fff;
+            color: #000;
+        }
+
+        .social {
+            margin-top: 30px;
+        }
+
+        .social h4 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            text-decoration: none;
+            color: #000;
+        }
+
+        .social-link img {
+            width: 25px;
+            height: 25px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .social a:hover {
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="logo">
+        <img src="https://drive.google.com/file/d/1XguEFqVwmdMaHm-LUcjo9ObysEy0JQoD/view?usp=drive_link"
+             alt="PC Forge"/>
+    </div>
+
+    <div class="header">
+        <h4>Witaj w serwisie PC Forge!</h4>
+    </div>
+
+    <div class="text">
+        <p>Aby dokończyć rejestrację, kliknij przycisk poniżej, żeby zweryfikować swój adres email.</p>
+    </div>
+
+    <!--    TODO dodać faktyczny url frontendu który to obsłuży-->
+    <div>
+        <p>
+            <th:block th:text="${url}"></th:block>
+        </p>
+        <button type="button" class="btn">Aktywuj konto</button>
+    </div>
+
+    <div class="social">
+        <h4>Masz pytania? Skontaktuj się z nami:</h4>
+        <a class="social-link" href="https://github.com/Pikei" target="_blank">
+            <img src="../static/Github.png" alt="github icon">
+            GitHub
+        </a><br/>
+        <a class="social-link" href="https://www.linkedin.com/in/piotr-karol/" target="_blank">
+            <img src="../static/linkedin.png" alt="linkedin icon">
+            LinkedIn
+        </a><br/>
+        <a class="social-link" href="tel:+48600735505">
+            <img src="../static/phone.png" alt="phone icon">
+            +48 600 735 505</a><br/>
+        <a class="social-link" href="mailto:piotrkarol2601@gmail.com">
+            <img src="../static/mail.png" alt="mail icon">
+            piotrkarol2601@gmail.com</a>
+    </div>
+</div>
+</body>
+</html>

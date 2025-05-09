@@ -11,16 +11,37 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Klasa serwisu zasilacza. Dziedziczy z klasy {@link AbstractProductService},
+ * przekazując klasę {@link PowerSupply} jako typ produktu w klasie nadrzędnej. Jest odpowiedzialna za pobieranie
+ * dostępnych filtrów i stosowanie ich w zależności od otrzymanych parametrów w odebranym żądaniu HTTP.
+ */
 @Service
 public final class PowerSupplyService extends AbstractProductService<PowerSupply> {
 
+    /**
+     * Repozytorium/DAO zasilacza
+     */
     private final PowerSupplyRepository powerSupplyRepository;
 
+    /**
+     * Konstruktor klasy serwisowej dla zasilacza.
+     * Wstrzykuje odpowiednie repozytoria do serwisu.
+     *
+     * @param productRepository     repozytorium produktu
+     * @param powerSupplyRepository repozytorium zasilacza
+     */
     public PowerSupplyService(ProductRepository<PowerSupply> productRepository, PowerSupplyRepository powerSupplyRepository) {
         super(productRepository);
         this.powerSupplyRepository = powerSupplyRepository;
     }
 
+    /**
+     * Metoda nadpisywana z klasy nadrzędnej. Odpowiada za pobieranie dostępnych filtrów dla zasilacza.
+     *
+     * @param filter obiekt filtra produktu
+     * @return Lista odfiltrowanych produktów
+     */
     @Override
     public List<PowerSupply> getFilteredProducts(ProductFilter filter) {
         filteredProducts.clear();
@@ -42,6 +63,12 @@ public final class PowerSupplyService extends AbstractProductService<PowerSupply
 
     }
 
+    /**
+     * Metoda nadpisywana z klasy nadrzędnej. Ustawia pola w klasie DTO filtra,
+     * pobierając dane za pomocą kwerend zawartych w repozytorium produktu.
+     *
+     * @return Obiekt klasy {@link PsFilterResponse} zawierający informację o dostępnych filtrach
+     */
     @Override
     @SuppressWarnings("unchecked")
     public PsFilterResponse getAvailableFilters() {

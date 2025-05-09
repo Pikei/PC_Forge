@@ -11,15 +11,36 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Klasa serwisu dysku HDD. Dziedziczy z klasy {@link AbstractProductService},
+ * przekazując klasę {@link HardDiskDrive} jako typ produktu w klasie nadrzędnej. Jest odpowiedzialna za pobieranie
+ * dostępnych filtrów i stosowanie ich w zależności od otrzymanych parametrów w odebranym żądaniu HTTP.
+ */
 @Service
 public final class HddService extends AbstractProductService<HardDiskDrive> {
+    /**
+     * Repozytorium/DAO dysku HDD
+     */
     private final HardDiskDriveRepository hddRepository;
 
+    /**
+     * Konstruktor klasy serwisowej dla dysku HDD.
+     * Wstrzykuje odpowiednie repozytoria do serwisu.
+     *
+     * @param productRepository repozytorium produktu
+     * @param hddRepository     repozytorium dysku HDD
+     */
     public HddService(ProductRepository<HardDiskDrive> productRepository, HardDiskDriveRepository hddRepository) {
         super(productRepository);
         this.hddRepository = hddRepository;
     }
 
+    /**
+     * Metoda nadpisywana z klasy nadrzędnej. Odpowiada za pobieranie dostępnych filtrów dla dysku HDD.
+     *
+     * @param filter obiekt filtra produktu
+     * @return Lista odfiltrowanych produktów
+     */
     @Override
     public List<HardDiskDrive> getFilteredProducts(ProductFilter filter) {
         filteredProducts.clear();
@@ -36,6 +57,12 @@ public final class HddService extends AbstractProductService<HardDiskDrive> {
         return applyFilters();
     }
 
+    /**
+     * Metoda nadpisywana z klasy nadrzędnej. Ustawia pola w klasie DTO filtra,
+     * pobierając dane za pomocą kwerend zawartych w repozytorium produktu.
+     *
+     * @return Obiekt klasy {@link HddFilterResponse} zawierający informację o dostępnych filtrach
+     */
     @Override
     @SuppressWarnings("unchecked")
     public HddFilterResponse getAvailableFilters() {

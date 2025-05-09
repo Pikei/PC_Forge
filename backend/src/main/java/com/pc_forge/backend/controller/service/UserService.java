@@ -11,6 +11,7 @@ import com.pc_forge.backend.model.repository.user.VerificationTokenRepository;
 import com.pc_forge.backend.view.body.auth.LoginBody;
 import com.pc_forge.backend.view.body.auth.RegistrationBody;
 import com.pc_forge.backend.view.body.auth.ResetPasswordBody;
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 

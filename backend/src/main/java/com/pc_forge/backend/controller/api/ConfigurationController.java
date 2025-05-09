@@ -129,4 +129,17 @@ public class ConfigurationController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    /**
+     * Metoda zwracająca czy użytkownik ma już zapisaną konfigurację o wskazanej nazwie. Służy do upewnienia się,
+     * czy użytkownik chcę nadpisać/usunąć istniejącą konfigurację.
+     *
+     * @param user Obiekt zalogowanego użytkownika, wstrzykiwany przez Spring Security
+     * @param name Nazwa konfiguracji przekazana jako wartość pozyskana z adresu URL
+     * @return Jeśli konfiguracja o podanej nazwie już istnieje zwracane jest {@code true}, w przeciwnym razie {@code false}
+     */
+    @GetMapping(UrlPath.CHECk_IF_EXISTS + "/{name}")
+    public ResponseEntity<Boolean> checkIfExists(@AuthenticationPrincipal User user, @PathVariable String name) {
+        return configurationService.check_if_exist(user, name);
+    }
 }

@@ -11,15 +11,37 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Klasa serwisu pamięci operacyjnej RAM. Dziedziczy z klasy {@link AbstractProductService},
+ * przekazując klasę {@link Memory} jako typ produktu w klasie nadrzędnej. Jest odpowiedzialna za pobieranie
+ * dostępnych filtrów i stosowanie ich w zależności od otrzymanych parametrów w odebranym żądaniu HTTP.
+ */
 @Service
 public final class MemoryService extends AbstractProductService<Memory> {
+
+    /**
+     * Repozytorium/DAO pamięci operacyjnej RAM
+     */
     private final MemoryRepository memoryRepository;
 
+    /**
+     * Konstruktor klasy serwisowej dla pamięci operacyjnej RAM.
+     * Wstrzykuje odpowiednie repozytoria do serwisu.
+     *
+     * @param productRepository repozytorium produktu
+     * @param memoryRepository  repozytorium pamięci operacyjnej RAM
+     */
     public MemoryService(ProductRepository<Memory> productRepository, MemoryRepository memoryRepository) {
         super(productRepository);
         this.memoryRepository = memoryRepository;
     }
 
+    /**
+     * Metoda nadpisywana z klasy nadrzędnej. Odpowiada za pobieranie dostępnych filtrów dla pamięci operacyjnej RAM.
+     *
+     * @param filter obiekt filtra produktu
+     * @return Lista odfiltrowanych produktów
+     */
     @Override
     public List<Memory> getFilteredProducts(ProductFilter filter) {
         filteredProducts.clear();
@@ -38,6 +60,12 @@ public final class MemoryService extends AbstractProductService<Memory> {
         return applyFilters();
     }
 
+    /**
+     * Metoda nadpisywana z klasy nadrzędnej. Ustawia pola w klasie DTO filtra,
+     * pobierając dane za pomocą kwerend zawartych w repozytorium produktu.
+     *
+     * @return Obiekt klasy {@link MemoryFilterResponse} zawierający informację o dostępnych filtrach
+     */
     @Override
     @SuppressWarnings("unchecked")
     public MemoryFilterResponse getAvailableFilters() {
