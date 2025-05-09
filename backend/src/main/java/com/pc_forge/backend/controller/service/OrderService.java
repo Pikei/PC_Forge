@@ -24,15 +24,52 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Serwis zamówień, odpowiedzialny za obsługę logiki związanej z pobieraniem listy zamówień, składaniem nowych
+ * oraz anulowaniem złożonych zamówień.
+ */
 @Service
 public class OrderService {
+    /**
+     * Repozytorium/DAO zamówień
+     */
     private final OrderRepository orderRepository;
+
+    /**
+     * Repozytorium/DAO szczegółów dotyczących zamówienia
+     */
     private final OrderDetailRepository orderDetailRepository;
+
+    /**
+     * Repozytorium/DAO statusów zamówień
+     */
     private final OrderStatusRepository orderStatusRepository;
+
+    /**
+     * Repozytorium/DAO adresów
+     */
     private final AddressRepository addressRepository;
+
+    /**
+     * Repozytorium/DAO koszyka zakupowego użytkownika
+     */
     private final ShoppingCartRepository shoppingCartRepository;
 
-    public OrderService(OrderRepository orderRepository, OrderDetailRepository orderDetailRepository, OrderStatusRepository orderStatusRepository, AddressRepository addressRepository, ShoppingCartRepository shoppingCartRepository) {
+    /**
+     * Konstruktor wstrzykujący niezbędne zależności.
+     *
+     * @param orderRepository        Repozytorium/DAO zamówień
+     * @param orderDetailRepository  Repozytorium/DAO szczegółów dotyczących zamówienia
+     * @param orderStatusRepository  Repozytorium/DAO statusów zamówień
+     * @param addressRepository      Repozytorium/DAO adresów
+     * @param shoppingCartRepository Repozytorium/DAO koszyka zakupowego użytkownika
+     */
+    public OrderService(
+            OrderRepository orderRepository,
+            OrderDetailRepository orderDetailRepository,
+            OrderStatusRepository orderStatusRepository,
+            AddressRepository addressRepository,
+            ShoppingCartRepository shoppingCartRepository) {
         this.orderRepository = orderRepository;
         this.orderDetailRepository = orderDetailRepository;
         this.orderStatusRepository = orderStatusRepository;
@@ -40,6 +77,12 @@ public class OrderService {
         this.shoppingCartRepository = shoppingCartRepository;
     }
 
+    /**
+     * Pobiera listę zamówień użytkownika
+     *
+     * @param user Obiekt zalogowanego użytkownika, wstrzykiwany przez Spring Security
+     * @return Lista zamówień użytkownika
+     */
     public List<OrderResponse> getOrders(User user) {
         List<Order> orders = orderRepository.findByUser_Id(user.getId());
         List<OrderResponse> response = new ArrayList<>();
@@ -49,6 +92,14 @@ public class OrderService {
         return response;
     }
 
+    /**
+     * Pobiera konkretne informacje o konkretnym zamówieniu użytkownika
+     *
+     * @param user    Obiekt zalogowanego użytkownika, wstrzykiwany przez Spring Security
+     * @param orderId ID zamówienia
+     * @return Obiekt zamówienia znaleziony w bazie danych
+     * @throws InvalidOrderDataException gdy zamówienie nie istnieje
+     */
     public Order getOrder(User user, Long orderId) throws InvalidOrderDataException {
         Optional<Order> order = orderRepository.findById(orderId);
         if (order.isPresent() && order.get().getUser().getId().equals(user.getId())) {
@@ -58,12 +109,24 @@ public class OrderService {
         }
     }
 
+    /**
+     * Tworzy nowe zamówienie dla użytkownika
+     *
+     * @param user        Obiekt zalogowanego użytkownika, wstrzykiwany przez Spring Security
+     * @param addressBody Dane adresowe do zamówienia
+     * @return Utworzone zamówienie
+     */
     public Order newOrder(User user, AddressBody addressBody) {
         Address address = createAddress(addressBody);
         Order order = createOrder(user, address);
         return orderRepository.save(order);
     }
 
+    /**
+     * Tworzy lub pobiera istniejący adres na podstawie przekazanych danych
+     *
+     * @param addressBody dane adresowe użytkownika, gdzie ma zostać wysłane zamówienie
+     */
     private Address createAddress(AddressBody addressBody) {
         Optional<Address> optionalAddress = addressRepository
                 .findIfExists(addressBody.getCity(),
@@ -83,6 +146,12 @@ public class OrderService {
         return address;
     }
 
+    /**
+     * Tworzy nowe zamówienie na podstawie zawartości koszyka
+     *
+     * @param user    Obiekt zalogowanego użytkownika, wstrzykiwany przez Spring Security
+     * @param address Adres użytkownika, pod który ma być wysłane zamówienie
+     */
     private Order createOrder(User user, Address address) {
         Order order = new Order();
         order.setUser(user);
@@ -105,6 +174,11 @@ public class OrderService {
         return order;
     }
 
+    /**
+     * Konwertuje encję zamówienia na obiekt klasy {@link OrderResponse}, będącej DTO zamówienia.
+     *
+     * @param order obiekt zamówienia
+     */
     private OrderResponse getOrderResponse(Order order) {
         List<OrderDetail> orderDetails = orderDetailRepository.findByOrder_Id(order.getId());
         OrderResponse orderResponse = new OrderResponse();
@@ -124,6 +198,11 @@ public class OrderService {
         return orderResponse;
     }
 
+    /**
+     * Generuje uproszczoną reprezentację danych o produkcie na podstawie przekazanego obiektu klasy {@link OrderDetail}
+     *
+     * @param orderDetail obiekt klasy {@link OrderDetail}, zawierający informację o zamówionym produkcie i jego liczbie
+     */
     private ProductOrderResponse getProductOrderResponse(OrderDetail orderDetail) {
         ProductOrderResponse response = new ProductOrderResponse();
         Product product = orderDetail.getProduct();
@@ -136,6 +215,11 @@ public class OrderService {
         return response;
     }
 
+    /**
+     * Usuwa wszystkie zamówienia użytkownika. Używany tylko podczas usuwania konta użytkownika.
+     *
+     * @param user Obiekt zalogowanego użytkownika, wstrzykiwany przez Spring Security
+     */
     @Transactional
     public void deleteOrder(User user) {
         List<Order> orders = orderRepository.findByUser_Id(user.getId());
@@ -145,6 +229,16 @@ public class OrderService {
         }
     }
 
+    /**
+     * Metoda służąca do anulowania zamówień. Jeśli zamówienie zostało złożone, ale nie opłacone i zostało anulowane,
+     * to zostaje ono trwale usunięte z bazy danych. Jeśli zamówienie ma inny status niż "Opłacone"
+     * i nie zostało ono już dostarczone albo anulowane wcześniej, ustawiany jest status na "Anulowane"
+     *
+     * @param user    Obiekt zalogowanego użytkownika, wstrzykiwany przez Spring Security
+     * @param orderId ID zamówienia do anulowania
+     * @return {@code true}, jeśli zamówienie zostało anulowane, {@code false} jeśli zostało usunięte
+     * @throws InvalidOrderDataException w przypadku, gdy zamówienia nie można anulować
+     */
     @Transactional
     public boolean cancelOrder(User user, Long orderId) throws InvalidOrderDataException {
         Order order;
@@ -166,6 +260,12 @@ public class OrderService {
         throw new InvalidOrderDataException("Order cannot be canceled");
     }
 
+    /**
+     * Metoda wywoływana po udanej płatności. Aktualizuje status zamówienia.
+     *
+     * @param sessionId ID sesji płatności
+     * @throws InvalidOrderDataException gdy zamówienie nie istnieje
+     */
     @Transactional
     public void paymentSucceeded(String sessionId) throws InvalidOrderDataException {
         Optional<Order> optionalOrder = orderRepository.findOrderBySessionId(sessionId);

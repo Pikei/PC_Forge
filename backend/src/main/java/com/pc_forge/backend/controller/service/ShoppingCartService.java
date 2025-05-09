@@ -14,16 +14,42 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Klasa serwisu koszyka zakupowego użytkownika. Jest odpowiedzialna za dodawanie i usuwanie produktów z koszyka
+ * oraz jego czyszczenie i wyświetlanie zawartości.
+ */
 @Service
 public class ShoppingCartService {
+    /**
+     * Repozytorium/DAO koszyka zakupowego użytkownika
+     */
     private final ShoppingCartRepository shoppingCartRepository;
+
+
+    /**
+     * Repozytorium/DAO produktów
+     */
     private final CommonProductRepository commonProductRepository;
 
+    /**
+     * Konstruktor wstrzykujący niezbędne zależności
+     *
+     * @param shoppingCartRepository  repozytorium koszyka zakupowego użytkownika
+     * @param commonProductRepository repozytorium produktu
+     */
     public ShoppingCartService(ShoppingCartRepository shoppingCartRepository, CommonProductRepository commonProductRepository) {
         this.shoppingCartRepository = shoppingCartRepository;
         this.commonProductRepository = commonProductRepository;
     }
 
+    /**
+     * Metoda dodająca produkt do koszyka zalogowanego użytkownika. Jeśli użytkownik po raz pierwszy
+     * dodaje produkt do koszyka, to tworzony jest nowy koszyk zakupowy dla tego właśnie użytkownika.
+     *
+     * @param user obiekt zalogowanego użytkownika wstrzykiwany przez Spring Security
+     * @param productId identyfikator produktu, który ma zostać dodany do koszyka zakupowego
+     * @throws ProductDoesNotExistException w przypadku próby dodania do koszyka nieistniejącego produktu
+     */
     public void addProductToCart(User user, Long productId) throws ProductDoesNotExistException {
         Optional<Product> optionalProduct = commonProductRepository.findById(productId);
         if (optionalProduct.isEmpty()) {
@@ -44,6 +70,13 @@ public class ShoppingCartService {
         shoppingCartRepository.save(productInShoppingCart);
     }
 
+    /**
+     * Usuwa wskazany produkt z koszyka zakupowego użytkownika
+     *
+     * @param user obiekt zalogowanego użytkownika wstrzykiwany przez Spring Security
+     * @param productId identyfikator produktu, który ma zostać dodany do koszyka zakupowego
+     * @throws ProductDoesNotExistException w przypadku próby dodania do koszyka nieistniejącego produktu
+     */
     public void removeProductFromCart(User user, Long productId) throws ProductDoesNotExistException {
         Optional<Product> optionalProduct = commonProductRepository.findById(productId);
         if (optionalProduct.isEmpty()) {
@@ -62,6 +95,12 @@ public class ShoppingCartService {
         shoppingCartRepository.save(productInShoppingCart);
     }
 
+    /**
+     * Metoda pobierająca listę produktów znajdujących się w koszyku
+     *
+     * @param user obiekt zalogowanego użytkownika wstrzykiwany przez Spring Security
+     * @return lista obiektów klasy {@link ProductOrderResponse}, będąca uproszczoną wersją DTO dla wszystkich produktów
+     */
     public List<ProductOrderResponse> getProductsInShoppingCart(User user) {
         List<ShoppingCart> productsInShoppingCart = shoppingCartRepository.findById_UserId(user.getId());
         List<ProductOrderResponse> productsInShoppingCartResponse = new ArrayList<>();
@@ -74,6 +113,11 @@ public class ShoppingCartService {
         return productsInShoppingCartResponse;
     }
 
+    /**
+     * Tworzy DTO produktu zawierające uproszczone dane
+     * @param shoppingCart obiekt koszyka zalogowanego użytkownika
+     * @return DTO produktu zawierające uproszczone dane
+     */
     private ProductOrderResponse getProductFromCart(ShoppingCart shoppingCart) {
         Optional<Product> optionalProduct = commonProductRepository.findById(shoppingCart.getProduct().getId());
         if (optionalProduct.isEmpty()) {
@@ -90,6 +134,11 @@ public class ShoppingCartService {
         return response;
     }
 
+    /**
+     * Metoda służąca do czyszczenia zawartości koszyka zalogowanego użytkownika. Usuwa z niego wszystkie produkty
+     *
+     * @param user obiekt zalogowanego użytkownika wstrzykiwany przez Spring Security
+     */
     public void clearCart(User user) {
         shoppingCartRepository.deleteById_UserId(user.getId());
     }

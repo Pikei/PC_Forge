@@ -19,17 +19,39 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Serwis obsługujący płatności internetowe z wykorzystaniem API Stripe.
+ * Odpowiada za płatności i zwroty środków za zamówienia.
+ */
 @Service
 public class PaymentService {
+    /**
+     * Adres URL aplikacji klienckiej, wstrzykiwany z konfiguracji
+     */
     @Value("${frontend.url}")
     private String frontendUrl;
 
+    /**
+     * Repozytorium/DAO zamówień użytkownika
+     */
     private final OrderRepository orderRepository;
 
+    /**
+     * Konstruktor wstrzykujący repozytorium zamówień
+     *
+     * @param orderRepository Repozytorium/DAO zamówień
+     */
     public PaymentService(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
     }
 
+    /**
+     * Tworzy sesję płatności w systemie Stripe dla danego zamówienia
+     *
+     * @param order Zamówienie, dla którego tworzona jest sesja płatności
+     * @return URL do strony realizacji płatności
+     * @throws PaymentException gdy wystąpi błąd podczas tworzenia sesji płatności
+     */
     public String createPaymentSession(Order order) throws PaymentException {
         var items = getOrderedProducts(order);
         SessionCreateParams params = SessionCreateParams.builder()
@@ -51,6 +73,12 @@ public class PaymentService {
         }
     }
 
+    /**
+     * Przygotowuje listę produktów z zamówienia w formacie wymaganym przez Stripe
+     *
+     * @param order Zamówienie, na podstawie którego budowana jest lista produktów dla sesji płatności
+     * @return Lista produktów w formacie Stripe
+     */
     private List<SessionCreateParams.LineItem> getOrderedProducts(Order order) {
         List<SessionCreateParams.LineItem> items = new ArrayList<>();
         for (OrderDetail orderDetail : order.getOrderDetails()) {
@@ -68,6 +96,14 @@ public class PaymentService {
         return items;
     }
 
+    /**
+     * Zwraca środki dla wskazanego zamówienia na konto bankowe użytkownika
+     *
+     * @param orderId Identyfikator zamówienia do zwrotu środków
+     * @return Informacja o kwocie dokonanego zwrotu
+     * @throws PaymentException          gdy wystąpi błąd podczas procesu zwrotu
+     * @throws InvalidOrderDataException gdy zamówienie o podanym ID nie istnieje
+     */
     public String refundPayment(Long orderId) throws PaymentException, InvalidOrderDataException {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
         if (optionalOrder.isEmpty()) {

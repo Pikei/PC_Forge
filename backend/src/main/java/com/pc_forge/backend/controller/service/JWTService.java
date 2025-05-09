@@ -11,6 +11,10 @@ import org.springframework.stereotype.Service;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
+/**
+ * Klasa serwisu tokenu JWT. Służy do generowania i dekodowania tokenów
+ * używanych podczas logowania, weryfikacji i resetowania hasła przez użytkowników.
+ */
 @Service
 public class JWTService {
     @Value("${security.jwt.key}")
@@ -27,12 +31,23 @@ public class JWTService {
     private static final String VERIFICATION_EMAIL_KEY = "verification_email";
     private static final String RESET_PASSWORD_KEY = "reset_password";
 
+    /**
+     * Metoda inicjująca algorytm szyfrowania zgodnie z przyjętym kluczem.
+     *
+     * @throws UnsupportedEncodingException w przypadku błędów podczas ustawiania algorytmu szyfrującego
+     */
     @PostConstruct
     private void postConstruct() throws UnsupportedEncodingException {
         algorithm = Algorithm.HMAC256(key);
     }
 
-    public String createJWT(User user) {
+    /**
+     * Generuje token JWT używany podczas logowania użytkownika.
+     *
+     * @param user Obiekt użytkownika
+     * @return wygenerowany token JWT
+     */
+    public String generateLoginToken(User user) {
         return JWT.create()
                 .withClaim(USERNAME_KEY, user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + (1000L * 3600 * expiration)))
@@ -40,7 +55,13 @@ public class JWTService {
                 .sign(algorithm);
     }
 
-    public String generateVerificationJWT(User user) {
+    /**
+     * Generuje token JWT używany do weryfikacji adresu email użytkownika.
+     *
+     * @param user Obiekt użytkownika, dla którego generowany jest token
+     * @return wygenerowany token JWT
+     */
+    public String generateVerificationToken(User user) {
         return JWT.create()
                 .withClaim(VERIFICATION_EMAIL_KEY, user.getEmail())
                 .withExpiresAt(new Date(System.currentTimeMillis() + (1000L * 3600 * expiration)))
@@ -48,7 +69,13 @@ public class JWTService {
                 .sign(algorithm);
     }
 
-    public String generatePasswordResetJWT(User user) {
+    /**
+     * Generuje token JWT używany podczas resetowania hasła.
+     *
+     * @param user Obiekt użytkownika, dla którego generowany jest token
+     * @return wygenerowany token JWT
+     */
+    public String generatePasswordResetToken(User user) {
         return JWT.create()
                 .withClaim(RESET_PASSWORD_KEY, user.getEmail())
                 .withExpiresAt(new Date(System.currentTimeMillis() + (1000L * 60 * 30)))
@@ -56,11 +83,23 @@ public class JWTService {
                 .sign(algorithm);
     }
 
+    /**
+     * Dekoduje token i zwraca adres email użytkownika resetującego hasło.
+     *
+     * @param token token JWT do zdekodowania
+     * @return adres email użytkownika, zawarty w tokenie
+     */
     public String getResetPasswordEmail(String token) {
         DecodedJWT jwt = JWT.require(algorithm).withIssuer(issuer).build().verify(token);
         return jwt.getClaim(RESET_PASSWORD_KEY).asString();
     }
 
+    /**
+     * Dekoduje token i zwraca nazwę użytkownika.
+     *
+     * @param token token JWT do zdekodowania
+     * @return nazwa użytkownika zawarta w tokenie
+     */
     public String getUsernameClaim(String token) {
         DecodedJWT jwt = JWT.require(algorithm).withIssuer(issuer).build().verify(token);
         return jwt.getClaim(USERNAME_KEY).asString();
