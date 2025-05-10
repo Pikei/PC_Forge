@@ -3,8 +3,6 @@ package com.pc_forge.backend.view.response.product;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 /**
  * Finalna klasa będąca reprezentacją DTO (Data Transfer Object) obudowy. Rozszerza klasę {@link ProductResponse}.
  * Dodaje informacje specyficzne dla obudowy.
