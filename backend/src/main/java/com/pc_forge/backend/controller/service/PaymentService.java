@@ -86,6 +86,9 @@ public class PaymentService {
                     .setQuantity(orderDetail.getQuantity().longValue())
                     .setPriceData(SessionCreateParams.LineItem.PriceData.builder()
                             .setCurrency("pln")
+                            /* Stripe operuje na centach (w tym przypadku groszach),
+                            dlatego cena, aby mogła być zapisana w bazie danych, jako cena w PLN,
+                             musi ona zostać pomnożona przez 100  */
                             .setUnitAmount((orderDetail.getProduct().getPrice().longValue() * 100))
                             .setProductData(SessionCreateParams.LineItem.PriceData.ProductData.builder()
                                     .setName(orderDetail.getProduct().getName())
@@ -117,6 +120,8 @@ public class PaymentService {
                     .setPaymentIntent(session.getPaymentIntent())
                     .build();
             Refund refund = Refund.create(params);
+            /* Stripe operuje na centach (w tym przypadku groszach),
+            dlatego cena w bazie danych, która jest zapisana w PLN musi zostać podzielona przez 100  */
             return refund.getAmount() / 100 + refund.getCurrency();
         } catch (StripeException e) {
             throw new PaymentException("Could not refund payment");

@@ -6,6 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Klasa będąca reprezentacją encji hdd z bazy danych. Dziedziczy ona z klasy {@link Drive},
+ * dodając własne pole.
+ */
 @NoArgsConstructor
 @Getter
 @Setter
@@ -14,6 +18,9 @@ import lombok.Setter;
 @PrimaryKeyJoinColumn(name = "ean")
 @DiscriminatorValue("HDD")
 public final class HardDiskDrive extends Drive {
+    /**
+     * Prędkość obrotowa dysku
+     */
     @NotNull
     @Column(name = "rotational_speed", nullable = false)
     private Integer rotationalSpeed;

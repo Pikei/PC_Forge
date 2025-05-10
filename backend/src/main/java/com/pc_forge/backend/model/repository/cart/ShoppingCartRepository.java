@@ -10,9 +10,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Repozytorium/DAO dla {@link ShoppingCart}. Zawiera niezbędne kwerendy pobierające odpowiednie dane z bazy danych.
+ */
 public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, ShoppingCartId> {
+    /**
+     * Kwerenda znajdująca produkty w koszyku po identyfikatorze użytkownika.
+     *
+     * @param userId Identyfikator użytkownika
+     * @return Lista produktów znajdujących się w koszyku
+     */
     List<ShoppingCart> findById_UserId(Long userId);
 
+    /**
+     * Kwerenda usuwająca produkty z koszyka użytkownika.
+     *
+     * @param userId Identyfikator użytkownika
+     */
     @Transactional
     @Modifying
     @Query("delete from ShoppingCart s where s.id.userId = :userId")

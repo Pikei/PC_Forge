@@ -7,6 +7,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Klasa będąca reprezentacją encji liquid_cooler z bazy danych. Dziedziczy ona z klasy {@link Cooler},
+ * dodając do tego swoje własne pole.
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -17,6 +21,9 @@ import lombok.Setter;
 @DiscriminatorValue("LIQUID_COOLER")
 public final class LiquidCooler extends Cooler {
 
+    /**
+     * Rozmiar chłodnicy układu chłodzenia cieczą.
+     */
     @NotNull
     @Column(name = "cooler_size", nullable = false)
     private Integer coolerSize;
