@@ -7,6 +7,12 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+ * Klasa abstrakcyjna DTO filtra dysku. Rozszerza klasę {@link ProductFilterResponse}.
+ * Zawiera informacje o dostępnych opcjach filtrowania wspólnych dla wszystkich typów dysków twardych.
+ * Klasy z niej dziedziczące dodają kolejne opcje filtrowania. Obiekty tych klas są następnie zwracane
+ * jako odpowiedź na żądanie pobrania dostępnych opcji filtrowania.
+ */
 @Getter
 @Setter
 public abstract class DriveFilterResponse extends ProductFilterResponse {

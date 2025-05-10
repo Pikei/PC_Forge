@@ -19,8 +19,19 @@ import org.springframework.http.ResponseEntity;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Klasa zawierająca metody statyczne, służąca do budowania odpowiedzi zwracanych w komunikacji HTTP.
+ */
 @NoArgsConstructor
 public class ResponseBuilder {
+
+    /**
+     * Metoda służąca do budowania odpowiedzi o produkcie znajdującym się w konfiguracji.
+     *
+     * @param product Obiekt produktu zawartego w konfiguracji.
+     * @return Obiekt klasy {@link ProductConfigurationResponse},
+     * zawierającego podstawowe informacje o produktach zapisanych w konfiguracji
+     */
     public static ProductConfigurationResponse getProductConfigurationResponse(Product product) {
         ProductConfigurationResponse response = new ProductConfigurationResponse();
         response.setProductEan(product.getId());
@@ -31,6 +42,12 @@ public class ResponseBuilder {
         return response;
     }
 
+    /**
+     * Metoda służąca do budowania listy odpowiedzi o produktach na podstawie przekazanej listy produktów.
+     *
+     * @param products Lista produktów
+     * @return Odpowiedź HTTP zawierająca listę uproszczonych informacji o produktach
+     */
     public static ResponseEntity<List<ProductResponse>> generateProductList(List<? extends Product> products) {
         List<ProductResponse> productResponses = new ArrayList<>();
         for (Product product : products) {
@@ -39,6 +56,12 @@ public class ResponseBuilder {
         return ResponseEntity.ok(productResponses);
     }
 
+    /**
+     * Metoda służąca do wywołania odpowiedniej metody budującej odpowiedź produktu, w zależności od jego kategorii.
+     *
+     * @param product Produkt, dla którego ma zostać stworzona odpowiedź.
+     * @return Obiekt klasy dziedziczącej z {@link ProductResponse}, zawierający uproszczone informacje o produkcie.
+     */
     public static ProductResponse getProductResponse(Product product) {
         if (product == null) {
             return null;
@@ -59,6 +82,12 @@ public class ResponseBuilder {
         };
     }
 
+    /**
+     * Metoda służąca do budowania odpowiedzi zawierającej uproszczone dane o obudowie komputerowej.
+     *
+     * @param product Obiekt klasy {@link Case}, dla którego ma zostać wygenerowana odpowiedź
+     * @return Obiekt klasy {@link CaseResponse}, zawierający uproszczone informacje o obudowie komputerowej.
+     */
     private static ProductResponse getCaseResponse(Case product) {
         CaseResponse response = new CaseResponse();
         response.setId(product.getId());
@@ -73,6 +102,12 @@ public class ResponseBuilder {
         return response;
     }
 
+    /**
+     * Metoda służąca do budowania odpowiedzi zawierającej uproszczone dane o karcie graficznej.
+     *
+     * @param product Obiekt klasy {@link GraphicsCard}, dla którego ma zostać wygenerowana odpowiedź
+     * @return Obiekt klasy {@link GraphicsCardResponse}, zawierający uproszczone informacje o karcie graficznej.
+     */
     private static ProductResponse getGpuResponse(GraphicsCard product) {
         GraphicsCardResponse response = new GraphicsCardResponse();
         response.setId(product.getId());
@@ -87,6 +122,12 @@ public class ResponseBuilder {
         return response;
     }
 
+    /**
+     * Metoda służąca do budowania odpowiedzi zawierającej uproszczone dane o dysku SSD.
+     *
+     * @param product Obiekt klasy {@link SolidStateDrive}, dla którego ma zostać wygenerowana odpowiedź
+     * @return Obiekt klasy {@link SsdResponse}, zawierający uproszczone informacje o dysku SSD.
+     */
     private static ProductResponse getSsdResponse(SolidStateDrive product) {
         SsdResponse response = new SsdResponse();
         response.setId(product.getId());
@@ -102,6 +143,12 @@ public class ResponseBuilder {
         return response;
     }
 
+    /**
+     * Metoda służąca do budowania odpowiedzi zawierającej uproszczone dane o dysku HDD.
+     *
+     * @param product Obiekt klasy {@link HardDiskDrive}, dla którego ma zostać wygenerowana odpowiedź
+     * @return Obiekt klasy {@link HddResponse}, zawierający uproszczone informacje o dysku HDD.
+     */
     private static ProductResponse getHddResponse(HardDiskDrive product) {
         HddResponse response = new HddResponse();
         response.setId(product.getId());
@@ -116,6 +163,12 @@ public class ResponseBuilder {
         return response;
     }
 
+    /**
+     * Metoda służąca do budowania odpowiedzi zawierającej uproszczone dane o płycie głównej.
+     *
+     * @param product Obiekt klasy {@link Motherboard}, dla którego ma zostać wygenerowana odpowiedź
+     * @return Obiekt klasy {@link MotherboardResponse}, zawierający uproszczone informacje o płycie głównej.
+     */
     private static ProductResponse getMbResponse(Motherboard product) {
         MotherboardResponse response = new MotherboardResponse();
         response.setId(product.getId());
@@ -132,6 +185,12 @@ public class ResponseBuilder {
         return response;
     }
 
+    /**
+     * Metoda służąca do budowania odpowiedzi zawierającej uproszczone dane o zasilaczu.
+     *
+     * @param product Obiekt klasy {@link PowerSupply}, dla którego ma zostać wygenerowana odpowiedź
+     * @return Obiekt klasy {@link PowerSupplyResponse}, zawierający uproszczone informacje o zasilaczu.
+     */
     private static ProductResponse getPsResponse(PowerSupply product) {
         PowerSupplyResponse response = new PowerSupplyResponse();
         response.setId(product.getId());
@@ -147,6 +206,12 @@ public class ResponseBuilder {
         return response;
     }
 
+    /**
+     * Metoda służąca do budowania odpowiedzi zawierającej uproszczone dane o procesorze.
+     *
+     * @param product Obiekt klasy {@link Processor}, dla którego ma zostać wygenerowana odpowiedź
+     * @return Obiekt klasy {@link ProcessorResponse}, zawierający uproszczone informacje o procesorze.
+     */
     private static ProductResponse getCpuResponse(Processor product) {
         ProcessorResponse response = new ProcessorResponse();
         response.setId(product.getId());
@@ -165,6 +230,12 @@ public class ResponseBuilder {
         return response;
     }
 
+    /**
+     * Metoda służąca do budowania odpowiedzi zawierającej uproszczone dane o pamięci operacyjnej RAM.
+     *
+     * @param product Obiekt klasy {@link Memory}, dla którego ma zostać wygenerowana odpowiedź
+     * @return Obiekt klasy {@link ProductResponse}, zawierający uproszczone informacje o pamięci operacyjnej RAM.
+     */
     private static ProductResponse getRamResponse(Memory product) {
         MemoryResponse response = new MemoryResponse();
         response.setId(product.getId());
@@ -181,6 +252,12 @@ public class ResponseBuilder {
         return response;
     }
 
+    /**
+     * Metoda służąca do budowania odpowiedzi zawierającej uproszczone dane o układzie chłodzenia procesora.
+     *
+     * @param product Obiekt klasy {@link Cooler}, dla którego ma zostać wygenerowana odpowiedź
+     * @return Obiekt klasy {@link CoolerResponse}, zawierający uproszczone informacje o układzie chłodzenia procesora.
+     */
     private static ProductResponse getCoolerResponse(Cooler product) {
         CoolerResponse response = new CoolerResponse();
         response.setId(product.getId());
