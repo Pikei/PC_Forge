@@ -79,6 +79,9 @@ public class OrderController {
         } catch (PaymentException e) {
             System.out.println(e.getMessage());
             return ResponseEntity.internalServerError().build();
+        } catch (InvalidOrderDataException e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().build();
         }
     }
 

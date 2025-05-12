@@ -116,7 +116,7 @@ public class OrderService {
      * @param addressBody Dane adresowe do zamówienia
      * @return Utworzone zamówienie
      */
-    public Order newOrder(User user, AddressBody addressBody) {
+    public Order newOrder(User user, AddressBody addressBody) throws InvalidOrderDataException {
         Address address = createAddress(addressBody);
         Order order = createOrder(user, address);
         return orderRepository.save(order);
@@ -152,12 +152,15 @@ public class OrderService {
      * @param user    Obiekt zalogowanego użytkownika, wstrzykiwany przez Spring Security
      * @param address Adres użytkownika, pod który ma być wysłane zamówienie
      */
-    private Order createOrder(User user, Address address) {
+    private Order createOrder(User user, Address address) throws InvalidOrderDataException {
         Order order = new Order();
         order.setUser(user);
         order.setShippingAddress(address);
         order.setOrderDate(LocalDate.now());
         List<ShoppingCart> productsInShoppingCart = shoppingCartRepository.findById_UserId(user.getId());
+        if (productsInShoppingCart.isEmpty()) {
+            throw new InvalidOrderDataException("Shopping cart of user \"" + user.getUsername() + "\" is empty");
+        }
         order.setTotalCost(productsInShoppingCart.stream()
                 .mapToDouble(cart -> cart.getProduct().getPrice() * cart.getQuantity())
                 .sum());
