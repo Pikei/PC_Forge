@@ -144,7 +144,7 @@ public class UrlPath {
      * Ścieżka do sprawdzenia, czy konfiguracja już istnieje. Stosowana w celu upewnienia się,
      * czy użytkownik chce nadpisać zapisaną konfigurację, czy nie.
      */
-    public static final String CHECk_IF_EXISTS = "/exists";
+    public static final String CHECK_IF_EXISTS = "/exists";
 
     /**
      * Ścieżka bazowa dla operacji na zamówieniach

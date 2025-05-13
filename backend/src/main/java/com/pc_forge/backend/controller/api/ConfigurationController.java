@@ -138,7 +138,7 @@ public class ConfigurationController {
      * @param name Nazwa konfiguracji przekazana jako wartość pozyskana z adresu URL
      * @return Jeśli konfiguracja o podanej nazwie już istnieje zwracane jest {@code true}, w przeciwnym razie {@code false}
      */
-    @GetMapping(UrlPath.CHECk_IF_EXISTS + "/{name}")
+    @GetMapping(UrlPath.CHECK_IF_EXISTS + "/{name}")
     public ResponseEntity<Boolean> checkIfExists(@AuthenticationPrincipal User user, @PathVariable String name) {
         return configurationService.check_if_exist(user, name);
     }

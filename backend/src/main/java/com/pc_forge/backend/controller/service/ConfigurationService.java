@@ -300,22 +300,22 @@ public class ConfigurationService {
                 response.setMessage("Procesor nie zawiera załączonego chłodzenia ani nie zostało ono wybrane w konfiguracji");
                 return response;
             }
-        }
-        assert configuration.getCooler() != null;
-        if (!configuration.getCooler().getCompatibleSockets().contains(configuration.getMotherboard().getSocket())) {
-            response.setCompatible(false);
-            response.setFirstProductCategoryCode(configuration.getCooler().getCategory());
-            response.setSecondProductCategoryCode(ProductCategoryCode.MOTHERBOARD);
-            response.setMessage("Wybrane chłodzenie pasuje do gniazda procesora na tej płycie głównej");
-            return response;
-        }
-        if (configuration.getCooler() instanceof AirCooler) {
-            if (configuration.getPcCase().getMaxCpuCoolerHeight() < ((AirCooler) configuration.getCooler()).getHeight()) {
+        } else {
+            if (!configuration.getCooler().getCompatibleSockets().contains(configuration.getMotherboard().getSocket())) {
                 response.setCompatible(false);
-                response.setFirstProductCategoryCode(ProductCategoryCode.CASE);
-                response.setSecondProductCategoryCode(ProductCategoryCode.AIR_COOLER);
-                response.setMessage("Wybrany układ chłodzenia jest zbyt wysoki dla tej obudowy");
+                response.setFirstProductCategoryCode(configuration.getCooler().getCategory());
+                response.setSecondProductCategoryCode(ProductCategoryCode.MOTHERBOARD);
+                response.setMessage("Wybrane chłodzenie nie pasuje do gniazda procesora na tej płycie głównej");
                 return response;
+            }
+            if (configuration.getCooler() instanceof AirCooler) {
+                if (configuration.getPcCase().getMaxCpuCoolerHeight() < ((AirCooler) configuration.getCooler()).getHeight()) {
+                    response.setCompatible(false);
+                    response.setFirstProductCategoryCode(ProductCategoryCode.CASE);
+                    response.setSecondProductCategoryCode(ProductCategoryCode.AIR_COOLER);
+                    response.setMessage("Wybrany układ chłodzenia jest zbyt wysoki dla tej obudowy");
+                    return response;
+                }
             }
         }
 
@@ -340,7 +340,6 @@ public class ConfigurationService {
         } else {
             psPower = configuration.getPowerSupply().getPower();
         }
-        assert configuration.getPowerSupply() != null;
 
         if (configuration.getGraphicsCard() == null) {
             if (configuration.getProcessor().getIntegratedGraphicsUnit() != null && !configuration.getProcessor().getIntegratedGraphicsUnit().isEmpty()) {
@@ -350,24 +349,24 @@ public class ConfigurationService {
                 response.setMessage("Procesor nie posiada zintegrowanego układu graficznego ani nie wybrano karty graficznej");
                 return response;
             }
+        } else {
+            if (configuration.getPcCase().getMaxGpuLength() < configuration.getGraphicsCard().getCardLength()) {
+                response.setCompatible(false);
+                response.setFirstProductCategoryCode(ProductCategoryCode.GRAPHICS_CARD);
+                response.setSecondProductCategoryCode(ProductCategoryCode.CASE);
+                response.setMessage("Karta graficzna jest zbyt długa dla tej obudowy");
+                return response;
+            }
+
+            if (psPower < configuration.getGraphicsCard().getRecommendedPsPower()) {
+                response.setCompatible(false);
+                response.setFirstProductCategoryCode(ProductCategoryCode.GRAPHICS_CARD);
+                response.setSecondProductCategoryCode(ProductCategoryCode.POWER_SUPPLY);
+                response.setMessage("Moc zasilacza jest mniejsza niż minimalna zalecana dla tej karty graficznej " + "( " + configuration.getGraphicsCard().getRecommendedPsPower() + "W )");
+                return response;
+            }
         }
 
-        assert configuration.getGraphicsCard() != null;
-        if (configuration.getPcCase().getMaxGpuLength() < configuration.getGraphicsCard().getCardLength()) {
-            response.setCompatible(false);
-            response.setFirstProductCategoryCode(ProductCategoryCode.GRAPHICS_CARD);
-            response.setSecondProductCategoryCode(ProductCategoryCode.CASE);
-            response.setMessage("Karta graficzna jest zbyt długa dla tej obudowy");
-            return response;
-        }
-
-        if (psPower < configuration.getGraphicsCard().getRecommendedPsPower()) {
-            response.setCompatible(false);
-            response.setFirstProductCategoryCode(ProductCategoryCode.GRAPHICS_CARD);
-            response.setSecondProductCategoryCode(ProductCategoryCode.POWER_SUPPLY);
-            response.setMessage("Moc zasilacza jest mniejsza niż minimalna zalecana dla tej karty graficznej " + "( " + configuration.getGraphicsCard().getRecommendedPsPower() + "W )");
-            return response;
-        }
         response.setCompatible(true);
         response.setFirstProductCategoryCode(null);
         response.setSecondProductCategoryCode(null);
