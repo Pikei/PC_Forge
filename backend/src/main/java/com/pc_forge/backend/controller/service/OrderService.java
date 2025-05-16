@@ -118,8 +118,7 @@ public class OrderService {
      */
     public Order newOrder(User user, AddressBody addressBody) throws InvalidOrderDataException {
         Address address = createAddress(addressBody);
-        Order order = createOrder(user, address);
-        return orderRepository.save(order);
+        return createOrder(user, address);
     }
 
     /**
@@ -174,7 +173,7 @@ public class OrderService {
             orderDetail.setCost(cart.getProduct().getPrice() * cart.getQuantity());
             order.getOrderDetails().add(orderDetail);
         }
-        return order;
+        return orderRepository.save(order);
     }
 
     /**

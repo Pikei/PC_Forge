@@ -55,7 +55,7 @@ public class ShoppingCartController {
      * lub odpowiedź ze statusem HTTP 400 (BAD_REQUEST) w przypadku podania nieprawidłowego identyfikatora produktu
      */
     @PostMapping(UrlPath.ADD)
-    public ResponseEntity<Void> addItem(@Valid @AuthenticationPrincipal User user, @Valid @RequestBody ShoppingCartBody product) {
+    public ResponseEntity<Void> addItem(@AuthenticationPrincipal User user, @Valid @RequestBody ShoppingCartBody product) {
         try {
             shoppingCartService.addProductToCart(user, product.getProductId());
         } catch (ProductDoesNotExistException e) {

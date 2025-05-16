@@ -1,6 +1,7 @@
 package com.pc_forge.backend.controller.security;
 
 import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.pc_forge.backend.controller.service.JWTService;
 import com.pc_forge.backend.model.entity.user.User;
 import com.pc_forge.backend.model.repository.user.UserRepository;
@@ -79,6 +80,8 @@ public class JWTRequestFilter extends OncePerRequestFilter {
                 }
             } catch (JWTDecodeException e) {
                 System.out.println("JWT verification failed");
+            } catch (TokenExpiredException e) {
+                System.out.println("JWT token expired");
             }
         }
         filterChain.doFilter(request, response);
