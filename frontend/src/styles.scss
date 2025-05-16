@@ -1,1 +1,12 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+  font-family: "Roboto", monospace;
+  margin: 0;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+body.full-height-header .content {
+  padding-top: 150px;
+}
