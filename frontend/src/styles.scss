@@ -1,6 +1,8 @@
 body {
   font-family: "Roboto", monospace;
   margin: 0;
+  background-color: #151515;
+  color: #dadada;
 }
 
 button:hover {
@@ -8,5 +10,5 @@ button:hover {
 }
 
 body.full-height-header .content {
-  padding-top: 150px;
+  padding-top: 80px;
 }

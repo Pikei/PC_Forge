@@ -1,25 +1,47 @@
 <nav
   #stickyMenu
   [class.sticky]="sticky">
-  <div class="logo">
+  <a class="logo" href="/">
     <img src="PC_Forge_Logo_White.png" alt="PC_Forge_Logo_White.png">
-  </div>
+  </a>
 
   <div class="search">
-    <input type="text" placeholder="Szukaj...">
+    <input type="text" placeholder="Szukaj produktów">
     <select>
-      <option>asdf</option>
-      <option>qwerty</option>
+      <option>Wszystkie kategorie</option>
+      <option>Procesory</option>
+      <option>Płyty główne</option>
+      <option>Pamięci operacyjne RAM</option>
+      <option>Karty graficzne</option>
+      <option>Zasilacze komputerowe</option>
+      <option>Obudowy</option>
+      <option>Dyski SSD</option>
+      <option>Dyski HDD</option>
+      <option>Chłodzenie cieczą</option>
+      <option>Chłodzenie powietrzem</option>
     </select>
-    <button>Szukaj</button>
+    <div class="btn-background">
+      <button><img src="search-icon.png"></button>
+    </div>
   </div>
 
   <div class="account">
-    <button>Koszyk</button>
-    <button>Profil</button>
+    <button class="shopping-cart-btn"><img src="cart-icon.png"></button>
+    <button class="profile-btn"><img src="profile-icon.png"></button>
   </div>
 </nav>
 
-<div class="complete-menu">
+<div class="hiding-menu">
   <p>Wykuj swój komputer</p>
+  <div class="hiding-buttons">
+    <a>
+      <button>Kategorie</button>
+    </a>
+    <a>
+      <button>Konfigurator</button>
+    </a>
+    <a>
+      <button>Moje konfiguracje</button>
+    </a>
+  </div>
 </div>
