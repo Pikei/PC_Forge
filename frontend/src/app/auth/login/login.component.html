@@ -1,0 +1,12 @@
+<div class="content auth" [ngStyle]="{'background-image': 'url(' + background + ')' }">
+    <a id="home-link" href="/">
+        <img src="PC_Forge_Logo_White.png">
+    </a>
+    <form class="login-form">
+        <input id="login" class="form-element" type="text" placeholder="login">
+        <input id="password" class="form-element" type="password" placeholder="hasło">
+        <button type="button" class="form-element" (click)="login()">Zaloguj się</button>
+        <a href="https://example.com/reset" target="_blank">Resetuj hasło</a>
+        <a href="/register">Nie masz konta? Zarejestruj się</a>
+    </form>
+</div>

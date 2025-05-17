@@ -7,10 +7,10 @@ import com.pc_forge.backend.controller.service.UserService;
 import com.pc_forge.backend.model.entity.user.User;
 import com.pc_forge.backend.view.body.auth.LoginBody;
 import com.pc_forge.backend.view.body.auth.ResetPasswordBody;
+import com.pc_forge.backend.view.response.StringResponse;
 import com.pc_forge.backend.view.response.auth.LoginResponse;
 import com.pc_forge.backend.view.body.auth.RegistrationBody;
 import com.pc_forge.backend.view.response.auth.ResetPasswordResponse;
-import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
  * resetowaniem hasła i usuwaniem konta.
  */
 @RestController
+@CrossOrigin("http://localhost:4200/")
 public class AuthenticationController {
     /**
      * Serwis obsługujący logikę związaną z kontem użytkownika
@@ -50,13 +51,13 @@ public class AuthenticationController {
      * ze statusem HTTP 500 (INTERNAL_SERVER_ERROR), gdy wystąpił błąd podczas wysyłania maila na wskazany adres
      */
     @PostMapping(UrlPath.REGISTER)
-    public ResponseEntity<Void> register(@Valid @RequestBody RegistrationBody registration) {
+    public ResponseEntity<StringResponse> register(@Valid @RequestBody RegistrationBody registration) {
         try {
             userService.createAccount(registration);
             return ResponseEntity.ok().build();
         } catch (UserAlreadyExistsException e) {
             System.out.println(e.getMessage());
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new StringResponse(e.getMessage()));
         } catch (EmailFailureException e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -81,7 +82,7 @@ public class AuthenticationController {
             if (e.getNewEmailSent()) {
                 response.setError(response.getError() + "_NEW_EMAIL_SENT");
             }
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            return ResponseEntity.ok(response);
         } catch (EmailFailureException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

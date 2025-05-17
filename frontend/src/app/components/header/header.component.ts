@@ -1,4 +1,5 @@
-import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, ViewChild} from '@angular/core';
+import {TokenService} from '../../token.service';
 
 @Component({
   selector: 'app-header',
@@ -6,20 +7,14 @@ import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/c
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
 
   @ViewChild('stickyMenu') menuElement!: ElementRef;
 
   sticky: boolean = false;
 
-  elementPosition: any;
-
-  ngOnInit() {
-  }
-
-  ngAfterViewInit() {
-    this.elementPosition = this.menuElement.nativeElement.offsetTop;
-  }
+    constructor(private tokenService: TokenService) {
+    }
 
   @HostListener('window:scroll', ['$event'])
   updateStickyState() {
@@ -31,4 +26,21 @@ export class HeaderComponent implements OnInit {
       document.body.classList.remove('full-height-header');
     }
   }
+
+    logout() {
+        if (!this.tokenService.getToken()) {
+            window.location.href = "/login";
+        } else if (confirm("Zostaniesz wylogowany")) {
+            this.tokenService.removeToken();
+            window.location.href = "/home";
+        }
+    }
+
+    shoppingCart() {
+        if (this.tokenService.getToken()) {
+            alert("Nie ma jeszcze funkcji koszyka");
+        } else {
+            window.location.href = "/login";
+        }
+    }
 }
