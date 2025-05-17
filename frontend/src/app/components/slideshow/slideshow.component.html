@@ -1,0 +1,22 @@
+<div class="carousel-container">
+    <div class="image-wrapper">
+        <div class="slides" [style.transform]="'translateX(-' + index * 100 + '%)'">
+            @for (img of images; track $index) {
+                <a *ngIf="img.href" [href]="img.href" class="slide">
+                    <img [src]="img.src" [alt]="img.alt">
+                </a>
+                <div *ngIf="!img.href" class="slide">
+                    <img [src]="img.src" [alt]="img.alt">
+                </div>
+            }
+        </div>
+
+        <div class="indicators">
+            @for (baner of images; track $index) {
+                <span class="indicator" [ngClass]="{active: index == $index}" (click)="selectImage($index)"></span>
+            }
+        </div>
+    </div>
+    <button class="btn-prev" (click)="prev()"><</button>
+    <button class="btn-next" (click)="next()">></button>
+</div>
