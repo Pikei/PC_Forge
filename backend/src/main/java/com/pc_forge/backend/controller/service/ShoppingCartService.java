@@ -7,7 +7,9 @@ import com.pc_forge.backend.model.entity.cart.ShoppingCart;
 import com.pc_forge.backend.model.entity.cart.ShoppingCartId;
 import com.pc_forge.backend.model.entity.user.User;
 import com.pc_forge.backend.model.repository.cart.ShoppingCartRepository;
+import com.pc_forge.backend.view.body.order.ShoppingCartBody;
 import com.pc_forge.backend.view.response.order.ProductOrderResponse;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -46,7 +48,7 @@ public class ShoppingCartService {
      * Metoda dodająca produkt do koszyka zalogowanego użytkownika. Jeśli użytkownik po raz pierwszy
      * dodaje produkt do koszyka, to tworzony jest nowy koszyk zakupowy dla tego właśnie użytkownika.
      *
-     * @param user obiekt zalogowanego użytkownika wstrzykiwany przez Spring Security
+     * @param user      obiekt zalogowanego użytkownika wstrzykiwany przez Spring Security
      * @param productId identyfikator produktu, który ma zostać dodany do koszyka zakupowego
      * @throws ProductDoesNotExistException w przypadku próby dodania do koszyka nieistniejącego produktu
      */
@@ -73,7 +75,7 @@ public class ShoppingCartService {
     /**
      * Usuwa wskazany produkt z koszyka zakupowego użytkownika
      *
-     * @param user obiekt zalogowanego użytkownika wstrzykiwany przez Spring Security
+     * @param user      obiekt zalogowanego użytkownika wstrzykiwany przez Spring Security
      * @param productId identyfikator produktu, który ma zostać dodany do koszyka zakupowego
      * @throws ProductDoesNotExistException w przypadku próby dodania do koszyka nieistniejącego produktu
      */
@@ -115,6 +117,7 @@ public class ShoppingCartService {
 
     /**
      * Tworzy DTO produktu zawierające uproszczone dane
+     *
      * @param shoppingCart obiekt koszyka zalogowanego użytkownika
      * @return DTO produktu zawierające uproszczone dane
      */
@@ -141,5 +144,24 @@ public class ShoppingCartService {
      */
     public void clearCart(User user) {
         shoppingCartRepository.deleteById_UserId(user.getId());
+    }
+
+    /**
+     * Usuwa wszystkie instancje wskazanego produktu z koszyka zakupowego użytkownika
+     *
+     * @param user      obiekt zalogowanego użytkownika wstrzykiwany przez Spring Security
+     * @param productId identyfikator produktu, który ma zostać dodany do koszyka zakupowego
+     */
+    public void clearProduct(User user, Long productId) throws ProductDoesNotExistException {
+        Optional<Product> optionalProduct = commonProductRepository.findById(productId);
+        if (optionalProduct.isEmpty()) {
+            throw new ProductDoesNotExistException("Product with id " + productId + " does not exist");
+        }
+        Optional<ShoppingCart> optionalProductInShoppingCart = shoppingCartRepository.findById(new ShoppingCartId(user.getId(), productId));
+        if (optionalProductInShoppingCart.isEmpty()) {
+            throw new ProductDoesNotExistException("Product with id " + productId + " does not exist in shopping cart");
+        }
+        ShoppingCart productInShoppingCart = optionalProductInShoppingCart.get();
+        shoppingCartRepository.delete(productInShoppingCart);
     }
 }

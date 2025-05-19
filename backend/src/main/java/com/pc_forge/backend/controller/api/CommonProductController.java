@@ -7,10 +7,7 @@ import com.pc_forge.backend.model.entity.product.Product;
 import com.pc_forge.backend.view.response.product.ProductResponse;
 import com.pc_forge.backend.view.util.ResponseBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,6 +16,7 @@ import java.util.List;
  * takich jak wyszukiwanie po nazwie lub pobranie konkretnego produktu po jego ID
  */
 @RestController
+@CrossOrigin("http://localhost:4200/")
 public class CommonProductController {
     /**
      * Serwis obsługujący logikę związaną ze wszystkimi produktami

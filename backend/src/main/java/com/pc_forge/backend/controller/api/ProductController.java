@@ -27,6 +27,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping(UrlPath.CATEGORY)
+@CrossOrigin("http://localhost:4200/")
 public class ProductController {
     /**
      * Serwis obsługujący logikę związaną z pobieraniem informacji o procesorach

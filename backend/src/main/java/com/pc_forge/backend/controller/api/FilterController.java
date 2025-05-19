@@ -4,10 +4,7 @@ import com.pc_forge.backend.controller.api.constants.UrlPath;
 import com.pc_forge.backend.controller.service.product.*;
 import com.pc_forge.backend.view.response.filter.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,6 +13,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(UrlPath.FILTER)
+@CrossOrigin("http://localhost:4200/")
 public class FilterController {
     /**
      * Serwis służący do pobrania filtrów dla wszystkich produktów

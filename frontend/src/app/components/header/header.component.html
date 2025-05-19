@@ -1,47 +1,67 @@
 <nav
-  #stickyMenu
-  [class.sticky]="sticky">
-  <a class="logo" href="/">
-    <img src="PC_Forge_Logo_White.png" alt="PC_Forge_Logo_White.png">
-  </a>
+    #stickyMenu
+    [class.sticky]="sticky">
+    <a class="logo" href="/" (click)="hideAccountMenu()">
+        <img src="PC_Forge_Logo_White.png" alt="PC_Forge_Logo_White.png">
+    </a>
 
-  <div class="search">
-    <input type="text" placeholder="Szukaj produktów">
-    <select>
-      <option>Wszystkie kategorie</option>
-      <option>Procesory</option>
-      <option>Płyty główne</option>
-      <option>Pamięci operacyjne RAM</option>
-      <option>Karty graficzne</option>
-      <option>Zasilacze komputerowe</option>
-      <option>Obudowy</option>
-      <option>Dyski SSD</option>
-      <option>Dyski HDD</option>
-      <option>Chłodzenie cieczą</option>
-      <option>Chłodzenie powietrzem</option>
-    </select>
-    <div class="btn-background">
-      <button><img src="search-icon.png"></button>
+    <div class="search" (click)="hideAccountMenu()">
+        <input type="text" placeholder="Szukaj produktów">
+        <select>
+            <option>Wszystkie kategorie</option>
+            <option>Procesory</option>
+            <option>Płyty główne</option>
+            <option>Pamięci operacyjne RAM</option>
+            <option>Karty graficzne</option>
+            <option>Zasilacze komputerowe</option>
+            <option>Obudowy</option>
+            <option>Dyski SSD</option>
+            <option>Dyski HDD</option>
+            <option>Chłodzenie cieczą</option>
+            <option>Chłodzenie powietrzem</option>
+        </select>
+        <div class="btn-background">
+            <button><img src="search-icon.png"></button>
+        </div>
     </div>
-  </div>
 
-  <div class="account">
-      <button class="shopping-cart-btn" (click)="shoppingCart()"><img src="cart-icon.png"></button>
-      <button class="profile-btn" (click)="logout()"><img src="profile-icon.png"></button>
-  </div>
+    <div class="account">
+        <button class="shopping-cart-btn" (click)="shoppingCart()"><img src="cart-icon.png"></button>
+        <div id="cart-item-count" *ngIf="cartItems > 0">{{ cartItems }}</div>
+        <button class="profile-btn" (click)="showAccountMenu()"><img src="profile-icon.png"></button>
+    </div>
 </nav>
 
-<div class="hiding-menu">
-  <p>Wykuj swój komputer</p>
-  <div class="hiding-buttons">
-    <a>
-      <button>Kategorie</button>
-    </a>
-    <a>
-      <button>Konfigurator</button>
-    </a>
-    <a>
-      <button>Moje konfiguracje</button>
-    </a>
-  </div>
+<div class="hiding-menu" (click)="hideAccountMenu()">
+    <p>Wykuj swój komputer</p>
+    <div class="hiding-buttons">
+        <a>
+            <button>Kategorie</button>
+        </a>
+        <a>
+            <button>Konfigurator</button>
+        </a>
+        <a>
+            <button>Moje konfiguracje</button>
+        </a>
+    </div>
+</div>
+
+<div class="account-menu-background" [ngClass]="{visible: accountMenuVisible, invisible: !accountMenuVisible}"
+     (click)="hideAccountMenu()"></div>
+
+<div class="account-menu" [ngClass]="{ visible: accountMenuVisible, invisible: !accountMenuVisible}">
+    <div class="account-info">
+        <h3>{{ accountInfo.name }}</h3>
+        <p>email: {{ accountInfo.email }}</p>
+        <p>nr telefonu: {{ accountInfo.phoneNumber }}</p>
+    </div>
+    <div class="account-links">
+        <a href="https://example.com/orders" target="_blank">Moje zamówienia</a>
+        <a href="https://example.com/configurations" target="_blank">Zapisane konfiguracje</a>
+    </div>
+    <div class="danger-links">
+        <a (click)="logout()">Wyloguj</a>
+        <a (click)="deleteAccount()" target="_blank">Usuń konto</a>
+    </div>
 </div>

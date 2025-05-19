@@ -20,6 +20,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(UrlPath.SHOPPING_CART)
+@CrossOrigin("http://localhost:4200/")
 public class ShoppingCartController {
     /**
      * Serwis obsługujący logikę związaną z koszykiem użytkownika
@@ -94,5 +95,24 @@ public class ShoppingCartController {
     public ResponseEntity<Void> clearCart(@AuthenticationPrincipal User user) {
         shoppingCartService.clearCart(user);
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Usuwa wszystkie instancje jednego produktu z koszyka
+     *
+     * @param user    Obiekt zalogowanego użytkownika, wstrzykiwany przez Spring Security
+     * @param product Obiekt {@link ShoppingCartBody} zawierający identyfikator produktu
+     * @return Pusta odpowiedź ze statusem HTTP 200 (OK) w przypadku pomyślnego usunięcia produktu z koszyka
+     * lub odpowiedź ze statusem HTTP 400 (BAD_REQUEST) w przypadku podania nieprawidłowego identyfikatora produktu
+     */
+    @PostMapping(UrlPath.CLEAR + UrlPath.PRODUCT)
+    public ResponseEntity<Void> clearProduct(@AuthenticationPrincipal User user, @Valid @RequestBody ShoppingCartBody product) {
+        try {
+            shoppingCartService.clearProduct(user, product.getProductId());
+            return ResponseEntity.ok().build();
+        } catch (ProductDoesNotExistException e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 }

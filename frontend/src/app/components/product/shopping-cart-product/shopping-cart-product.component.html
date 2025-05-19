@@ -1,0 +1,19 @@
+<div class="product-in-cart">
+    <div class="product-image">
+        <img [src]="imgSrc" [alt]="product.productName">
+    </div>
+    <div class="product-info">
+        <h3>{{ product.productName }}</h3>
+        <div class="quantity-counter">
+            <button type="button" class="btn-remove" (click)="removeFromCart()">-</button>
+            <p>liczba sztuk: {{ product.productQuantity }}</p>
+            <button type="button" class="btn-add" (click)="addToCart()">+</button>
+        </div>
+
+    </div>
+    <h2 class="product-price">{{ totalProductPrice() }} zł</h2>
+    <button type="button" class="btn-clear" (click)="clearFromCart()">
+        <img id="trash1" src="cart/trash-white.png" alt="trash">
+        <img id="trash2" src="cart/trash-orange.png" alt="trash">
+    </button>
+</div>

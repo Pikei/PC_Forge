@@ -22,6 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(UrlPath.CONFIGURATIONS)
+@CrossOrigin("http://localhost:4200/")
 public class ConfigurationController {
     /**
      * Serwis obsługujący logikę związaną z konfiguracjami

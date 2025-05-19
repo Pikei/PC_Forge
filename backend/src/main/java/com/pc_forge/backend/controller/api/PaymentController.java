@@ -5,16 +5,14 @@ import com.pc_forge.backend.controller.api.constants.UrlPath;
 import com.pc_forge.backend.controller.exceptions.InvalidOrderDataException;
 import com.pc_forge.backend.controller.service.OrderService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Kontroler odbierający informację o powodzeniu i anulowaniu płatności
  */
 @RestController
 @RequestMapping(UrlPath.PAYMENT)
+@CrossOrigin("http://localhost:4200/")
 public class PaymentController {
     /**
      * Serwis odpowiedzialny za aktualizację statusu zamówienia

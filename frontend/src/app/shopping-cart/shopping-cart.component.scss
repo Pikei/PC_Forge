@@ -1,0 +1,33 @@
+.content {
+    padding: 20px;
+}
+
+.empty-cart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    margin-top: 100px;
+
+    img {
+        width: 7%;
+        opacity: 0.3;
+    }
+
+    a {
+        color: #dadada;
+        text-decoration: underline;
+    }
+
+    a:hover {
+        color: #ff6600;
+    }
+}
+
+.shopping-cart {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+}
+

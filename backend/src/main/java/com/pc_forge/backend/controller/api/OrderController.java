@@ -26,6 +26,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(UrlPath.ORDER)
+@CrossOrigin("http://localhost:4200/")
 public class OrderController {
 
     /**

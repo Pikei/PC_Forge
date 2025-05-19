@@ -1,0 +1,15 @@
+<app-header></app-header>
+<div class="content">
+    <div class="empty-cart" *ngIf="productCount == 0">
+        <img src="cart-icon.png" alt="cart-icon">
+        <h2>Nie znaleziono produktów w koszyku</h2>
+        <a href="/home">Powróć na stronę główną</a>
+    </div>
+    <div class="shopping-cart" *ngIf="productCount > 0">
+        <h3>Koszyk zakupowy (liczba produktów: {{ productCount }})</h3>
+        @for (product of productList; track $index) {
+            <app-shopping-cart-product [product]="product"></app-shopping-cart-product>
+        }
+
+    </div>
+</div>
