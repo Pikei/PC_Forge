@@ -9,6 +9,7 @@ import com.pc_forge.backend.controller.service.PaymentService;
 import com.pc_forge.backend.model.entity.order.Order;
 import com.pc_forge.backend.model.entity.user.User;
 import com.pc_forge.backend.view.body.order.AddressBody;
+import com.pc_forge.backend.view.response.StringResponse;
 import com.pc_forge.backend.view.response.order.OrderResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(UrlPath.ORDER)
-@CrossOrigin("http://localhost:4200/")
+@CrossOrigin("http://localhost:4200")
 public class OrderController {
 
     /**
@@ -72,11 +73,11 @@ public class OrderController {
      * w przypadku powodzenia utworzenia sesji płatności lub status HTTP 500 (INTERNAL_SERVER_ERROR) w razie niepowodzenia
      */
     @PostMapping(UrlPath.NEW)
-    public ResponseEntity<String> createOrder(@AuthenticationPrincipal User user, @Valid @RequestBody AddressBody addressBody) {
+    public ResponseEntity<StringResponse> createOrder(@AuthenticationPrincipal User user, @Valid @RequestBody AddressBody addressBody) {
         try {
             Order order = orderService.newOrder(user, addressBody);
             String paymentUrl = paymentService.createPaymentSession(order);
-            return ResponseEntity.ok(paymentUrl);
+            return ResponseEntity.ok(new StringResponse(paymentUrl));
         } catch (PaymentException e) {
             System.out.println(e.getMessage());
             return ResponseEntity.internalServerError().build();
@@ -95,12 +96,12 @@ public class OrderController {
      * w przypadku powodzenia utworzenia sesji płatności lub status HTTP 500 (INTERNAL_SERVER_ERROR) w razie niepowodzenia
      */
     @PostMapping(UrlPath.PAYMENT)
-    public ResponseEntity<String> payOrder(@AuthenticationPrincipal User user, @RequestParam(RequestParams.ORDER_ID) Long orderId) {
+    public ResponseEntity<StringResponse> payOrder(@AuthenticationPrincipal User user, @RequestParam(RequestParams.ORDER_ID) Long orderId) {
         Order order;
         try {
             order = orderService.getOrder(user, orderId);
             String paymentUrl = paymentService.createPaymentSession(order);
-            return ResponseEntity.ok(paymentUrl);
+            return ResponseEntity.ok(new StringResponse(paymentUrl));
         } catch (InvalidOrderDataException e) {
             System.out.println(e.getMessage());
             return ResponseEntity.badRequest().build();
@@ -121,14 +122,14 @@ public class OrderController {
      * W przypadku błędów zwraca odpowiedni status HTTP i komunikat.
      */
     @PostMapping(UrlPath.CANCEL)
-    public ResponseEntity<String> cancelOrder(@AuthenticationPrincipal User user, @RequestParam(RequestParams.ORDER_ID) Long orderId) {
+    public ResponseEntity<StringResponse> cancelOrder(@AuthenticationPrincipal User user, @RequestParam(RequestParams.ORDER_ID) Long orderId) {
         try {
             boolean refund = orderService.cancelOrder(user, orderId);
             if (refund) {
                 String returned = paymentService.refundPayment(orderId);
-                return ResponseEntity.ok("Zwrócono środki w wysokości: " + returned);
+                return ResponseEntity.ok(new StringResponse("Zwrócono środki w wysokości: " + returned));
             }
-            return ResponseEntity.ok("Zamówienie zostało anulowane");
+            return ResponseEntity.ok(new StringResponse("Zamówienie zostało anulowane"));
         } catch (PaymentException e) {
             System.out.println(e.getMessage());
             return ResponseEntity.internalServerError().build();

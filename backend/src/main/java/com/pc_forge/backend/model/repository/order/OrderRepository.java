@@ -19,7 +19,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
      * @param id Identyfikator użytkownika
      * @return Lista zamówień użytkownika
      */
-    @Query("select o from Order o where o.user.id = ?1")
+    @Query("select o from Order o where o.user.id = ?1 order by o.orderDate desc")
     List<Order> findByUser_Id(Long id);
 
     /**

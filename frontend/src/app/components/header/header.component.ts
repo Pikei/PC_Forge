@@ -2,6 +2,7 @@ import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/c
 import {TokenService} from '../../token.service';
 import {NgClass, NgIf} from '@angular/common';
 import {RequestSender} from '../../request.sender';
+import {CartService} from '../../shopping-cart/shopping-cart.service';
 
 @Component({
     selector: 'app-header',
@@ -18,14 +19,13 @@ export class HeaderComponent implements OnInit {
 
     sticky: boolean = false;
     accountMenuVisible: boolean = false;
-    cartItems: number = 0;
     accountInfo = {
         name: "",
         email: "",
         phoneNumber: ""
     };
 
-    constructor(private tokenService: TokenService, private sender: RequestSender) {
+    constructor(private tokenService: TokenService, private sender: RequestSender, protected cartItems: CartService) {
     }
 
     ngOnInit() {
@@ -47,9 +47,7 @@ export class HeaderComponent implements OnInit {
         this.sender.requestGet('http://localhost:8080/cart').subscribe(
             {
                 next: response => {
-                    for (let i = 0; i < response.body.length; i++) {
-                        this.cartItems += response.body[i].productQuantity;
-                    }
+                    this.cartItems.setProducts(response.body)
                 },
                 error: err => {
                     console.log(err)

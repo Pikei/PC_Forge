@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {RequestSender} from '../../../request.sender';
-import {HeaderComponent} from '../../header/header.component';
+import {CartService} from '../../../shopping-cart/shopping-cart.service';
 
 @Component({
     selector: 'app-shopping-cart-product',
@@ -9,6 +9,7 @@ import {HeaderComponent} from '../../header/header.component';
     styleUrl: './shopping-cart-product.component.scss'
 })
 export class ShoppingCartProductComponent implements OnInit {
+
     @Input() product: {
         producer: string,
         productCategory: string,
@@ -27,7 +28,7 @@ export class ShoppingCartProductComponent implements OnInit {
 
     imgSrc: string = "https://cdn.jsdelivr.net/gh/Pikei/PC_Forge_images/";
 
-    constructor(private sender: RequestSender) {
+    constructor(private sender: RequestSender, protected cartItems: CartService) {
     }
 
     ngOnInit(): void {
@@ -36,17 +37,19 @@ export class ShoppingCartProductComponent implements OnInit {
 
     removeFromCart() {
         this.sender.requestPost("http://localhost:8080/cart/remove", {productId: this.product.productEan}).subscribe()
-        window.location.reload();
+        if (this.product.productQuantity > 0) {
+            this.cartItems.decrementProductQuantity(this.product.productEan);
+        }
     }
 
     addToCart() {
         this.sender.requestPost("http://localhost:8080/cart/add", {productId: this.product.productEan}).subscribe()
-        window.location.reload();
+        this.cartItems.incrementProductQuantity(this.product.productEan);
     }
 
     clearFromCart() {
         this.sender.requestPost("http://localhost:8080/cart/clear/product", {productId: this.product.productEan}).subscribe()
-        window.location.reload();
+        this.cartItems.removeProduct(this.product.productEan);
     }
 
     totalProductPrice(): number {

@@ -186,4 +186,6 @@ public class UrlPath {
      */
     public static final String CLEAR = "/clear";
 
+    public static final String FRONT_ORDER = "/home";
+
 }

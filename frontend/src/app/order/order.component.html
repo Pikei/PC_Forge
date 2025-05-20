@@ -1,0 +1,45 @@
+<app-header></app-header>
+<div class="content">
+    <div class="address-shipping-forms">
+        <form class="address-form">
+            <h3>Dane adresowe</h3>
+            <input class="input-box" id="city" type="text" placeholder="Miasto">
+            <input class="input-box" id="street" type="text" placeholder="Ulica">
+            <input class="input-box" id="houseNumber" type="text" placeholder="Numer domu">
+            <input class="input-box" id="apartmentNumber" type="text" placeholder="Numer mieszkania">
+            <input class="input-box" id="postalCode" type="text" placeholder="Kod pocztowy">
+        </form>
+        <div class="shipping-options">
+            <h3>Opcje dostawy</h3>
+            <label class="container">Kurier
+                <input name="radio-group" type="radio" checked="checked">
+                <span class="checkmark"></span>
+            </label>
+
+            <label class="container">Poczta Polska
+                <input name="radio-group" type="radio">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+    </div>
+    <div class="summary">
+        <div class="item-list">
+            @for (cartItem of cartItems.getProducts(); track cartItem.productEan) {
+                <div class="item">
+                    <div class="item-data">
+                        <div class="image-wrapper">
+                            <img [src]="getImgUrl(cartItem)" alt="product-image">
+                        </div>
+                        <div class="item-info">
+                            <h5>{{ cartItem.productName }}</h5>
+                            <p>Liczba sztuk: {{ cartItem.productQuantity }}</p>
+                        </div>
+                    </div>
+                    <h4>{{ getProductSummaryPrice(cartItem) }} zł</h4>
+                </div>
+            }
+        </div>
+        <p id="cost">Suma: <span>{{ cartItems.getTotalCost() }} zł</span></p>
+        <button type="button" class="go-to-payment-btn" (click)="goToPayment()">Przejdź do płatności</button>
+    </div>
+</div>

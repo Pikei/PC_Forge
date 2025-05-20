@@ -1,15 +1,22 @@
 <app-header></app-header>
 <div class="content">
-    <div class="empty-cart" *ngIf="productCount == 0">
+    <div class="empty-cart" *ngIf="cartItems.getCounter() == 0">
         <img src="cart-icon.png" alt="cart-icon">
         <h2>Nie znaleziono produktów w koszyku</h2>
         <a href="/home">Powróć na stronę główną</a>
     </div>
-    <div class="shopping-cart" *ngIf="productCount > 0">
-        <h3>Koszyk zakupowy (liczba produktów: {{ productCount }})</h3>
-        @for (product of productList; track $index) {
-            <app-shopping-cart-product [product]="product"></app-shopping-cart-product>
+    <div class="shopping-cart" *ngIf="cartItems.getCounter() > 0">
+        <div class="title">
+            <h3>Koszyk zakupowy (liczba produktów: {{ cartItems.getCounter() }})</h3>
+            <a (click)="clearCart()" class="clear-cart">Wyczyść koszyk</a>
+        </div>
+        @for (product of cartItems.getProducts(); track product.productEan) {
+            <app-shopping-cart-product *ngIf="product.productQuantity > 0"
+                                       [product]="product"></app-shopping-cart-product>
         }
-
+    </div>
+    <div class="total-price" *ngIf="cartItems.getCounter() > 0">
+        <p>Łączna kwota:<span>{{ cartItems.getTotalCost() }} zł</span></p>
+        <button type="button" class="go-to-shipping-btn" (click)="goToShipping()">Przejdź do dostawy</button>
     </div>
 </div>

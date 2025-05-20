@@ -46,14 +46,4 @@ public class PaymentController {
             return ResponseEntity.notFound().build();
         }
     }
-
-    /**
-     * Metoda obsługująca anulowanie płatności. Zwraca informację o anulowaniu płatności.
-     *
-     * @return Odpowiedź ze statusem HTTP 200 (OK) i komunikatem o anulowaniu płatności.
-     */
-    @GetMapping(UrlPath.CANCEL)
-    public ResponseEntity<String> paymentCancel() {
-        return ResponseEntity.ok("Płatność anulowana");
-    }
 }

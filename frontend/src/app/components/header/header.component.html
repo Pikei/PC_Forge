@@ -27,7 +27,7 @@
 
     <div class="account">
         <button class="shopping-cart-btn" (click)="shoppingCart()"><img src="cart-icon.png"></button>
-        <div id="cart-item-count" *ngIf="cartItems > 0">{{ cartItems }}</div>
+        <div id="cart-item-count" *ngIf="cartItems.getCounter() > 0">{{ cartItems.getCounter() }}</div>
         <button class="profile-btn" (click)="showAccountMenu()"><img src="profile-icon.png"></button>
     </div>
 </nav>
@@ -57,7 +57,7 @@
         <p>nr telefonu: {{ accountInfo.phoneNumber }}</p>
     </div>
     <div class="account-links">
-        <a href="https://example.com/orders" target="_blank">Moje zamówienia</a>
+        <a href="/orders">Moje zamówienia</a>
         <a href="https://example.com/configurations" target="_blank">Zapisane konfiguracje</a>
     </div>
     <div class="danger-links">

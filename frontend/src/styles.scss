@@ -10,5 +10,19 @@ button:hover {
 }
 
 body.full-height-header .content {
-    padding-top: 150px
+    margin-top: 150px;
+    transition: 0.2s;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #151515;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #dadada;
+    border-radius: 20px;
 }

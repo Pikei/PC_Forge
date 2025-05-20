@@ -28,10 +28,6 @@ nav {
             width: 30%;
         }
 
-        .btn-background {
-            width: 7%;
-        }
-
         img {
             width: 15px;
         }
@@ -91,7 +87,7 @@ nav {
         background-color: #242424;
         border-top-right-radius: 50px;
         border-bottom-right-radius: 50px;
-        width: 5%;
+        width: 7%;
         border-right: 2px solid #dadada;
         border-top: 2px solid #dadada;
         border-bottom: 2px solid #dadada;
@@ -144,7 +140,7 @@ nav {
 
     #cart-item-count {
         position: absolute;
-        width: 13%;
+        width: 15%;
         aspect-ratio: 1 / 1;
         border-radius: 50%;
         background-color: #ff6600;
@@ -213,7 +209,7 @@ nav {
     z-index: 10;
     right: 0;
     border-radius: 15px;
-    display: flex;
+    display: none;
     box-shadow: 2px 2px 10px 5px #151515;
     flex-direction: column;
     background-color: #242424;
