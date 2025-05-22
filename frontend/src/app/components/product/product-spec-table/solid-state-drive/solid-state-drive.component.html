@@ -1,0 +1,30 @@
+<table>
+    <tr>
+        <td>Producent</td>
+        <td>{{ product.producer }}</td>
+    </tr>
+    <tr>
+        <td>Kod producenta</td>
+        <td>{{ product.producerCode }}</td>
+    </tr>
+    <tr>
+        <td>Format dysku</td>
+        <td>{{ product.driveFormat }}</td>
+    </tr>
+    <tr>
+        <td>Pojemność dysku</td>
+        <td>{{ getDriveStorage() }}</td>
+    </tr>
+    <tr>
+        <td>Interfejs dysku</td>
+        <td>{{ product.driveInterface }}</td>
+    </tr>
+    <tr>
+        <td>Prędkość odczytu</td>
+        <td>{{ product.readSpeed }} MB/s</td>
+    </tr>
+    <tr>
+        <td>Prędkość zapisu</td>
+        <td>{{ product.writeSpeed }} MB/s</td>
+    </tr>
+</table>

@@ -1,0 +1,19 @@
+<app-header></app-header>
+<div class="content">
+    <h1>{{ product.name }}</h1>
+    <div class="info" [ngClass]="{column: zoomImage}">
+        <div class="image-wrapper" [ngClass]="{zoom: zoomImage}" (click)="toggleZoom()">
+            <img [src]="getImgUrl()" alt="product-image">
+        </div>
+        <div class="price-wrapper">
+            <p>{{ product.price }} zł</p>
+            <button type="button" class="add-to-cart-btn" (click)="addToCart()">Dodaj do koszyka</button>
+        </div>
+    </div>
+    <h2>Opis produktu</h2>
+    <div class="description"></div>
+    <div class="specs">
+        <h2>Dane techniczne produktu</h2>
+        <app-product-spec-table [product]="product"></app-product-spec-table>
+    </div>
+</div>

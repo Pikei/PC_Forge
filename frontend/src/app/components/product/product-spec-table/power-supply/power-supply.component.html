@@ -1,0 +1,92 @@
+<table class="spec-table">
+    <tr>
+        <td>Producent</td>
+        <td>{{ product.producer }}</td>
+    </tr>
+    <tr>
+        <td>Kod producenta</td>
+        <td>{{ product.producerCode }}</td>
+    </tr>
+    <tr>
+        <td>Standard</td>
+        <td>{{ product.standard }}</td>
+    </tr>
+    <tr>
+        <td>Moc</td>
+        <td>{{ product.power }} W</td>
+    </tr>
+    <tr>
+        <td>Certyfikat sprawności</td>
+        <td>{{ product.efficiencyCertificate }}</td>
+    </tr>
+    <tr>
+        <td>Sprawność</td>
+        <td>{{ product.efficiency }}%</td>
+    </tr>
+    <tr>
+        <td>Zabezpieczenia</td>
+        <td>
+            <span *ngFor="let prot of product.protections">{{ prot }}<br></span>
+        </td>
+    </tr>
+    <tr>
+        <td>Rodzaj chłodzenia</td>
+        <td>{{ product.coolingType }}</td>
+    </tr>
+    <tr *ngIf="product.fanDiameter > 0">
+        <td>Średnica wentylatora</td>
+        <td>{{ product.fanDiameter }} mm</td>
+    </tr>
+    <tr>
+        <td>Modularne okablowanie</td>
+        <td>{{ product.modularCabling ? "Tak" : "Nie" }}</td>
+    </tr>
+    <tr>
+        <td>Podświetlenie</td>
+        <td>{{ product.lightning ? "Tak" : "Nie" }}</td>
+    </tr>
+    <tr>
+        <td>Liczba złącz ATX 24-pin (20+4)</td>
+        <td>{{ product.atx24 }}</td>
+    </tr>
+    <tr>
+        <td>Liczba złącz PCI-E 16-pin (12+4)</td>
+        <td>{{ product.pcie16 }}</td>
+    </tr>
+    <tr>
+        <td>Liczba złącz PCI-E 8-pin (6+2) lub PCI-E 8-pin</td>
+        <td>{{ product.pcie8 }}</td>
+    </tr>
+    <tr>
+        <td>Liczba złącz PCI-E 6-pin</td>
+        <td>{{ product.pcie6 }}</td>
+    </tr>
+    <tr>
+        <td>Liczba złącz CPU 8-pin (4+4) lub CPU 8-pin</td>
+        <td>{{ product.cpu8 }}</td>
+    </tr>
+    <tr>
+        <td>Liczba złącz CPU 4-pin</td>
+        <td>{{ product.cpu4 }}</td>
+    </tr>
+    <tr>
+        <td>Liczba złącz SATA</td>
+        <td>{{ product.sata }}</td>
+    </tr>
+    <tr>
+        <td>Liczba złącz Molex</td>
+        <td>{{ product.molex }}</td>
+    </tr>
+    <tr>
+        <td>Wysokość</td>
+        <td>{{ product.height }} cm</td>
+    </tr>
+    <tr>
+        <td>Szerokość</td>
+        <td>{{ product.width }} cm</td>
+    </tr>
+    <tr>
+        <td>Głębokość</td>
+        <td>{{ product.depth }} cm</td>
+    </tr>
+</table>

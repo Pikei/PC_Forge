@@ -1,0 +1,36 @@
+<table>
+    <tr>
+        <td>Producent</td>
+        <td>{{ product.producer }}</td>
+    </tr>
+    <tr>
+        <td>Kod producenta</td>
+        <td>{{ product.producerCode }}</td>
+    </tr>
+    <tr>
+        <td>Kompatybilność z gniazdami procesorów</td>
+        <td>
+            <span *ngFor="let socket of product.socket">{{ socket }}<br></span>
+        </td>
+    </tr>
+    <tr>
+        <td>Liczba wiatraków</td>
+        <td>{{ product.fans }}</td>
+    </tr>
+    <tr>
+        <td>Średnica wiatraków</td>
+        <td>{{ product.fanDiameter }} mm</td>
+    </tr>
+    <tr>
+        <td>Prędkość obrotowa wiatraków</td>
+        <td>{{ product.fanSpeed }} obr./min</td>
+    </tr>
+    <tr>
+        <td>Podświetlenie</td>
+        <td>{{ product.lightning ? "Tak" : "Nie" }}</td>
+    </tr>
+    <tr>
+        <td>Rozmiar średnicy</td>
+        <td>{{ product.coolerSize }} mm</td>
+    </tr>
+</table>

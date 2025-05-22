@@ -36,6 +36,12 @@ export class CartService {
     }
 
     addProduct(product: any) {
+        for (let i = 0; i < this.products.length; i++) {
+            if (this.products[i].productEan === product.productEan) {
+                this.products[i].productQuantity++;
+                return;
+            }
+        }
         this.products.push(product);
     }
 

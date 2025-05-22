@@ -1,0 +1,136 @@
+<table>
+    <tr>
+        <td>Producent</td>
+        <td>{{ product.producer }}</td>
+    </tr>
+    <tr>
+        <td>Kod producenta</td>
+        <td>{{ product.producerCode }}</td>
+    </tr>
+    <tr>
+        <td>Kompatybilne standardy płyt głównych</td>
+        <td>
+            <span *ngFor="let standard of product.supportedStandardNames">{{ standard }}<br></span>
+        </td>
+    </tr>
+    <tr>
+        <td>Kolor</td>
+        <td>{{ product.color }}</td>
+    </tr>
+    <tr>
+        <td>Podświetlenie</td>
+        <td>{{ product.lightning ? "Tak" : "Nie" }}</td>
+    </tr>
+    <tr>
+        <td>Typ obudowy</td>
+        <td>{{ product.caseType }}</td>
+    </tr>
+    <tr>
+        <td>Posiada okno</td>
+        <td>{{ product.hasWindow ? "Tak" : "Nie" }}</td>
+    </tr>
+    <tr>
+        <td>Wysokość</td>
+        <td>{{ product.height }} cm</td>
+    </tr>
+    <tr>
+        <td>Szerokość</td>
+        <td>{{ product.width }} cm</td>
+    </tr>
+    <tr>
+        <td>Głębokość</td>
+        <td>{{ product.depth }} cm</td>
+    </tr>
+    <tr>
+        <td>Waga</td>
+        <td>{{ product.weight }} kg</td>
+    </tr>
+    <tr>
+        <td>Wbudowany czytnik kart</td>
+        <td>{{ product.cardReader ? "Tak" : "Nie" }}</td>
+    </tr>
+    <tr>
+        <td>Złącze mikrofonowe</td>
+        <td>{{ product.microphoneConnector ? "Tak" : "Nie" }}</td>
+    </tr>
+    <tr>
+        <td>Złącze słuchawkowe/głośnikowe</td>
+        <td>{{ product.headphonesConnector ? "Tak" : "Nie" }}</td>
+    </tr>
+    <tr>
+        <td>Liczba wewnętrznych wnęk 3.5"</td>
+        <td>{{ product.internal35Bays }}</td>
+    </tr>
+    <tr>
+        <td>Liczba wewnętrznych wnęk 2.5"</td>
+        <td>{{ product.internal25Bays }}</td>
+    </tr>
+    <tr>
+        <td>Liczba zewnętrznych wnęk 3.5"</td>
+        <td>{{ product.external35Bays }}</td>
+    </tr>
+    <tr>
+        <td>Liczba zewnętrznych wnęk 5.25"</td>
+        <td>{{ product.external525Bays }}</td>
+    </tr>
+    <tr>
+        <td>Maksymalna długość karty graficznej</td>
+        <td>{{ product.maxGpuLength }} mm</td>
+    </tr>
+    <tr>
+        <td>Maksymalna wysokość układu chłodzenia</td>
+        <td>{{ product.maxCpuCoolerHeight }} mm</td>
+    </tr>
+    <tr>
+        <td>Liczba slotów rozszerzeń</td>
+        <td>{{ product.extensionSlots }}</td>
+    </tr>
+    <tr>
+        <td>Wentylatory na panelu przednim</td>
+        <td>{{ product.frontFans != "" ? product.frontFans : "Brak" }}</td>
+    </tr>
+    <tr>
+        <td>Wentylatory na panelu tylnym</td>
+        <td>{{ product.frontFans != "" ? product.frontFans : "Brak" }}</td>
+    </tr>
+    <tr>
+        <td>Wentylatory na panelu bocznym</td>
+        <td>{{ product.sideFans != "" ? product.sideFans : "Brak" }}</td>
+    </tr>
+    <tr>
+        <td>Wentylatory na panelu dolnym</td>
+        <td>{{ product.bottomFans != "" ? product.bottomFans : "Brak" }}</td>
+    </tr>
+    <tr>
+        <td>Wentylatory na panelu górnym</td>
+        <td>{{ product.topFans != "" ? product.topFans : "Brak" }}</td>
+    </tr>
+    <tr>
+        <td>Załączony zasilacz</td>
+        <td>{{ product.powerSupply ? "Tak" : "Nie" }}</td>
+    </tr>
+    <tr *ngIf="product.powerSupply">
+        <td>Moc zasilacza</td>
+        <td>{{ product.psPower }} W</td>
+    </tr>
+    <tr>
+        <td>Liczba portów USB 2.0</td>
+        <td>{{ product.usb20 }}</td>
+    </tr>
+    <tr>
+        <td>Liczba portów USB 3.0</td>
+        <td>{{ product.usb30 }}</td>
+    </tr>
+    <tr>
+        <td>Liczba portów USB 3.1</td>
+        <td>{{ product.usb31 }}</td>
+    </tr>
+    <tr>
+        <td>Liczba portów USB 3.1</td>
+        <td>{{ product.usb32 }}</td>
+    </tr>
+    <tr>
+        <td>Liczba portów USB-C</td>
+        <td>{{ product.usbC }}</td>
+    </tr>
+</table>

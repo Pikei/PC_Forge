@@ -26,3 +26,36 @@ body.full-height-header .content {
     background-color: #dadada;
     border-radius: 20px;
 }
+
+table {
+    border-collapse: collapse;
+}
+
+tr:nth-child(even) {
+    background-color: #353535;
+    color: #dadada;
+}
+
+tr:nth-child(even):hover {
+    background-color: #383838;
+    color: #dadada;
+}
+
+tr:nth-child(odd):hover {
+    background-color: #282828;
+    color: #dadada;
+}
+
+td {
+    padding: 10px 5%;
+    text-align: left;
+    font-size: 20px;
+}
+
+td:nth-child(even) {
+    text-align: right;
+}
+
+td:nth-child(odd) {
+    font-weight: bold;
+}

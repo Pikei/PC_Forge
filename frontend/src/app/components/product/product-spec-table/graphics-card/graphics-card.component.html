@@ -1,0 +1,94 @@
+<table>
+    <tr>
+        <td>Producent</td>
+        <td>{{ product.producer }}</td>
+    </tr>
+    <tr>
+        <td>Kod producenta</td>
+        <td>{{ product.producerCode }}</td>
+    </tr>
+    <tr>
+        <td>Producent chipsetu</td>
+        <td>{{ product.chipsetProducer }}</td>
+    </tr>
+    <tr>
+        <td>Chipset</td>
+        <td>{{ product.chipset }}</td>
+    </tr>
+    <tr>
+        <td>Częstotliwość taktowania rdzenia</td>
+        <td>{{ product.coreFrequency }} MHz</td>
+    </tr>
+    <tr>
+        <td>Maksymalna częstotliwość taktowania rdzenia</td>
+        <td>{{ product.maxCoreFrequency }} MHz</td>
+    </tr>
+    <tr>
+        <td>Rekomendowana moc Zasilacza</td>
+        <td>{{ product.recommendedPsPower }} W</td>
+    </tr>
+    <tr>
+        <td>Podświetlenie</td>
+        <td>{{ product.lightning ? "Tak" : "Nie" }}</td>
+    </tr>
+    <tr>
+        <td>Pamięć VRAM</td>
+        <td>{{ product.ram }} GB</td>
+    </tr>
+    <tr>
+        <td>Rodzaj pamięci VRAM</td>
+        <td>{{ product.ramType }}</td>
+    </tr>
+    <tr>
+        <td>Magistrala danych</td>
+        <td>{{ product.dataBus }} bit</td>
+    </tr>
+    <tr>
+        <td>Częstotliwość pamięci</td>
+        <td>{{ product.memoryFrequency }} MHz</td>
+    </tr>
+    <tr>
+        <td>Liczba wiatraków</td>
+        <td>{{ product.numberOfFans }}</td>
+    </tr>
+    <tr>
+        <td>Rodzaj chłodzenia</td>
+        <td>{{ product.coolingType }}</td>
+    </tr>
+    <tr>
+        <td>Liczba procesorów strumieniujących</td>
+        <td>{{ product.streamProcessors }}</td>
+    </tr>
+    <tr>
+        <td>Liczba jednostek ROP</td>
+        <td>{{ product.ropUnits }}</td>
+    </tr>
+    <tr>
+        <td>Liczba jednostek teksturujących</td>
+        <td>{{ product.texturingUnits }}</td>
+    </tr>
+    <tr>
+        <td>Liczba rdzeni RT</td>
+        <td>{{ product.rtCores }}</td>
+    </tr>
+    <tr>
+        <td>Liczba rdzeni Tensor</td>
+        <td>{{ product.tensorCores }}</td>
+    </tr>
+    <tr>
+        <td>DLSS</td>
+        <td>{{ product.dlss }}</td>
+    </tr>
+    <tr>
+        <td>Rodzaj złącza</td>
+        <td>{{ product.connector }}</td>
+    </tr>
+    <tr>
+        <td>Długość karty</td>
+        <td>{{ product.cardLength }} mm</td>
+    </tr>
+    <tr>
+        <td>Rozdzielczość generowanego obrazu</td>
+        <td>{{ product.resolution }}</td>
+    </tr>
+</table>

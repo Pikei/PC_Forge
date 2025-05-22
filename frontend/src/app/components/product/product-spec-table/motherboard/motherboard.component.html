@@ -1,0 +1,86 @@
+<table>
+    <tr>
+        <td>Producent</td>
+        <td>{{ product.producer }}</td>
+    </tr>
+    <tr>
+        <td>Kod producenta</td>
+        <td>{{ product.producerCode }}</td>
+    </tr>
+    <tr>
+        <td>Chipset płyty</td>
+        <td>{{ product.chipset }}</td>
+    </tr>
+    <tr>
+        <td>Standard płyty</td>
+        <td>{{ product.standard }}</td>
+    </tr>
+    <tr>
+        <td>Gniazdo procesora</td>
+        <td>socket {{ product.socket }}</td>
+    </tr>
+    <tr>
+        <td>Obsługiwany typ pamięci</td>
+        <td>{{ product.memoryStandard }}</td>
+    </tr>
+    <tr>
+        <td>Obsługiwane częstotliwości pamięci</td>
+        <td>
+            <span *ngFor="let freq of product.supportedMemoryFrequencies">{{ freq }}<br></span>
+        </td>
+    </tr>
+    <tr>
+        <td>Liczba slotów pamięci</td>
+        <td>{{ product.memorySlots }}</td>
+    </tr>
+    <tr>
+        <td>Maksymalna pojemność pamięci</td>
+        <td>{{ product.maxMemoryCapacity }} GB</td>
+    </tr>
+    <tr>
+        <td>Zintegrowana karta dźwiękowa</td>
+        <td>{{ product.integratedAudioCard }}</td>
+    </tr>
+    <tr>
+        <td>Kanały audio</td>
+        <td>{{ product.audioChannels }}</td>
+    </tr>
+    <tr>
+        <td>Zintegrowana karta sieciowa</td>
+        <td>{{ product.integratedNetworkCard }}</td>
+    </tr>
+    <tr>
+        <td>Bluetooth</td>
+        <td>{{ product.bluetooth ? "Tak" : "Nie" }}</td>
+    </tr>
+    <tr>
+        <td>Wi-Fi</td>
+        <td>{{ product.wifi ? "Tak" : "Nie" }}</td>
+    </tr>
+    <tr>
+        <td>Szerokość</td>
+        <td>{{ product.width }} mm</td>
+    </tr>
+    <tr>
+        <td>Głębokość</td>
+        <td>{{ product.depth }} mm</td>
+    </tr>
+    <tr>
+        <td>Sloty rozszerzeń</td>
+        <td>
+            <span *ngFor="let slot of product.expansionSlots">{{ slot }}<br></span>
+        </td>
+    </tr>
+    <tr>
+        <td>Interfejsy dyskowe</td>
+        <td>
+            <span *ngFor="let inter of product.driveInterfaces">{{ inter }}<br></span>
+        </td>
+    </tr>
+    <tr>
+        <td>Złącza zewnętrzne</td>
+        <td>
+            <span *ngFor="let conn of product.outsideConnectors">{{ conn }}<br></span>
+        </td>
+    </tr>
+</table>

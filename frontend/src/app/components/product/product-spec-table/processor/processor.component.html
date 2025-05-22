@@ -1,0 +1,62 @@
+<table>
+    <tr>
+        <td>Producent</td>
+        <td>{{ product.producer }}</td>
+    </tr>
+    <tr>
+        <td>Kod producenta</td>
+        <td>{{ product.producerCode }}</td>
+    </tr>
+    <tr>
+        <td>Linia</td>
+        <td>{{ product.line }}</td>
+    </tr>
+    <tr>
+        <td>Model</td>
+        <td>{{ product.model }}</td>
+    </tr>
+    <tr>
+        <td>Gniazdo procesora</td>
+        <td>Socket {{ product.socket }}</td>
+    </tr>
+    <tr>
+        <td>Liczba rdzeni</td>
+        <td>{{ product.cores }}</td>
+    </tr>
+    <tr>
+        <td>Liczba wątków</td>
+        <td>{{ product.threads }}</td>
+    </tr>
+    <tr>
+        <td>Odblokowany mnożnik</td>
+        <td>{{ product.unlocked ? "Tak" : "Nie" }}</td>
+    </tr>
+    <tr>
+        <td>Częstotliwość taktowania</td>
+        <td>{{ product.frequency }} GHz</td>
+    </tr>
+    <tr>
+        <td>Maksymalna częstotliwość taktowania</td>
+        <td>{{ product.maxFrequency }} GHz</td>
+    </tr>
+    <tr>
+        <td>Zintegrowany układ graficzny</td>
+        <td>{{ (product.integratedGraphicsUnit != null) ? product.integratedGraphicsUnit : "Brak" }}</td>
+    </tr>
+    <tr>
+        <td>TDP</td>
+        <td>{{ product.tdp }} W</td>
+    </tr>
+    <tr>
+        <td>Załączone chłodzenie</td>
+        <td>{{
+                product.coolerIncluded ? "Tak" : "N" +
+                    "ie"
+            }}
+        </td>
+    </tr>
+    <tr>
+        <td>Typ pakowania</td>
+        <td>{{ product.packaging }}</td>
+    </tr>
+</table>

@@ -80,6 +80,11 @@
             margin-bottom: 0;
         }
 
+        h5:hover {
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
         p {
             font-size: 11px;
         }
@@ -100,6 +105,10 @@
             max-width: 80%;
             max-height: 80%;
         }
+    }
+
+    .image-wrapper:hover {
+        cursor: pointer;
     }
 
     h4 {

@@ -73,4 +73,8 @@ export class OrderListComponent implements OnInit {
     getProductSummaryPrice(product: any): number {
         return Math.round(product.productPrice * product.productQuantity * 100) / 100;
     }
+
+    goToProduct(productEan: any) {
+        window.location.href = "/product?id=" + productEan;
+    }
 }

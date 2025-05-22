@@ -1,9 +1,9 @@
 <div class="product-in-cart">
-    <div class="product-image">
+    <div class="product-image" (click)="goToProduct()">
         <img [src]="imgSrc" [alt]="product.productName">
     </div>
     <div class="product-info">
-        <h4>{{ product.productName }}</h4>
+        <h4 (click)="goToProduct()">{{ product.productName }}</h4>
         <div class="quantity-counter">
             <button type="button" class="btn-remove" (click)="removeFromCart()">-</button>
             <p>liczba sztuk: {{ product.productQuantity }}</p>

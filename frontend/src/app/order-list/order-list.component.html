@@ -20,11 +20,11 @@
                     @for (product of order.orderedProducts; track product.productEan) {
                         <div class="item">
                             <div class="item-data">
-                                <div class="image-wrapper">
+                                <div class="image-wrapper" (click)="goToProduct(product.productEan)">
                                     <img [src]="getImgUrl(product)" alt="product-image">
                                 </div>
                                 <div class="item-info">
-                                    <h5>{{ product.productName }}</h5>
+                                    <h5 (click)="goToProduct(product.productEan)">{{ product.productName }}</h5>
                                     <p>Liczba sztuk: {{ product.productQuantity }}</p>
                                 </div>
                             </div>

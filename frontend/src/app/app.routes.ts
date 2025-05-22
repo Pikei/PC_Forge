@@ -6,6 +6,8 @@ import {ShoppingCartComponent} from './shopping-cart/shopping-cart.component';
 import {OrderComponent} from './order/order.component';
 import {OrderListComponent} from './order-list/order-list.component';
 import {PaymentComponent} from './payment/payment.component';
+import {ProductPageComponent} from './product-page/product-page.component';
+import {ErrorPageComponent} from './error-page/error-page.component';
 
 export const routes: Routes = [
     {path: '', component: HomeComponent},
@@ -16,4 +18,7 @@ export const routes: Routes = [
     {path: 'shipping', component: OrderComponent},
     {path: 'orders', component: OrderListComponent},
     {path: 'payment/success', component: PaymentComponent},
+    {path: 'product', component: ProductPageComponent},
+    {path: 'not_found', component: ErrorPageComponent},
+
 ];

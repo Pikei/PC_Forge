@@ -1,0 +1,32 @@
+@switch (product.category) {
+    @case ("CPU") {
+        <app-processor class="product-spec" [product]="product"></app-processor>
+    }
+    @case ("MB") {
+        <app-motherboard class="product-spec" [product]="product"></app-motherboard>
+    }
+    @case ("RAM") {
+        <app-memory class="product-spec" [product]="product"></app-memory>
+    }
+    @case ("CASE") {
+        <app-pc-case class="product-spec" [product]="product"></app-pc-case>
+    }
+    @case ("AIR_COOLER") {
+        <app-air-cooler class="product-spec" [product]="product"></app-air-cooler>
+    }
+    @case ("LIQUID_COOLER") {
+        <app-liquid-cooler class="product-spec" [product]="product"></app-liquid-cooler>
+    }
+    @case ("GPU") {
+        <app-graphics-card class="product-spec" [product]="product"></app-graphics-card>
+    }
+    @case ("SSD") {
+        <app-solid-state-drive class="product-spec" [product]="product"></app-solid-state-drive>
+    }
+    @case ("HDD") {
+        <app-hard-disk-drive class="product-spec" [product]="product"></app-hard-disk-drive>
+    }
+    @case ("PS") {
+        <app-power-supply class="product-spec" [product]="product"></app-power-supply>
+    }
+}

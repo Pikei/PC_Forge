@@ -55,4 +55,8 @@ export class ShoppingCartProductComponent implements OnInit {
     totalProductPrice(): number {
         return Math.round(this.product.productPrice * this.product.productQuantity * 100) / 100;
     }
+
+    goToProduct() {
+        window.location.href = "/product?id=" + this.product.productEan;
+    }
 }
