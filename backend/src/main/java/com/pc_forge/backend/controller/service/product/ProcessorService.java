@@ -55,6 +55,7 @@ public final class ProcessorService extends AbstractProductService<Processor> {
         }
         filterByPrice(filter.getPriceMinimum(), filter.getPriceMaximum(), ProductCategoryCode.PROCESSOR);
         filterByProducers(ProductCategoryCode.PROCESSOR, filter.getSelectedProducers());
+        filterByName(ProductCategoryCode.PROCESSOR, filter.getName());
         filterByListParam(((ProcessorFilter) filter).getSelectedSockets(), processorRepository::findBySocket_SocketName);
         filterByListParam(((ProcessorFilter) filter).getSelectedLines(), processorRepository::findByLine);
         filterByListParam(((ProcessorFilter) filter).getSelectedCores(), processorRepository::findByCores);

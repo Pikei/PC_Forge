@@ -43,17 +43,17 @@ public class UrlPath {
     /**
      * Ścieżka specyficzna dla kart graficznych
      */
-    public static final String GRAPHICS_CARD = "/graphics-card";
+    public static final String GRAPHICS_CARD = "/graphics_card";
 
     /**
      * Ścieżka specyficzna dla zasilaczy
      */
-    public static final String POWER_SUPPLY = "/power-supply";
+    public static final String POWER_SUPPLY = "/power_supply";
 
     /**
      * Ścieżka specyficzna dla obudów komputerowych
      */
-    public static final String CASE = "/pc-case";
+    public static final String CASE = "/pc_case";
 
     /**
      * Ścieżka specyficzna dla dysków SSD
@@ -68,12 +68,12 @@ public class UrlPath {
     /**
      * Ścieżka specyficzna dla układów chłodzenia powietrzem
      */
-    public static final String AIR_COOLER = "/air-cooler";
+    public static final String AIR_COOLER = "/air_cooler";
 
     /**
      * Ścieżka specyficzna dla układów chłodzenia cieczą
      */
-    public static final String LIQUID_COOLER = "/liquid-cooler";
+    public static final String LIQUID_COOLER = "/liquid_cooler";
 
     /**
      * Ścieżka do logowania użytkownika
@@ -98,7 +98,7 @@ public class UrlPath {
     /**
      * Ścieżka do usuwania konta użytkownika
      */
-    public static final String DELETE_ACCOUNT = "/delete-account";
+    public static final String DELETE_ACCOUNT = "/delete_account";
 
     /**
      * Ścieżka do inicjalizacji procesu resetowania hasła
@@ -128,7 +128,7 @@ public class UrlPath {
     /**
      * Ścieżka do dodawania produktów z konfiguracji do koszyka.
      */
-    public static final String ADD_TO_CART = "/add-to-cart";
+    public static final String ADD_TO_CART = "/add_to_cart";
 
     /**
      * Ścieżka do usuwania elementu (np. produktu z koszyka, konfiguracji).

@@ -21,23 +21,6 @@ public interface CommonProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByNameContainsIgnoreCase(String name);
 
     /**
-     * Kwerenda zwracająca listę produktów zawierających w nazwie wskazane słowo, będących w danej kategorii.
-     *
-     * @param name     Ciąg znaków, do którego dopasowywana jest nazwa produktu.
-     * @param category Kod kategorii produktu
-     * @return Lista produktów zawierających w nazwie podany ciąg znaków.
-     */
-    List<Product> findByNameContainsIgnoreCaseAndCategory(String name, String category);
-
-    /**
-     * Kwerenda zwracająca listę dostępnych kategorii produktów i liczbę produktów do nich należących.
-     *
-     * @return Lista zawierająca dostępne kategorie i liczby produktów
-     */
-    @Query("select p.category, count(*) from Product p group by p.category")
-    List<Object[]> getCategoryFilter();
-
-    /**
      * Kwerenda zwracająca listę dostępnych kategorii produktów i liczbę produktów do nich należących.
      * Używane podczas wyszukiwania produktów po nazwie w danej kategorii.
      *

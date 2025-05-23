@@ -22,6 +22,15 @@ public interface ProductRepository<T extends Product> extends JpaRepository<T, L
     List<T> findByCategory(String category);
 
     /**
+     * Kwerenda znajdująca produkty po ich nazwie i kategoriach
+     *
+     * @param category Kod kategorii produktu
+     * @param name     Nazwa produktu
+     * @return Lista obiektów klas dziedziczących z {@link Product}
+     */
+    List<T> findByNameContainsIgnoreCaseAndCategory(String name, String category);
+
+    /**
      * Kwerenda znajdująca produkty po ich producentach i kategoriach
      *
      * @param category Kod kategorii produktu

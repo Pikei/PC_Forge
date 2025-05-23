@@ -51,6 +51,7 @@ public final class AirCoolerService extends AbstractProductService<AirCooler> {
             return applyFilters();
         }
         filterByPrice(filter.getPriceMinimum(), filter.getPriceMaximum(), ProductCategoryCode.AIR_COOLER);
+        filterByName(ProductCategoryCode.AIR_COOLER, filter.getName());
         filterByProducers(ProductCategoryCode.AIR_COOLER, filter.getSelectedProducers());
         filterByListParam(((AirCoolerFilter) filter).getSelectedSockets(), airCoolerRepository::findBySocket);
         filterByListParam(((AirCoolerFilter) filter).getSelectedFans(), airCoolerRepository::findByFans);

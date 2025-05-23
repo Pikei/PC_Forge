@@ -53,20 +53,16 @@ public class CommonProductController {
     }
 
     /**
-     * Wyszukuje produkty po nazwie, z opcjonalnym filtrowaniem po kategorii.
+     * Wyszukuje produkty po nazwie.
      *
      * @param name     Nazwa produktu do wyszukania.
-     * @param category Kod kategorii produktu określony w {@link com.pc_forge.backend.controller.api.constants.ProductCategoryCode}.
-     *                 Jest to parametr opcjonalny. Jego brak spowoduje wyszukanie produktów zawierających w nazwie podany ciąg znaków
-     *                 spośród wszystkich kategorii. Podanie kodu kategorii zawęzi obszar poszukiwań.
      * @return Lista {@link ProductResponse}, czyli DTO produktów zawierających uproszczone dane, tworzone przez {@link ResponseBuilder}
      */
     @GetMapping(UrlPath.PRODUCT + UrlPath.SEARCH + "/{name}")
     public ResponseEntity<List<ProductResponse>> getProductsByName(
-            @PathVariable String name,
-            @RequestParam(value = RequestParams.PRODUCT_CATEGORY, required = false) String category
+            @PathVariable String name
     ) {
-        List<Product> products = productService.getProductsByName(name, category);
+        List<Product> products = productService.getProductsByName(name);
         return ResponseBuilder.generateProductList(products);
     }
 }

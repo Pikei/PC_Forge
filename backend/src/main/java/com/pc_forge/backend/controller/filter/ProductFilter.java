@@ -18,6 +18,11 @@ import java.util.Map;
 public abstract class ProductFilter {
 
     /**
+     * Nazwa produktu
+     */
+    private String name;
+
+    /**
      * Minimalna cena produktu
      */
     private Double priceMinimum;
@@ -68,6 +73,7 @@ public abstract class ProductFilter {
      */
     protected Boolean checkCommonFilterFieldsIfEmpty() {
         boolean result = priceMinimum == null && priceMaximum == null;
+        result = result && (name == null || name.isEmpty());
         result = result && (selectedProducers == null || selectedProducers.isEmpty());
         return result;
     }
@@ -88,6 +94,9 @@ public abstract class ProductFilter {
      */
     protected void setCommonFilters() {
         splitJoinedParams();
+        if (requestParameters.containsKey(RequestParams.NAME)) {
+            setName(requestParameters.get(RequestParams.NAME)[0]);
+        }
         setPriceMinimum(getDoubleFromRequestParam(RequestParams.PRICE_MINIMUM));
         setPriceMaximum(getDoubleFromRequestParam(RequestParams.PRICE_MAXIMUM));
         setSelectedProducers(getStringListFromRequestParam(RequestParams.PRODUCER));

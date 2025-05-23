@@ -8,6 +8,11 @@ public class RequestParams {
     /**
      * Parametr określający kategorię produktu
      */
+    public static final String NAME = "name";
+
+    /**
+     * Parametr określający kategorię produktu
+     */
     public static final String PRODUCT_CATEGORY = "category";
 
     /**

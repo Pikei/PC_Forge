@@ -49,6 +49,7 @@ public final class HddService extends AbstractProductService<HardDiskDrive> {
             return applyFilters();
         }
         filterByPrice(filter.getPriceMinimum(), filter.getPriceMaximum(), ProductCategoryCode.HDD);
+        filterByName(ProductCategoryCode.HDD, filter.getName());
         filterByProducers(ProductCategoryCode.HDD, filter.getSelectedProducers());
         filterByListParam(((HddFilter) filter).getSelectedStorages(), hddRepository::findByStorage);
         filterByListParam(((HddFilter) filter).getSelectedFormats(), hddRepository::findByDriveFormat);

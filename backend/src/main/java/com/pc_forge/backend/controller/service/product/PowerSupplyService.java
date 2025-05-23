@@ -51,6 +51,7 @@ public final class PowerSupplyService extends AbstractProductService<PowerSupply
         }
         filterByPrice(filter.getPriceMinimum(), filter.getPriceMaximum(), ProductCategoryCode.POWER_SUPPLY);
         filterByProducers(ProductCategoryCode.POWER_SUPPLY, filter.getSelectedProducers());
+        filterByName(ProductCategoryCode.POWER_SUPPLY, filter.getName());
         filterByListParam(((PowerSupplyFilter) filter).getSelectedPowers(), powerSupplyRepository::findByPower);
         filterByListParam(((PowerSupplyFilter) filter).getSelectedCertificates(), powerSupplyRepository::findByEfficiencyCertificate);
         filterByListParam(((PowerSupplyFilter) filter).getSelectedEfficiencies(), powerSupplyRepository::findByEfficiency);

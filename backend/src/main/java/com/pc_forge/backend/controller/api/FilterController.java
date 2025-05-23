@@ -100,16 +100,6 @@ public class FilterController {
     }
 
     /**
-     * Kontroler zwracający, w jakich kategoriach można filtrować produkty podczas wyszukiwania
-     *
-     * @return Odpowiedź zawierająca listę składającą się z dostępnych kategorii i liczbie elementów w niej zawartej
-     */
-    @GetMapping(UrlPath.SEARCH)
-    public ResponseEntity<List<Object[]>> getProductsByCategoryFilter() {
-        return ResponseEntity.ok(productService.getSearchFilter());
-    }
-
-    /**
      * Kontroler zwracający, w jakich kategoriach można filtrować produkty podczas wyszukiwania.
      * Dynamicznie zmienia wartość w zależności od przekazanej w adresie URL nazwy
      *

@@ -50,6 +50,7 @@ public final class MemoryService extends AbstractProductService<Memory> {
             return applyFilters();
         }
         filterByPrice(filter.getPriceMinimum(), filter.getPriceMaximum(), ProductCategoryCode.RAM);
+        filterByName(ProductCategoryCode.RAM, filter.getName());
         filterByProducers(ProductCategoryCode.RAM, filter.getSelectedProducers());
         filterByListParam(((MemoryFilter) filter).getSelectedTypes(), memoryRepository::findByMemoryType);
         filterByListParam(((MemoryFilter) filter).getSelectedCapacities(), memoryRepository::findByTotalCapacity);

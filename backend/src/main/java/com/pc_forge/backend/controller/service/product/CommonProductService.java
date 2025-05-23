@@ -39,31 +39,19 @@ public class CommonProductService {
     }
 
     /**
-     * Pobiera listę produktów zawierających w nazwie wskazane słowo. Jeśli przekazana została kategoria,
-     * zakres poszukiwań produktów jest zawężany do wskazanej kategorii produktu.
+     * Pobiera listę produktów zawierających w nazwie wskazane słowo.
      *
      * @param name     słowo kluczowe dopasowywane do nazwy produktu
-     * @param category nazwa kategorii zawężająca obszar poszukiwań
      * @return lista produktów zawierających w nazwie wskazane słowo
      */
-    public List<Product> getProductsByName(String name, String category) {
-        if (category == null || category.isEmpty()) {
-            return productRepository.findByNameContainsIgnoreCase(name);
-        }
-        return productRepository.findByNameContainsIgnoreCaseAndCategory(name, category);
-    }
-
-    /**
-     * Pobiera listę możliwych filtrów podczas wyszukiwania produktów (listę kategorii).
-     * @return lista możliwych filtrów podczas wyszukiwania produktów
-     */
-    public List<Object[]> getSearchFilter() {
-        return productRepository.getCategoryFilter();
+    public List<Product> getProductsByName(String name) {
+        return productRepository.findByNameContainsIgnoreCase(name);
     }
 
     /**
      * Pobiera listę możliwych filtrów podczas wyszukiwania produktów (listę kategorii), które spełniają kryterium
      * posiadania w nazwie wskazanego słowa.
+     *
      * @return lista możliwych filtrów podczas wyszukiwania produktów
      */
     public List<Object[]> getSearchByNameFilter(String name) {

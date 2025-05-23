@@ -106,6 +106,10 @@ public abstract class AbstractProductService<T extends Product> {
         }
     }
 
+    protected void filterByName(String category, String name) {
+        filteredProducts.add(productRepository.findByNameContainsIgnoreCaseAndCategory(name, category));
+    }
+
     /**
      * Metoda filtruje produkty po cenie, pobierając wartości pomiędzy przekazanym minimum a maksimum.
      *
@@ -128,6 +132,7 @@ public abstract class AbstractProductService<T extends Product> {
         filteredProducts.add(productRepository.findByPriceBetweenAndCategory(minPrice, maxPrice, category));
     }
 
+
     /**
      * Metoda aplikująca filtry. Spłaszcza {@link #filteredProducts} do jednowymiarowej listy produktów
      * wydobywając część wspólną spośród wszystkich list zagnieżdżonych.
@@ -135,7 +140,7 @@ public abstract class AbstractProductService<T extends Product> {
      * @return odfiltrowana lista produktów
      */
     protected List<T> applyFilters() {
-        return filteredProducts.stream()
+        var filtered = filteredProducts.stream()
                 .map(HashSet::new)
                 .reduce((set1, set2) -> {
                     set1.retainAll(set2);
@@ -143,6 +148,9 @@ public abstract class AbstractProductService<T extends Product> {
                 })
                 .map(ArrayList::new)
                 .orElseGet(ArrayList::new);
+
+        filtered.sort(Comparator.comparing(Product::getId));
+        return filtered;
     }
 
     /**

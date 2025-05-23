@@ -52,6 +52,7 @@ public final class MotherboardService extends AbstractProductService<Motherboard
         }
         filterByPrice(filter.getPriceMinimum(), filter.getPriceMaximum(), ProductCategoryCode.MOTHERBOARD);
         filterByProducers(ProductCategoryCode.MOTHERBOARD, filter.getSelectedProducers());
+        filterByName(ProductCategoryCode.MOTHERBOARD, filter.getName());
         filterByListParam(((MotherboardFilter) filter).getSelectedSockets(), motherboardRepository::findBySocket_SocketName);
         filterByListParam(((MotherboardFilter) filter).getSelectedStandards(), motherboardRepository::findByStandard_StandardName);
         filterByListParam(((MotherboardFilter) filter).getSelectedChipsets(), motherboardRepository::findByChipset);

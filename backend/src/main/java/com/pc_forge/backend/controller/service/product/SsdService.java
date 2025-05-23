@@ -52,6 +52,7 @@ public final class SsdService extends AbstractProductService<SolidStateDrive> {
         }
         filterByPrice(filter.getPriceMinimum(), filter.getPriceMaximum(), ProductCategoryCode.SSD);
         filterByProducers(ProductCategoryCode.SSD, filter.getSelectedProducers());
+        filterByName(ProductCategoryCode.SSD, filter.getName());
         filterByListParam(((SsdFilter) filter).getSelectedStorages(), ssdRepository::findByStorage);
         filterByListParam(((SsdFilter) filter).getSelectedFormats(), ssdRepository::findByDriveFormat);
         filterByListParam(((SsdFilter) filter).getSelectedInterfaces(), ssdRepository::findByDriveInterface);

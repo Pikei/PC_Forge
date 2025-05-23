@@ -50,6 +50,7 @@ public final class LiquidCoolerService extends AbstractProductService<LiquidCool
             return applyFilters();
         }
         filterByPrice(filter.getPriceMinimum(), filter.getPriceMaximum(), ProductCategoryCode.LIQUID_COOLER);
+        filterByName(ProductCategoryCode.LIQUID_COOLER, filter.getName());
         filterByProducers(ProductCategoryCode.LIQUID_COOLER, filter.getSelectedProducers());
         filterByListParam(((LiquidCoolerFilter) filter).getSelectedSockets(), liquidCoolerRepository::findBySocket);
         filterByListParam(((LiquidCoolerFilter) filter).getSelectedFans(), liquidCoolerRepository::findByFans);

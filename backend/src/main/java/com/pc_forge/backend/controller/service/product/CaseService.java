@@ -50,7 +50,9 @@ public final class CaseService extends AbstractProductService<Case> {
         if (filter.empty()) {
             return applyFilters();
         }
+
         filterByPrice(filter.getPriceMinimum(), filter.getPriceMaximum(), ProductCategoryCode.CASE);
+        filterByName(ProductCategoryCode.CASE, filter.getName());
         filterByProducers(ProductCategoryCode.CASE, filter.getSelectedProducers());
         filterByListParam(((CaseFilter) filter).getSelectedColors(), caseRepository::findByColor);
         filterByListParam(((CaseFilter) filter).getSelectedCaseTypes(), caseRepository::findByCaseType);

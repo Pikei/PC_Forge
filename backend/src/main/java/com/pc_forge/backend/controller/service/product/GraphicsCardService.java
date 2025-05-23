@@ -50,6 +50,7 @@ public final class GraphicsCardService extends AbstractProductService<GraphicsCa
             return applyFilters();
         }
         filterByPrice(filter.getPriceMinimum(), filter.getPriceMaximum(), ProductCategoryCode.GRAPHICS_CARD);
+        filterByName(ProductCategoryCode.GRAPHICS_CARD, filter.getName());
         filterByProducers(ProductCategoryCode.GRAPHICS_CARD, filter.getSelectedProducers());
         filterByListParam(((GpuFilter) filter).getSelectedChipsetProducers(), graphicsCardRepository::findByChipsetProducer);
         filterByListParam(((GpuFilter) filter).getSelectedChipsets(), graphicsCardRepository::findByChipset);
