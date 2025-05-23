@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {NgStyle} from '@angular/common';
-import {TokenService} from '../../token.service';
+import {TokenService} from '../../service/token.service';
 import {RequestSender} from '../../request.sender';
 
 @Component({

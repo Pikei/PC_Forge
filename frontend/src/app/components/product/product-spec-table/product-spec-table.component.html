@@ -1,32 +1,32 @@
 @switch (product.category) {
     @case ("CPU") {
-        <app-processor class="product-spec" [product]="product"></app-processor>
+        <app-spec-table-cpu class="product-spec" [product]="product"></app-spec-table-cpu>
     }
     @case ("MB") {
-        <app-motherboard class="product-spec" [product]="product"></app-motherboard>
+        <app-spec-table-mb class="product-spec" [product]="product"></app-spec-table-mb>
     }
     @case ("RAM") {
-        <app-memory class="product-spec" [product]="product"></app-memory>
+        <app-spec-table-ram class="product-spec" [product]="product"></app-spec-table-ram>
     }
     @case ("CASE") {
-        <app-pc-case class="product-spec" [product]="product"></app-pc-case>
+        <app-spec-table-case class="product-spec" [product]="product"></app-spec-table-case>
     }
     @case ("AIR_COOLER") {
-        <app-air-cooler class="product-spec" [product]="product"></app-air-cooler>
+        <app-spec-table-air-cooler class="product-spec" [product]="product"></app-spec-table-air-cooler>
     }
     @case ("LIQUID_COOLER") {
-        <app-liquid-cooler class="product-spec" [product]="product"></app-liquid-cooler>
+        <app-spec-table-liquid-cooler class="product-spec" [product]="product"></app-spec-table-liquid-cooler>
     }
     @case ("GPU") {
-        <app-graphics-card class="product-spec" [product]="product"></app-graphics-card>
+        <app-spec-table-gpu class="product-spec" [product]="product"></app-spec-table-gpu>
     }
     @case ("SSD") {
-        <app-solid-state-drive class="product-spec" [product]="product"></app-solid-state-drive>
+        <app-spec-table-ssd class="product-spec" [product]="product"></app-spec-table-ssd>
     }
     @case ("HDD") {
-        <app-hard-disk-drive class="product-spec" [product]="product"></app-hard-disk-drive>
+        <app-spec-table-hdd class="product-spec" [product]="product"></app-spec-table-hdd>
     }
     @case ("PS") {
-        <app-power-supply class="product-spec" [product]="product"></app-power-supply>
+        <app-spec-table-power-supply class="product-spec" [product]="product"></app-spec-table-power-supply>
     }
 }

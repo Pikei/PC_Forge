@@ -1,0 +1,102 @@
+<div class="product">
+    <div class="image-wrapper" (click)="goToProductUrl()">
+        <img [src]="getImgUrl()" [alt]="product.name">
+    </div>
+    <div class="product-info" (click)="goToProductUrl()">
+        <h3>{{ product.name }}</h3>
+        <div class="product-simplified-spec">
+            @switch (product.category) {
+                @case ("CPU") {
+                    <p>Producent: {{ product.producer }}</p>
+                    <p>Socket: {{ product.socket }}</p>
+                    <p>Liczba rdzeni: {{ product.cores }}</p>
+                    <p>Liczba wątków: {{ product.threads }}</p>
+                    <p>Odblokowany mnożnik: {{ product.unlocked ? "Tak" : "Nie" }}</p>
+                    <p>Częstotliwość taktowania: {{ product.frequency }} GHz</p>
+                    <p>Zintegrowany układ
+                        graficzny: {{ (product.integratedGraphicsUnit != null) ? product.integratedGraphicsUnit : "Brak" }}</p>
+                    <p>Załączone chłodzenie: {{ product.coolerIncluded ? "Tak" : "Nie" }}</p>
+                }
+                @case ("GPU") {
+                    <p>Producent: {{ product.producer }}</p>
+                    <p>Producent chipsetu: {{ product.chipsetProducer }}</p>
+                    <p>Chipset: {{ product.chipset }}</p>
+                    <p>Długość karty: {{ product.cardLength }} mm</p>
+                    <p>Pamięć VRAM: {{ product.ram }} GB</p>
+
+                }
+                @case ("RAM") {
+                    <p>Producent: {{ product.producer }}</p>
+                    <p>Typ pamięci: {{ product.memoryType }}</p>
+                    <p>Pojemność łączna: {{ product.totalCapacity }} GB</p>
+                    <p>Opóźnienie zegara: {{ product.latency }}</p>
+                    <p>Częstotliwość taktowania: {{ product.frequency }} MHz</p>
+                    <p>Liczba modułów: {{ product.modules }}</p>
+                    <p>Podświetlenie: {{ product.lighting ? "Tak" : "Nie" }}</p>
+                }
+                @case ("MB") {
+                    <p>Producent: {{ product.producer }}</p>
+                    <p>Chipset: {{ product.chipset }}</p>
+                    <p>Obsługiwany typ pamięci RAM: {{ product.memoryStandard }}</p>
+                    <p>Standard płyty: {{ product.standard }}</p>
+                    <p>Liczba slotów pamięci RAM: {{ product.memorySlots }}</p>
+                    <p>Moduł Bluetooth: {{ product.bluetooth ? "Tak" : "Nie" }}</p>
+                    <p>:Moduł Wi-Fi: {{ product.wifi ? "Tak" : "Nie" }}</p>
+
+                }
+                @case ("PS") {
+                    <p>Producent: {{ product.producer }}</p>
+                    <p>Standard zasilacza: {{ product.standard }}</p>
+                    <p>Moc: {{ product.power }} W</p>
+                    <p>Certyfikat sprawności: {{ product.efficiencyCertificate }}</p>
+                    <p>Sprawność: {{ product.efficiency }}%</p>
+                    <p>Modularne okablowanie: {{ product.modularCabling ? "Tak" : "Nie" }}</p>
+                }
+                @case ("SSD") {
+                    <p>Producent: {{ product.producer }}</p>
+                    <p>Format dysku: {{ product.driveFormat }}</p>
+                    <p *ngIf="product.storage < 1024">Pojemność: {{ product.storage }} GB</p>
+                    <p *ngIf="product.storage >= 1024">Pojemność: {{ product.storage }} TB</p>
+                    <p>Interfejs dysku: {{ product.driveInterface }}</p>
+                    <p>Prędkość odczytu: {{ product.readSpeed }} MB/s</p>
+                    <p>Prędkość zapisu: {{ product.writeSpeed }} MB/s</p>
+                }
+                @case ("HDD") {
+                    <p>Producent: {{ product.producer }}</p>
+                    <p>Format dysku: {{ product.driveFormat }}</p>
+                    <p *ngIf="product.storage < 1024">Pojemność: {{ product.storage }} GB</p>
+                    <p *ngIf="product.storage >= 1024">Pojemność: {{ product.storage }} TB</p>
+                    <p>Interfejs dysku: {{ product.driveInterface }}</p>
+                    <p>Prędkość obrotowa: {{ product.rotationalSpeed }} obr./min</p>
+                }
+                @case ("AIR_COOLER") {
+                    <p>Producent: {{ product.producer }}</p>
+                    <p>Liczba wiatraków: {{ product.numberOfFans }}</p>
+                    <p>Średnica wiatraków: {{ product.fanDiameter }} mm</p>
+                    <p>Podświetlenie: {{ product.lightning ? "Tak" : "Nie" }}</p>
+                    <p>Poziom hałasu: {{ product.noiseLevel }} dBA</p>
+                }
+                @case ("LIQUID_COOLER") {
+                    <p>Producent: {{ product.producer }}</p>
+                    <p>Liczba wiatraków: {{ product.numberOfFans }}</p>
+                    <p>Średnica wiatraków: {{ product.fanDiameter }} mm</p>
+                    <p>Podświetlenie: {{ product.lightning ? "Tak" : "Nie" }}</p>
+                    <p>Poziom hałasu: {{ product.noiseLevel }} dBA</p>
+                }
+                @case ("CASE") {
+                    <p>Producent: {{ product.producer }}</p>
+                    <p>Typ obudowy: {{ product.caseType }}</p>
+                    <p>Kolor: {{ product.color }}</p>
+                    <p>Posiada okno: {{ product.hasWindow ? "Tak" : "Nie" }}</p>
+                    <p>Podświetlenie: {{ product.lightning ? "Tak" : "Nie" }}</p>
+                }
+
+            }
+        </div>
+    </div>
+    <div class="product-price">
+        <p>{{ product.price.toFixed(2) }} zł</p>
+        <button type="button" class="add-to-cart-btn" (click)="addToCart()">Dodaj do koszyka</button>
+    </div>
+</div>
+

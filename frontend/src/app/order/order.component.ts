@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {HeaderComponent} from '../components/header/header.component';
-import {CartService} from '../shopping-cart/shopping-cart.service';
+import {CartService} from '../service/shopping-cart.service';
 import {RequestSender} from '../request.sender';
 
 @Component({
@@ -35,6 +35,6 @@ export class OrderComponent {
     }
 
     getProductSummaryPrice(cartItem: any) {
-        return Math.round(cartItem.productPrice * cartItem.productQuantity * 100) / 100;
+        return (cartItem.productPrice * cartItem.productQuantity).toFixed(2);
     }
 }

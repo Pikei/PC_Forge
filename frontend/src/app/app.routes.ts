@@ -8,6 +8,8 @@ import {OrderListComponent} from './order-list/order-list.component';
 import {PaymentComponent} from './payment/payment.component';
 import {ProductPageComponent} from './product-page/product-page.component';
 import {ErrorPageComponent} from './error-page/error-page.component';
+import {CategoryPageComponent} from './category-page/category-page.component';
+import {ProductsInCategoryComponent} from './products-in-category/products-in-category.component';
 
 export const routes: Routes = [
     {path: '', component: HomeComponent},
@@ -19,6 +21,8 @@ export const routes: Routes = [
     {path: 'orders', component: OrderListComponent},
     {path: 'payment/success', component: PaymentComponent},
     {path: 'product', component: ProductPageComponent},
-    {path: 'not_found', component: ErrorPageComponent},
-
+    {path: 'category', component: CategoryPageComponent},
+    {path: 'category/:category', component: ProductsInCategoryComponent},
+    {path: 'page_not_found', component: ErrorPageComponent},
+    {path: '**', component: ErrorPageComponent},
 ];

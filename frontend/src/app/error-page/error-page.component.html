@@ -1,7 +1,6 @@
-<div class="content">
-    <h1>404</h1>
+<div class="content" [ngStyle]="{'background-image': 'url(' + background + ')' }">
     <div class="info">
-        <p>Wygląda na to, że szukasz nie tam gdzie trzeba</p>
-        <a href="/home">Powróć na stronę główną</a>
+        <p>My również nie znaleźliśmy tego, czego szukasz</p>
+        <button type="button" class="go-to-home-btn" (click)="goToHome()">Powróć na stronę główną</button>
     </div>
 </div>

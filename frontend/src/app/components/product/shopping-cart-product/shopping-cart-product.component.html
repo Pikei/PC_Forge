@@ -5,9 +5,13 @@
     <div class="product-info">
         <h4 (click)="goToProduct()">{{ product.productName }}</h4>
         <div class="quantity-counter">
-            <button type="button" class="btn-remove" (click)="removeFromCart()">-</button>
+            <button type="button" class="btn-remove" (click)="removeFromCart()">
+                <p id="minus">-</p>
+            </button>
             <p>liczba sztuk: {{ product.productQuantity }}</p>
-            <button type="button" class="btn-add" (click)="addToCart()">+</button>
+            <button type="button" class="btn-add" (click)="addToCart()">
+                <p id="plus">+</p>
+            </button>
         </div>
 
     </div>

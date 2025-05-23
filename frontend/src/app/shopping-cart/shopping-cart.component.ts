@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {HeaderComponent} from '../components/header/header.component';
 import {NgIf} from '@angular/common';
-import {CartService} from './shopping-cart.service';
+import {CartService} from '../service/shopping-cart.service';
 import {RequestSender} from '../request.sender';
 import {
     ShoppingCartProductComponent

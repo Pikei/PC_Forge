@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {RequestSender} from '../../../request.sender';
-import {CartService} from '../../../shopping-cart/shopping-cart.service';
+import {CartService} from '../../../service/shopping-cart.service';
 
 @Component({
     selector: 'app-shopping-cart-product',
@@ -52,8 +52,8 @@ export class ShoppingCartProductComponent implements OnInit {
         this.cartItems.removeProduct(this.product.productEan);
     }
 
-    totalProductPrice(): number {
-        return Math.round(this.product.productPrice * this.product.productQuantity * 100) / 100;
+    totalProductPrice(): string {
+        return (this.product.productPrice * this.product.productQuantity).toFixed(2);
     }
 
     goToProduct() {

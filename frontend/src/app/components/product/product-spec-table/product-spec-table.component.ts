@@ -1,28 +1,28 @@
 import {Component, Input} from '@angular/core';
-import {ProcessorComponent} from './processor/processor.component';
-import {MotherboardComponent} from './motherboard/motherboard.component';
-import {MemoryComponent} from './memory/memory.component';
-import {PcCaseComponent} from './pc-case/pc-case.component';
-import {AirCoolerComponent} from './air-cooler/air-cooler.component';
-import {LiquidCoolerComponent} from './liquid-cooler/liquid-cooler.component';
-import {GraphicsCardComponent} from './graphics-card/graphics-card.component';
-import {SolidStateDriveComponent} from './solid-state-drive/solid-state-drive.component';
-import {HardDiskDriveComponent} from './hard-disk-drive/hard-disk-drive.component';
-import {PowerSupplyComponent} from './power-supply/power-supply.component';
+import {ProcessorSpecTableComponent} from './processor/processor-spec-table.component';
+import {MotherboardSpecTableComponent} from './motherboard/motherboard-spec-table.component';
+import {MemorySpecTableComponent} from './memory/memory-spec-table.component';
+import {PcCaseSpecTableComponent} from './pc-case/pc-case-spec-table.component';
+import {AirCoolerComponentSpecTable} from './air-cooler/air-cooler-spec-table.component';
+import {LiquidCoolerSpecTableComponent} from './liquid-cooler/liquid-cooler-spec-table.component';
+import {GraphicsCardSpecTableComponent} from './graphics-card/graphics-card-spec-table.component';
+import {SolidStateDriveSpecTableComponent} from './solid-state-drive/solid-state-drive-spec-table.component';
+import {HardDiskDriveSpecTableComponent} from './hard-disk-drive/hard-disk-drive-spec-table.component';
+import {PowerSupplySpecTableComponent} from './power-supply/power-supply-spec-table.component';
 
 @Component({
     selector: 'app-product-spec-table',
     imports: [
-        ProcessorComponent,
-        MotherboardComponent,
-        MemoryComponent,
-        PcCaseComponent,
-        AirCoolerComponent,
-        LiquidCoolerComponent,
-        GraphicsCardComponent,
-        SolidStateDriveComponent,
-        HardDiskDriveComponent,
-        PowerSupplyComponent
+        ProcessorSpecTableComponent,
+        MotherboardSpecTableComponent,
+        MemorySpecTableComponent,
+        PcCaseSpecTableComponent,
+        AirCoolerComponentSpecTable,
+        LiquidCoolerSpecTableComponent,
+        GraphicsCardSpecTableComponent,
+        SolidStateDriveSpecTableComponent,
+        HardDiskDriveSpecTableComponent,
+        PowerSupplySpecTableComponent
     ],
     templateUrl: './product-spec-table.component.html',
     styleUrl: './product-spec-table.component.scss'

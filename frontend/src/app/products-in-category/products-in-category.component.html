@@ -1,0 +1,58 @@
+<app-header></app-header>
+<div class="content">
+    <div class="filter">
+    </div>
+    <div class="main">
+        <div class="nav">
+            <h2>{{ getCategoryName() }}</h2>
+            <div class="options">
+                <div class="page_nav_option">
+                    <button *ngIf="pageNumber > 1" (click)="prevPage()" class="prev-page-btn">‹</button>
+                    <label for="page-number">Strona</label>
+                    <input type="number" name="page-number" min="1" [max]="lastPage" [placeholder]="pageNumber"
+                           (change)="goToPage($event)">
+                    <button *ngIf="pageNumber < lastPage" (click)="nextPage()" class="next-page-btn">›</button>
+                </div>
+                <div class="products_per_page_option">
+                    <label for="products-per-page">Liczba produktów na stronie</label>
+                    <select class="page-size-select" name="products-per-page" (change)="changeProductsPerPage($event)">
+                        <option [value]="10">10</option>
+                        <option [value]="30" [defaultSelected]="true">30</option>
+                        <option [value]="60">60</option>
+                        <option [value]="90">90</option>
+                    </select>
+                </div>
+                <div class="sorting_option">
+                    <label for="sort-options">Sortowanie</label>
+                    <select class="sort-select" name="sort-options" (change)="sortProducts($event)">
+                        <option [value]="'default'" [defaultSelected]="true">Domyślne</option>
+                        <option [value]="'name_asc'">Nazwa A-Z</option>
+                        <option [value]="'name_desc'">Nazwa Z-A</option>
+                        <option [value]="'price_asc'">Cena rosnąco</option>
+                        <option [value]="'price_desc'">Cena malejąco</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="product_in_category">
+            @for (product of productsOnPage; track product.id; ) {
+                <app-product-category class="product" [product]="product"></app-product-category>
+            }
+        </div>
+        <div class="pagination">
+            <button *ngIf="pageNumber > 1" (click)="goToFirstPage()" class="page-nav-btn">‹‹</button>
+            <button *ngIf="pageNumber > 1" (click)="prevPage()" class="page-nav-btn">‹</button>
+            @if (pageNumber < lastPage - 1) {
+                <p id="current_page">{{ pageNumber }}</p>
+                <input type="number" placeholder="..." (change)="goToPage($event)">
+                <button *ngIf="pageNumber < lastPage" id="last_page" (click)="goToLastPage()">{{ lastPage }}</button>
+            } @else {
+                <input type="number" placeholder="..." (change)="goToPage($event)">
+                <p id="current_page">{{ pageNumber }}</p>
+                <button *ngIf="pageNumber < lastPage" id="last_page" (click)="goToLastPage()">{{ lastPage }}</button>
+            }
+            <button *ngIf="pageNumber < lastPage" (click)="nextPage()" class="page-nav-btn">›</button>
+            <button *ngIf="pageNumber < lastPage" (click)="goToLastPage()" class="page-nav-btn">››</button>
+        </div>
+    </div>
+</div>

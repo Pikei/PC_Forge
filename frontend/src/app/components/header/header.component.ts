@@ -1,8 +1,8 @@
 import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
-import {TokenService} from '../../token.service';
+import {TokenService} from '../../service/token.service';
 import {NgClass, NgIf} from '@angular/common';
 import {RequestSender} from '../../request.sender';
-import {CartService} from '../../shopping-cart/shopping-cart.service';
+import {CartService} from '../../service/shopping-cart.service';
 
 @Component({
     selector: 'app-header',
@@ -16,7 +16,6 @@ import {CartService} from '../../shopping-cart/shopping-cart.service';
 export class HeaderComponent implements OnInit {
 
     @ViewChild('stickyMenu') menuElement!: ElementRef;
-
     sticky: boolean = false;
     accountMenuVisible: boolean = false;
     accountInfo = {
@@ -58,7 +57,7 @@ export class HeaderComponent implements OnInit {
     @HostListener('window:scroll', ['$event'])
     updateStickyState() {
         const windowScroll = window.window.scrollY;
-        this.sticky = windowScroll >= 50;
+        this.sticky = windowScroll >= 150;
         if (this.sticky) {
             document.body.classList.add('full-height-header');
         } else {
@@ -108,5 +107,9 @@ export class HeaderComponent implements OnInit {
                 }
             )
         }
+    }
+
+    goToCategoryPage() {
+        window.location.href = "/category";
     }
 }

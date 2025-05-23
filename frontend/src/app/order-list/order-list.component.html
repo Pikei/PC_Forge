@@ -8,7 +8,7 @@
                 <p>Data złożenia: {{ order.orderDate }}</p>
                 <p>Data doręczenia: {{ order.deliveryDate }}</p>
                 <p>Liczba zamówionych produktów: {{ numberOfProductsInOrder(order) }}</p>
-                <h3>Kwota łączna zamówienia: {{ Math.round(order.totalCost * 100) / 100 }} zł</h3>
+                <h3>Kwota łączna zamówienia: {{ (order.totalCost).toFixed(2) }} zł</h3>
                 <div class="buttons">
                     <button type="button" *ngIf="cancellable(order)" (click)="cancelOrder(order)">Anuluj zamówienie
                     </button>

@@ -38,8 +38,6 @@ export class OrderListComponent implements OnInit {
         return productCount;
     }
 
-    protected readonly Math = Math;
-
     cancelOrder(order: any) {
         const url = 'http://localhost:8080/order/cancel?order_ID=' + order.id;
         this.sender.requestPost(url, null).subscribe(
@@ -70,8 +68,8 @@ export class OrderListComponent implements OnInit {
         return "https://cdn.jsdelivr.net/gh/Pikei/PC_Forge_images/" + product.productCategory + "/" + product.producer + "/" + product.productEan + ".png";
     }
 
-    getProductSummaryPrice(product: any): number {
-        return Math.round(product.productPrice * product.productQuantity * 100) / 100;
+    getProductSummaryPrice(product: any): string {
+        return (product.productPrice * product.productQuantity).toFixed(2);
     }
 
     goToProduct(productEan: any) {

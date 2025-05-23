@@ -53,6 +53,7 @@ nav {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    font-size: 12px;
 
     input {
         width: 60%;
@@ -63,7 +64,6 @@ nav {
         border-bottom: 2px solid #dadada;
         border-right: none;
         background-color: #242424;
-        font-size: 12px;
         text-align: center;
         color: #dadada;
     }
@@ -74,7 +74,6 @@ nav {
 
     select {
         width: 25%;
-        font-size: 12px;
         padding-left: 10px;
         background-color: #242424;
         border-top: 2px solid #dadada;

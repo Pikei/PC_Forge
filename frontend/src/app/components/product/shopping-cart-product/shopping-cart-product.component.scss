@@ -54,16 +54,32 @@
         height: 20%;
 
         button {
+            position: relative;
             border: none;
             width: 25px;
+            height: 25px;
             aspect-ratio: 1/1;
             color: #151515;
             letter-spacing: 2px;
             border-radius: 50%;
             background-color: #ff6600;
-            font-weight: bold;
-            font-size: 20px;
-            padding: 0;
+
+            p {
+                position: absolute;
+                top: 10%;
+                left: 50%;
+            }
+
+            #plus {
+                font-size: 30px;
+                font-weight: bold;
+                transform: translate(-45%, -105%);
+            }
+
+            #minus {
+                font-size: 40px;
+                transform: translate(-43%, -120%);
+            }
         }
     }
 }

@@ -4,7 +4,7 @@ import {HeaderComponent} from '../components/header/header.component';
 import {ActivatedRoute} from '@angular/router';
 import {ProductSpecTableComponent} from '../components/product/product-spec-table/product-spec-table.component';
 import {NgClass} from '@angular/common';
-import {CartService} from '../shopping-cart/shopping-cart.service';
+import {CartService} from '../service/shopping-cart.service';
 
 @Component({
     selector: 'app-product-page',
@@ -35,7 +35,7 @@ export class ProductPageComponent {
                     }
                 },
                 error: err => {
-                    window.location.href = "/not_found";
+                    window.location.href = "/page_not_found";
                 }
             }
         );

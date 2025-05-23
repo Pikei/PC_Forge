@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {CartService} from '../../../shopping-cart/shopping-cart.service';
+import {CartService} from '../../../service/shopping-cart.service';
 
 @Component({
     selector: 'app-order-products',
@@ -16,6 +16,6 @@ export class OrderProductsComponent {
     }
 
     getProductSummaryPrice(cartItem: any) {
-        return Math.round(cartItem.productPrice * cartItem.productQuantity * 100) / 100;
+        return (cartItem.productPrice * cartItem.productQuantity).toFixed(2);
     }
 }
