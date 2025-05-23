@@ -1,0 +1,53 @@
+<div class="product_filter">
+    <section>
+        <div class="filter_header">
+            <h3>Cena</h3>
+            <a>usuń</a>
+        </div>
+        <div class="filter_body" id="price_range">
+            <input type="number" placeholder="Od">
+            <p>――</p>
+            <input type="number" placeholder="Do">
+        </div>
+    </section>
+
+    <section>
+        <div class="filter_header">
+            <h3>Producent</h3>
+            <a>usuń</a>
+        </div>
+        <div class="filter_body">
+            @if (expandProducers) {
+                @for (filter_option of filter.producer; track filter_option) {
+                    <div class="option_wrapper">
+                        <<label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox" [value]="filter_option[0]">
+                        <span class="checkbox"></span>
+                    </label>
+                    </div>
+                }
+            } @else {
+                @for (filter_option of filter.producer.slice(0, 5); track filter_option) {
+                    <div class="option_wrapper">
+                        <label class="option_checkbox_wrapper">
+                            <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                            <input type="checkbox" [value]="filter_option[0]">
+                            <span class="checkbox"></span>
+                        </label>
+                    </div>
+                }
+            }
+            <a *ngIf="filter.producer.length > 5"
+               (click)="expandProducers = !expandProducers">{{ expandProducers ? "zwiń" : "rozwiń wszystko" }}</a>
+        </div>
+    </section>
+
+    @if (category == 'CPU') {
+        <app-cpu-filter [filter]="filter"></app-cpu-filter>
+    }
+
+    <div class="button_wrapper">
+        <button type="button" class="apply-filter-btn" (click)="applyFilter()">Zastosuj filtry</button>
+    </div>
+</div>

@@ -5,6 +5,7 @@ import {HeaderComponent} from '../components/header/header.component';
 import {ProductCategoryComponent} from '../components/product/product-category/product-category.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgIf} from '@angular/common';
+import {ProductFilterComponent} from '../components/product/filter/product-filter/product-filter.component';
 
 @Component({
     selector: 'app-products-in-category',
@@ -13,7 +14,8 @@ import {NgIf} from '@angular/common';
         ProductCategoryComponent,
         ReactiveFormsModule,
         FormsModule,
-        NgIf
+        NgIf,
+        ProductFilterComponent
     ],
     templateUrl: './products-in-category.component.html',
     styleUrl: './products-in-category.component.scss'
