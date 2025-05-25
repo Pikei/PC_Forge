@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {HeaderComponent} from '../components/header/header.component';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-category-page',
@@ -8,6 +9,9 @@ import {HeaderComponent} from '../components/header/header.component';
     styleUrl: './category-page.component.scss'
 })
 export class CategoryPageComponent {
+
+    constructor(private router: Router) {
+    }
 
     goToCategory(category: string) {
         let path: string = "";
@@ -45,6 +49,6 @@ export class CategoryPageComponent {
             default:
                 return;
         }
-        window.location.href = "/category/" + path;
+        this.router.navigate(['/category/' + path]);
     }
 }

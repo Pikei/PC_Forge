@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {NgStyle} from '@angular/common';
 import {RequestSender} from '../../request.sender';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-register',
@@ -13,7 +14,7 @@ import {RequestSender} from '../../request.sender';
 export class RegisterComponent {
     background = 'auth/auth_background.png';
 
-    constructor(private sender: RequestSender) {
+    constructor(private sender: RequestSender, private router: Router) {
     }
 
     register() {
@@ -29,13 +30,12 @@ export class RegisterComponent {
             {
                 next: () => {
                     alert("Konto utworzone. Sprawdź email, w celu weryfikacji konta")
-                    window.location.href = "/login";
+                    this.router.navigate(['/login']);
                 },
                 error: err => {
                     if (err.status === 409) {
                         alert(err.error.message)
                     }
-                    console.log(err)
                 }
             }
         );

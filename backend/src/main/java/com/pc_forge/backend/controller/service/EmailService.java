@@ -85,7 +85,7 @@ public class EmailService {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             Context context = new Context();
-            context.setVariable("url", frontendUrl + UrlPath.VERIFY + "?token=" + token);
+            context.setVariable("url", frontendUrl + UrlPath.RESET + "?token=" + token);
             String verificationEmailTemplate = templateEngine.process("reset_password_email", context);
             helper.setFrom(pcForgeEmail);
             helper.setTo(user.getEmail());

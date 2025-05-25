@@ -3,12 +3,15 @@ import {TokenService} from '../../service/token.service';
 import {NgClass, NgIf} from '@angular/common';
 import {RequestSender} from '../../request.sender';
 import {CartService} from '../../service/shopping-cart.service';
+import {ReactiveFormsModule} from '@angular/forms';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-header',
     imports: [
         NgClass,
-        NgIf
+        NgIf,
+        ReactiveFormsModule
     ],
     templateUrl: './header.component.html',
     styleUrl: './header.component.scss'
@@ -24,7 +27,9 @@ export class HeaderComponent implements OnInit {
         phoneNumber: ""
     };
 
-    constructor(private tokenService: TokenService, private sender: RequestSender, protected cartItems: CartService) {
+    category: string = "";
+
+    constructor(private tokenService: TokenService, private sender: RequestSender, protected cartItems: CartService, private router: Router) {
     }
 
     ngOnInit() {
@@ -67,7 +72,7 @@ export class HeaderComponent implements OnInit {
 
     showAccountMenu() {
         if (!this.tokenService.getToken()) {
-            window.location.href = "/login";
+            this.router.navigate(['/login']);
         } else {
             this.accountMenuVisible = !this.accountMenuVisible;
         }
@@ -75,9 +80,9 @@ export class HeaderComponent implements OnInit {
 
     shoppingCart() {
         if (!this.tokenService.getToken()) {
-            window.location.href = "/login";
+            this.router.navigate(['/login']);
         } else {
-            window.location.href = "/cart";
+            this.router.navigate(['/cart']);
         }
     }
 
@@ -88,7 +93,7 @@ export class HeaderComponent implements OnInit {
     logout() {
         if (confirm("Czy na pewno chcesz się wylogować?")) {
             this.tokenService.removeToken();
-            window.location.href = "/home";
+            this.router.navigate(['/home']);
         }
     }
 
@@ -99,7 +104,7 @@ export class HeaderComponent implements OnInit {
                     next: () => {
                         this.tokenService.removeToken();
                         alert("Twoje konto zostało usunięte")
-                        window.location.href = "/home";
+                        this.router.navigate(['/home']);
                     },
                     error: () => {
                         alert("Wystąpił błąd. Spróbuj ponownie później")
@@ -110,6 +115,36 @@ export class HeaderComponent implements OnInit {
     }
 
     goToCategoryPage() {
-        window.location.href = "/category";
+        this.router.navigate(['/category']);
+    }
+
+    setCategory($event: Event) {
+        this.category = ($event.target as HTMLInputElement).value;
+    }
+
+    searchItems() {
+        const searchInput: string = (document.querySelector("#search-input") as HTMLInputElement).value;
+        if (searchInput != "" && searchInput) {
+            if (this.category == "") {
+                this.router.navigate(['search/' + searchInput]);
+            } else {
+                this.router.navigateByUrl('/', {
+                    skipLocationChange: true
+                }).then(() => {
+                    this.router.navigate(['category/' + this.category], {
+                        queryParams: {
+                            name: searchInput
+                        }
+                    });
+                });
+            }
+        } else {
+            this.router.navigateByUrl('/', {
+                skipLocationChange: true
+            }).then(() => {
+                this.router.navigate(['category/' + this.category]);
+            });
+
+        }
     }
 }

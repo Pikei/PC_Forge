@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {HeaderComponent} from '../components/header/header.component';
 import {RequestSender} from '../request.sender';
 import {NgIf} from '@angular/common';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-order-list',
@@ -15,7 +16,7 @@ import {NgIf} from '@angular/common';
 export class OrderListComponent implements OnInit {
     protected orders: any[] = [];
 
-    constructor(private sender: RequestSender) {
+    constructor(private sender: RequestSender, private router: Router) {
         sender.requestGet('http://localhost:8080/order/all').subscribe(
             {
                 next: response => {
@@ -56,7 +57,7 @@ export class OrderListComponent implements OnInit {
     goToPayment(order: any) {
         let paymentUrl = "http://localhost:8080/order/payment?order_ID=" + order.id;
         this.sender.requestPost(paymentUrl, null).subscribe(response => {
-            window.location.href = response.body.message;
+            window.open(response.body.message, '_blank');
         })
     }
 
@@ -73,7 +74,11 @@ export class OrderListComponent implements OnInit {
     }
 
     goToProduct(productEan: any) {
-        window.location.href = "/product?id=" + productEan;
+        this.router.navigate(['/product'], {
+            queryParams: {
+                id: productEan
+            }
+        });
     }
 
     getNumberOfOrders() {

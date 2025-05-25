@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {NgStyle} from '@angular/common';
 import {TokenService} from '../../service/token.service';
 import {RequestSender} from '../../request.sender';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-login',
@@ -14,7 +15,7 @@ import {RequestSender} from '../../request.sender';
 export class LoginComponent {
     background = 'auth/auth_background.png';
 
-    constructor(private sender: RequestSender, private tokenService: TokenService) {
+    constructor(private sender: RequestSender, private tokenService: TokenService, private router: Router) {
     }
 
     login() {
@@ -36,7 +37,7 @@ export class LoginComponent {
     private handleResponse(response: any) {
         if (response.body.success === true) {
             this.tokenService.setToken(response.body.jwt);
-            window.location.href = "/home";
+            this.router.navigate(['/']);
         } else {
             let message: string = "";
             if (response.body.error.includes("USER_NOT_VERIFIED")) {

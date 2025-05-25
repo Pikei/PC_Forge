@@ -6,22 +6,22 @@
     </a>
 
     <div class="search" (click)="hideAccountMenu()">
-        <input type="text" placeholder="Szukaj produktów">
-        <select>
-            <option>Wszystkie kategorie</option>
-            <option>Procesory</option>
-            <option>Płyty główne</option>
-            <option>Pamięci operacyjne RAM</option>
-            <option>Karty graficzne</option>
-            <option>Zasilacze komputerowe</option>
-            <option>Obudowy</option>
-            <option>Dyski SSD</option>
-            <option>Dyski HDD</option>
-            <option>Chłodzenie cieczą</option>
-            <option>Chłodzenie powietrzem</option>
+        <input type="text" id="search-input" placeholder="Szukaj produktów">
+        <select (change)="setCategory($event)" class="category-select" name="category" id="category">
+            <option value="">Wszystkie kategorie</option>
+            <option value="processor">Procesory</option>
+            <option value="motherboard">Płyty główne</option>
+            <option value="memory">Pamięci operacyjne RAM</option>
+            <option value="graphics_card">Karty graficzne</option>
+            <option value="power_supply">Zasilacze komputerowe</option>
+            <option value="pc_case">Obudowy</option>
+            <option value="ssd">Dyski SSD</option>
+            <option value="hdd">Dyski HDD</option>
+            <option value="liquid_cooler">Chłodzenie cieczą</option>
+            <option value="air_cooler">Chłodzenie powietrzem</option>
         </select>
         <div class="btn-background">
-            <button><img src="search-icon.png"></button>
+            <button (click)="searchItems()"><img src="search-icon.png"></button>
         </div>
     </div>
 

@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {RequestSender} from '../../../request.sender';
 import {CartService} from '../../../service/shopping-cart.service';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-shopping-cart-product',
@@ -28,7 +29,7 @@ export class ShoppingCartProductComponent implements OnInit {
 
     imgSrc: string = "https://cdn.jsdelivr.net/gh/Pikei/PC_Forge_images/";
 
-    constructor(private sender: RequestSender, protected cartItems: CartService) {
+    constructor(private sender: RequestSender, protected cartItems: CartService, private router: Router) {
     }
 
     ngOnInit(): void {
@@ -57,6 +58,8 @@ export class ShoppingCartProductComponent implements OnInit {
     }
 
     goToProduct() {
-        window.location.href = "/product?id=" + this.product.productEan;
+        this.router.navigate(['/product'], {
+            queryParams: {id: this.product.productEan}
+        })
     }
 }

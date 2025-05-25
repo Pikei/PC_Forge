@@ -17,6 +17,29 @@
     display: flex;
     flex-direction: column;
     background-color: #242424;
+
+    h3 {
+        margin-bottom: 30px;
+        margin-top: 30px;
+        font-size: 22px;
+        text-align: center;
+    }
+
+    a {
+        color: #969696;
+        margin-left: 30px;
+        margin-right: 30px;
+        margin-bottom: 30px;
+        font-size: 16px;
+    }
+
+    a:hover {
+        color: #ff6600;
+        background-color: #353535;
+        border-radius: 5px;
+        transition: 0.2s;
+        cursor: pointer;
+    }
 }
 
 .products_not_found {
@@ -35,6 +58,10 @@
     display: flex;
     flex-direction: column;
     width: 80%;
+
+    h2 {
+        text-align: center;
+    }
 }
 
 .nav {
@@ -125,19 +152,6 @@
 
 }
 
-.product_in_category {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: right;
-    align-items: end;
-    margin-bottom: 10px;
-
-    .product {
-        width: 100%;
-    }
-}
-
 .pagination {
     display: flex;
     height: 50px;
@@ -200,4 +214,3 @@
 
 
 }
-

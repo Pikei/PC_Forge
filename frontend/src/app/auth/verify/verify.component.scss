@@ -1,0 +1,23 @@
+.content {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    margin-top: 10%;
+}
+
+img {
+    width: 5%;
+}
+
+a {
+    color: #dadada;
+    text-decoration: underline;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+a:hover {
+    color: #ff6600;
+    cursor: pointer;
+}

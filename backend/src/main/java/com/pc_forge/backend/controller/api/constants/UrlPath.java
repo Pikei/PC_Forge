@@ -41,6 +41,11 @@ public class UrlPath {
     public static final String VERIFY = "/verify";
 
     /**
+     * Ścieżka do weryfikacji konta użytkownika
+     */
+    public static final String RESET = "/reset_password";
+
+    /**
      * Ścieżka do pobierania danych profilu zalogowanego użytkownika
      */
     public static final String PROFILE = "/profile";

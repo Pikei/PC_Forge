@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {NgStyle} from '@angular/common';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-error-page',
@@ -13,7 +14,10 @@ export class ErrorPageComponent {
 
     background = 'error/error_background.png';
 
+    constructor(private router: Router) {
+    }
+
     goToHome() {
-        window.location.href = "/home";
+        this.router.navigate(['/']);
     }
 }

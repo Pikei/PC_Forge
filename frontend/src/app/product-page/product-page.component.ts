@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {RequestSender} from '../request.sender';
 import {HeaderComponent} from '../components/header/header.component';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {ProductSpecTableComponent} from '../components/product/product-spec-table/product-spec-table.component';
 import {NgClass} from '@angular/common';
 import {CartService} from '../service/shopping-cart.service';
@@ -21,7 +21,7 @@ export class ProductPageComponent {
     product: any = {};
     zoomImage: boolean = false;
 
-    constructor(private route: ActivatedRoute, private sender: RequestSender, private cartService: CartService) {
+    constructor(private route: ActivatedRoute, private router: Router, private sender: RequestSender, private cartService: CartService) {
         this.route.queryParams.subscribe(params => {
             this.productEan = params['id'];
         })
@@ -35,7 +35,7 @@ export class ProductPageComponent {
                     }
                 },
                 error: err => {
-                    window.location.href = "/page_not_found";
+                    this.router.navigate(['/page_not_found']);
                 }
             }
         );

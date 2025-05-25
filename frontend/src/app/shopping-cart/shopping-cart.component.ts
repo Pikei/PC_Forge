@@ -6,6 +6,7 @@ import {RequestSender} from '../request.sender';
 import {
     ShoppingCartProductComponent
 } from '../components/product/shopping-cart-product/shopping-cart-product.component';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-shopping-cart',
@@ -19,11 +20,11 @@ import {
 })
 export class ShoppingCartComponent {
 
-    constructor(public cartItems: CartService, private sender: RequestSender) {
+    constructor(public cartItems: CartService, private sender: RequestSender, private router: Router) {
     }
 
     goToShipping() {
-        window.location.href = "/shipping";
+        this.router.navigate(['/shipping']);
     }
 
     clearCart() {

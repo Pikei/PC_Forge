@@ -90,7 +90,7 @@ export class ProductsInCategoryComponent implements OnInit {
             case "pc_case":
                 return "Obudowy komputerowe";
             default:
-                window.location.href = "/page_not_found";
+                this.router.navigate(['/page_not_found']);
                 return "";
         }
     }
@@ -209,6 +209,8 @@ export class ProductsInCategoryComponent implements OnInit {
                 return "LIQUID_COOLER";
             case "pc_case":
                 return "CASE";
+            default:
+                this.router.navigate(['/page_not_found']);
         }
         return "";
     }

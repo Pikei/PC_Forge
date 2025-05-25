@@ -2,6 +2,7 @@ import {Component, inject, Input} from '@angular/core';
 import {RequestSender} from '../../../request.sender';
 import {CartService} from '../../../service/shopping-cart.service';
 import {NgIf} from '@angular/common';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-product-category',
@@ -14,7 +15,7 @@ import {NgIf} from '@angular/common';
 export class ProductCategoryComponent {
     @Input() product: any;
 
-    constructor(private sender: RequestSender, private cart: CartService) {
+    constructor(private sender: RequestSender, private cart: CartService, private router: Router) {
     }
 
     getImgUrl() {
@@ -37,6 +38,8 @@ export class ProductCategoryComponent {
     }
 
     goToProductUrl() {
-        window.location.href = "/product?id=" + this.product.id;
+        this.router.navigate(['/product'], {
+            queryParams: {id: this.product.id}
+        });
     }
 }

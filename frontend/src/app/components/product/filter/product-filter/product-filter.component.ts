@@ -38,6 +38,7 @@ export class ProductFilterComponent implements OnInit, AfterViewInit {
 
     expandProducers = false;
     selectedProducers: string[] = [];
+    name: string = "";
 
     ngOnInit(): void {
         let paramUrl = []
@@ -59,7 +60,9 @@ export class ProductFilterComponent implements OnInit, AfterViewInit {
             let priceMax = (document.querySelector("#price_max") as HTMLInputElement);
             priceMax.value = "";
         }
-
+        if (this.activeFilters.has('name')) {
+            this.name = this.activeFilters.get('name')![0];
+        }
     }
 
     applyFilter() {
@@ -84,6 +87,11 @@ export class ProductFilterComponent implements OnInit, AfterViewInit {
         if (paramUrl.length == 0) {
             this.filterApplied.emit("");
             return;
+        }
+        if (this.name != "") {
+            paramUrl.push("name=" + this.name);
+        } else {
+            filter.delete('name');
         }
         let paramUrlString = "?" + paramUrl.join("&");
         this.filterApplied.emit(paramUrlString)
@@ -119,13 +127,24 @@ export class ProductFilterComponent implements OnInit, AfterViewInit {
         priceMax.value = "";
         this.selectedProducers = [];
         this.productFilter?.clearFilters();
+        this.name = "";
         this.filterApplied.emit("");
     }
 
     producerSelected(producer: string) {
-        // console.log(producer);
-        // console.log(this.selectedProducers);
-        // console.log(this.selectedProducers.includes(producer));
         return this.selectedProducers.includes(producer);
+    }
+
+    searchName() {
+        console.log(this.name);
+        return this.name != "";
+    }
+
+    clearSearch() {
+        this.name = "";
+    }
+
+    getSearch() {
+        return this.name;
     }
 }

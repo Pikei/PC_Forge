@@ -1,5 +1,11 @@
 <div class="product_filter">
     <a (click)="clearAllFilters()">Usuń wszystkie filtry</a>
+    <section *ngIf="searchName()">
+        <div class="filter_header">
+            <h3>Wyszukiwanie "{{ getSearch() }}"</h3>
+            <a (click)="clearSearch()">usuń</a>
+        </div>
+    </section>
     <section>
         <div class="filter_header">
             <h3>Cena</h3>
