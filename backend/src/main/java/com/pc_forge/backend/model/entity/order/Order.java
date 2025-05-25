@@ -10,7 +10,9 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,13 +59,13 @@ public class Order {
      */
     @NotNull
     @Column(name = "order_date", nullable = false)
-    private LocalDate orderDate;
+    private Timestamp orderDate;
 
     /**
      * Data dostarczenia zamówienia.
      */
     @Column(name = "delivery_date")
-    private LocalDate deliveryDate;
+    private Timestamp deliveryDate;
 
     /**
      * Sumaryczna cena zamówionych produktów.

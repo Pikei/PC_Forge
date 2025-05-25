@@ -1,11 +1,12 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 import {RequestSender} from '../request.sender';
 import {HeaderComponent} from '../components/header/header.component';
 import {ProductCategoryComponent} from '../components/product/product-category/product-category.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgIf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {ProductFilterComponent} from '../components/product/filter/product-filter/product-filter.component';
+import * as querystring from 'node:querystring';
 
 @Component({
     selector: 'app-products-in-category',
@@ -15,7 +16,8 @@ import {ProductFilterComponent} from '../components/product/filter/product-filte
         ReactiveFormsModule,
         FormsModule,
         NgIf,
-        ProductFilterComponent
+        ProductFilterComponent,
+        NgForOf
     ],
     templateUrl: './products-in-category.component.html',
     styleUrl: './products-in-category.component.scss'
@@ -23,25 +25,41 @@ import {ProductFilterComponent} from '../components/product/filter/product-filte
 export class ProductsInCategoryComponent implements OnInit {
     category!: string;
     filter!: any;
-    products!: any[];
+    products: any[] = [];
     numberOfProductsPerPage: number = 30;
     pageNumber: number = 1;
     lastPage!: number;
     productsOnPage!: any[];
+    paramMap: Map<string, string[]> = new Map()
 
-    constructor(private route: ActivatedRoute, private sender: RequestSender) {
+    constructor(private route: ActivatedRoute, private router: Router, private sender: RequestSender) {
     }
 
     ngOnInit(): void {
         this.category = this.route.snapshot.paramMap.get('category')!;
+        this.route.queryParamMap.subscribe(params => {
+            this.paramMap = new Map<string, string[]>();
+            params.keys.forEach(key => {
+                const values = params.getAll(key) || [];
+                this.paramMap.set(key, values);
+            });
+        })
         let filter_url = "http://localhost:8080/filter/";
         let category_url = "http://localhost:8080/category/";
-        this.sender.requestGet(filter_url + this.category).subscribe(
+        this.sender.requestGet(filter_url + this.getCategoryCode()).subscribe(
             response => {
                 this.filter = response.body;
             }
         )
-        this.sender.requestGet(category_url + this.category).subscribe(
+        let paramUrl = new Array<string>();
+        for (const [key, value] of this.paramMap) {
+            paramUrl.push(key + "=" + value);
+        }
+        let paramUrlString = "";
+        if (paramUrl.length > 0) {
+            paramUrlString = "?" + paramUrl.join("&");
+        }
+        this.sender.requestGet(category_url + this.getCategoryCode() + paramUrlString).subscribe(
             response => {
                 this.products = response.body;
                 this.updateProductsOnPage();
@@ -144,5 +162,67 @@ export class ProductsInCategoryComponent implements OnInit {
             this.updateProductsOnPage();
         }
         (event.target as HTMLInputElement).value = "";
+    }
+
+    getFilteredProducts(event: string) {
+        let category_url = "http://localhost:8080/category/";
+        const queryParams = this.parseParams(event);
+        if (event != "") {
+            this.router.navigate(['category/' + this.category], {
+                queryParams
+            });
+        } else {
+            this.router.navigate(['category/' + this.category]);
+        }
+        this.sender.requestGet(category_url + this.getCategoryCode() + event).subscribe(
+            response => {
+                this.products = response.body;
+                this.pageNumber = 1;
+                this.updateProductsOnPage();
+            }
+        )
+    }
+
+    numberOfProductsInCategory(): number {
+        return this.products.length;
+    }
+
+    getCategoryCode() {
+        switch (this.category) {
+            case "processor":
+                return "CPU";
+            case "graphics_card":
+                return "GPU";
+            case "memory":
+                return "RAM";
+            case "motherboard":
+                return "MB";
+            case "power_supply":
+                return "PS"
+            case "ssd":
+                return "SSD";
+            case "hdd":
+                return "HDD";
+            case "air_cooler":
+                return "AIR_COOLER";
+            case "liquid_cooler":
+                return "LIQUID_COOLER";
+            case "pc_case":
+                return "CASE";
+        }
+        return "";
+    }
+
+    private parseParams(event: string) {
+        console.log(event)
+        let result: { [key: string]: string } = {};
+        let params = event.substring(1).split("&");
+        for (const param of params) {
+            let [key, value] = param.split("=");
+            if (key && value !== undefined) {
+                result[key] = decodeURIComponent(value);
+            }
+        }
+        return result;
     }
 }

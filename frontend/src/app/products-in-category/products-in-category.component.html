@@ -2,11 +2,15 @@
 <div class="content">
     <div class="filter_wrapper">
         <div class="filter">
-            <app-product-filter [filter]="filter" [category]="products[0].category"></app-product-filter>
+            <app-product-filter [filter]="filter" [category]="getCategoryCode()" [activeFilters]="paramMap"
+                                (filterApplied)="getFilteredProducts($event)"></app-product-filter>
         </div>
         <div class="filter_separator"></div>
     </div>
-    <div class="main">
+    <div class="products_not_found" *ngIf="numberOfProductsInCategory() == 0">
+        <p>Nie znaleziono produktów spełniających określone kryteria</p>
+    </div>
+    <div class="main" *ngIf="numberOfProductsInCategory() > 0">
         <div class="nav">
             <h2>{{ getCategoryName() }}</h2>
             <div class="options">
@@ -19,7 +23,8 @@
                 </div>
                 <div class="products_per_page_option">
                     <label for="products-per-page">Liczba produktów na stronie</label>
-                    <select class="page-size-select" name="products-per-page" (change)="changeProductsPerPage($event)">
+                    <select class="page-size-select" name="products-per-page"
+                            (change)="changeProductsPerPage($event)">
                         <option [value]="10">10</option>
                         <option [value]="30" [defaultSelected]="true">30</option>
                         <option [value]="60">60</option>
@@ -38,10 +43,9 @@
                 </div>
             </div>
         </div>
-        <div class="product_in_category">
-            @for (product of productsOnPage; track product.id; ) {
-                <app-product-category class="product" [product]="product"></app-product-category>
-            }
+        <div class="product_in_category" *ngIf="products.length > 0">
+            <app-product-category *ngFor="let product of productsOnPage" class="product"
+                                  [product]="product"></app-product-category>
         </div>
         <div class="pagination">
             <button *ngIf="pageNumber > 1" (click)="goToFirstPage()" class="page-nav-btn">‹‹</button>
@@ -49,11 +53,14 @@
             @if (pageNumber < lastPage - 1) {
                 <p id="current_page">{{ pageNumber }}</p>
                 <input type="number" placeholder="..." (change)="goToPage($event)">
-                <button *ngIf="pageNumber < lastPage" id="last_page" (click)="goToLastPage()">{{ lastPage }}</button>
+                <button *ngIf="pageNumber < lastPage" id="last_page" (click)="goToLastPage()">{{ lastPage }}
+                </button>
             } @else {
-                <input type="number" placeholder="..." (change)="goToPage($event)">
+                <input *ngIf="products.length > numberOfProductsPerPage" type="number" placeholder="..."
+                       (change)="goToPage($event)">
                 <p id="current_page">{{ pageNumber }}</p>
-                <button *ngIf="pageNumber < lastPage" id="last_page" (click)="goToLastPage()">{{ lastPage }}</button>
+                <button *ngIf="pageNumber < lastPage" id="last_page" (click)="goToLastPage()">{{ lastPage }}
+                </button>
             }
             <button *ngIf="pageNumber < lastPage" (click)="nextPage()" class="page-nav-btn">›</button>
             <button *ngIf="pageNumber < lastPage" (click)="goToLastPage()" class="page-nav-btn">››</button>

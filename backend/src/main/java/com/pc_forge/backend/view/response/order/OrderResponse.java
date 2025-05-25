@@ -3,7 +3,7 @@ package com.pc_forge.backend.view.response.order;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -41,12 +41,12 @@ public class OrderResponse {
     /**
      * Data złożenia zamówienia.
      */
-    private LocalDate orderDate;
+    private String orderDate;
 
     /**
      * Data dostawy zamówienia.
      */
-    private LocalDate deliveryDate;
+    private String deliveryDate;
 
     /**
      * Łączny koszt zamówienia.

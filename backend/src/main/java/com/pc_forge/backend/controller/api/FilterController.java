@@ -1,5 +1,6 @@
 package com.pc_forge.backend.controller.api;
 
+import com.pc_forge.backend.controller.api.constants.ProductCategoryCode;
 import com.pc_forge.backend.controller.api.constants.UrlPath;
 import com.pc_forge.backend.controller.service.product.*;
 import com.pc_forge.backend.view.response.filter.*;
@@ -105,16 +106,16 @@ public class FilterController {
      *
      * @return Odpowiedź zawierająca listę składającą się z dostępnych kategorii i liczbie elementów w niej zawartej
      */
-    @GetMapping(UrlPath.SEARCH + "/{name}")
-    public ResponseEntity<List<Object[]>> getProductsByCategoryFilter(@PathVariable String name) {
-        return ResponseEntity.ok(productService.getSearchByNameFilter(name));
+    @GetMapping(UrlPath.SEARCH + "/{category}")
+    public ResponseEntity<List<Object[]>> getProductsByCategoryFilter(@PathVariable String category) {
+        return ResponseEntity.ok(productService.getSearchByNameFilter(category));
     }
 
     /**
      * @return Odpowiedż zawierająca listę składającą się z dostępnych filtrów dla procesorów
      * oraz liczbie dostępnych sztuk w danym filtrze
      */
-    @GetMapping(UrlPath.PROCESSOR)
+    @GetMapping(ProductCategoryCode.PROCESSOR)
     public ResponseEntity<ProcessorFilterResponse> getProcessorFilters() {
         return ResponseEntity.ok(processorService.getAvailableFilters());
     }
@@ -123,7 +124,7 @@ public class FilterController {
      * @return Odpowiedż zawierająca listę składającą się z dostępnych filtrów dla płyt głównych
      * oraz liczbie dostępnych sztuk w danym filtrze
      */
-    @GetMapping(UrlPath.MOTHERBOARD)
+    @GetMapping(ProductCategoryCode.MOTHERBOARD)
     public ResponseEntity<MotherboardFilterResponse> getMotherboardFilters() {
         return ResponseEntity.ok(motherboardService.getAvailableFilters());
     }
@@ -132,7 +133,7 @@ public class FilterController {
      * @return Odpowiedż zawierająca listę składającą się z dostępnych filtrów dla pamięci operacyjnych
      * oraz liczbie dostępnych sztuk w danym filtrze
      */
-    @GetMapping(UrlPath.MEMORY)
+    @GetMapping(ProductCategoryCode.RAM)
     public ResponseEntity<MemoryFilterResponse> getMemoryFilters() {
         return ResponseEntity.ok(memoryService.getAvailableFilters());
     }
@@ -141,7 +142,7 @@ public class FilterController {
      * @return Odpowiedż zawierająca listę składającą się z dostępnych filtrów dla kart graficznych
      * oraz liczbie dostępnych sztuk w danym filtrze
      */
-    @GetMapping(UrlPath.GRAPHICS_CARD)
+    @GetMapping(ProductCategoryCode.GRAPHICS_CARD)
     public ResponseEntity<GpuFilterResponse> getGraphicsCardFilters() {
         return ResponseEntity.ok(graphicsCardService.getAvailableFilters());
     }
@@ -150,7 +151,7 @@ public class FilterController {
      * @return Odpowiedż zawierająca listę składającą się z dostępnych filtrów dla zasilaczy
      * oraz liczbie dostępnych sztuk w danym filtrze
      */
-    @GetMapping(UrlPath.POWER_SUPPLY)
+    @GetMapping(ProductCategoryCode.POWER_SUPPLY)
     public ResponseEntity<PsFilterResponse> getPowerSupplyFilters() {
         return ResponseEntity.ok(powerSupplyService.getAvailableFilters());
     }
@@ -159,7 +160,7 @@ public class FilterController {
      * @return Odpowiedż zawierająca listę składającą się z dostępnych filtrów dla obudów
      * oraz liczbie dostępnych sztuk w danym filtrze
      */
-    @GetMapping(UrlPath.CASE)
+    @GetMapping(ProductCategoryCode.CASE)
     public ResponseEntity<CaseFilterResponse> getCaseFilters() {
         return ResponseEntity.ok(caseService.getAvailableFilters());
     }
@@ -168,7 +169,7 @@ public class FilterController {
      * @return Odpowiedż zawierająca listę składającą się z dostępnych filtrów dla dysków SSD
      * oraz liczbie dostępnych sztuk w danym filtrze
      */
-    @GetMapping(UrlPath.SSD)
+    @GetMapping(ProductCategoryCode.SSD)
     public ResponseEntity<SsdFilterResponse> getSSDFilters() {
         return ResponseEntity.ok(ssdService.getAvailableFilters());
     }
@@ -177,7 +178,7 @@ public class FilterController {
      * @return Odpowiedż zawierająca listę składającą się z dostępnych filtrów dla dysków HDD
      * oraz liczbie dostępnych sztuk w danym filtrze
      */
-    @GetMapping(UrlPath.HDD)
+    @GetMapping(ProductCategoryCode.HDD)
     public ResponseEntity<HddFilterResponse> getHDDFilters() {
         return ResponseEntity.ok(hddService.getAvailableFilters());
     }
@@ -186,7 +187,7 @@ public class FilterController {
      * @return Odpowiedż zawierająca listę składającą się z dostępnych filtrów dla układów chłodzenia powietrzem
      * oraz liczbie dostępnych sztuk w danym filtrze
      */
-    @GetMapping(UrlPath.AIR_COOLER)
+    @GetMapping(ProductCategoryCode.AIR_COOLER)
     public ResponseEntity<AirCoolerFilterResponse> getAirCoolerFilters() {
         return ResponseEntity.ok(airCoolerService.getAvailableFilters());
     }
@@ -195,7 +196,7 @@ public class FilterController {
      * @return Odpowiedż zawierająca listę składającą się z dostępnych filtrów dla układów chłodzenia cieczą
      * oraz liczbie dostępnych sztuk w danym filtrze
      */
-    @GetMapping(UrlPath.LIQUID_COOLER)
+    @GetMapping(ProductCategoryCode.LIQUID_COOLER)
     public ResponseEntity<LiquidCoolerFilterResponse> getLiquidCoolerFilters() {
         return ResponseEntity.ok(liquidCoolerService.getAvailableFilters());
     }

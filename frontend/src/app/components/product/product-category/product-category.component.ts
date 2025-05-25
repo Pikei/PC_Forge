@@ -13,8 +13,6 @@ import {NgIf} from '@angular/common';
 })
 export class ProductCategoryComponent {
     @Input() product: any;
-    // private sender = inject(RequestSender)
-    // private cart = inject(CartService)
 
     constructor(private sender: RequestSender, private cart: CartService) {
     }

@@ -75,4 +75,8 @@ export class OrderListComponent implements OnInit {
     goToProduct(productEan: any) {
         window.location.href = "/product?id=" + productEan;
     }
+
+    getNumberOfOrders() {
+        return this.orders.length;
+    }
 }

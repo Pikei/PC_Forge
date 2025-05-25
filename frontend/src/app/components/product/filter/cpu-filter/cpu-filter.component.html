@@ -1,7 +1,7 @@
 <section>
     <div class="filter_header">
         <h3>Socket</h3>
-        <a>usuń</a>
+        <a (click)="deleteFilters('socket')">usuń</a>
     </div>
     <div class="filter_body">
         @if (expandOptions.socket) {
@@ -9,7 +9,10 @@
                 <div class="option_wrapper">
                     <label class="option_checkbox_wrapper">
                         <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
-                        <input type="checkbox" [value]="filter_option[0]">
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'socket')"
+                               [checked]="checkIfSelected(filter_option[0], 'socket')">
                         <span class="checkbox"></span>
                     </label>
                 </div>
@@ -19,7 +22,10 @@
                 <div class="option_wrapper">
                     <label class="option_checkbox_wrapper">
                         <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
-                        <input type="checkbox" [value]="filter_option[0]">
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'socket')"
+                               [checked]="checkIfSelected(filter_option[0], 'socket')">
                         <span class="checkbox"></span>
                     </label>
                 </div>
@@ -33,7 +39,7 @@
 <section>
     <div class="filter_header">
         <h3>Model</h3>
-        <a>usuń</a>
+        <a (click)="deleteFilters('model')">usuń</a>
     </div>
     <div class="filter_body">
         @if (expandOptions.model) {
@@ -41,7 +47,10 @@
                 <div class="option_wrapper">
                     <label class="option_checkbox_wrapper">
                         <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
-                        <input type="checkbox" [value]="filter_option[0]">
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleCpuModel(filter_option[0])"
+                               [checked]="modelSelected(filter_option[0])">
                         <span class="checkbox"></span>
                     </label>
                 </div>
@@ -51,7 +60,10 @@
                 <div class="option_wrapper">
                     <label class="option_checkbox_wrapper">
                         <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
-                        <input type="checkbox" [value]="filter_option[0]">
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleCpuModel(filter_option[0])"
+                               [checked]="modelSelected(filter_option[0])">
                         <span class="checkbox"></span>
                     </label>
                 </div>
@@ -65,7 +77,7 @@
 <section>
     <div class="filter_header">
         <h3>Liczba rdzeni</h3>
-        <a>usuń</a>
+        <a (click)="deleteFilters('num_cores')">usuń</a>
     </div>
     <div class="filter_body">
         @if (expandOptions.num_cores) {
@@ -73,7 +85,10 @@
                 <div class="option_wrapper">
                     <label class="option_checkbox_wrapper">
                         <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
-                        <input type="checkbox" [value]="filter_option[0]">
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'num_cores')"
+                               [checked]="checkIfSelected(filter_option[0], 'num_cores')">
                         <span class="checkbox"></span>
                     </label>
                 </div>
@@ -83,7 +98,10 @@
                 <div class="option_wrapper">
                     <label class="option_checkbox_wrapper">
                         <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
-                        <input type="checkbox" [value]="filter_option[0]">
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'num_cores')"
+                               [checked]="checkIfSelected(filter_option[0], 'num_cores')">
                         <span class="checkbox"></span>
                     </label>
                 </div>
@@ -97,7 +115,7 @@
 <section>
     <div class="filter_header">
         <h3>Częstotliwość taktowania</h3>
-        <a>usuń</a>
+        <a (click)="deleteFilters('freq')">usuń</a>
     </div>
     <div class="filter_body">
         @if (expandOptions.freq) {
@@ -105,7 +123,10 @@
                 <div class="option_wrapper">
                     <label class="option_checkbox_wrapper">
                         <p>{{ filter_option[0] }} GHz ({{ filter_option[1] }})</p>
-                        <input type="checkbox" [value]="filter_option[0]">
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'freq')"
+                               [checked]="checkIfSelected(filter_option[0], 'freq')">
                         <span class="checkbox"></span>
                     </label>
                 </div>
@@ -114,8 +135,11 @@
             @for (filter_option of filter.freq.slice(0, 5); track filter_option) {
                 <div class="option_wrapper">
                     <label class="option_checkbox_wrapper">
-                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
-                        <input type="checkbox" [value]="filter_option[0]">
+                        <p>{{ filter_option[0] }} GHz ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'freq')"
+                               [checked]="checkIfSelected(filter_option[0], 'freq')">
                         <span class="checkbox"></span>
                     </label>
                 </div>
@@ -129,15 +153,18 @@
 <section>
     <div class="filter_header">
         <h3>Zintegrowany układ graficzny</h3>
-        <a>usuń</a>
+        <a (click)="deleteFilters('igu')">usuń</a>
     </div>
     <div class="filter_body">
         @if (expandOptions.igu) {
             @for (filter_option of filter.igu; track filter_option) {
                 <div class="option_wrapper">
                     <label class="option_checkbox_wrapper">
-                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
-                        <input type="checkbox" [value]="filter_option[0]">
+                        <p>{{ filter_option[0] != null ? filter_option[0] : "Brak" }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'igu')"
+                               [checked]="checkIfSelected(filter_option[0], 'igu')">
                         <span class="checkbox"></span>
                     </label>
                 </div>
@@ -146,8 +173,11 @@
             @for (filter_option of filter.igu.slice(0, 5); track filter_option) {
                 <div class="option_wrapper">
                     <label class="option_checkbox_wrapper">
-                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
-                        <input type="checkbox" [value]="filter_option[0]">
+                        <p>{{ filter_option[0] != null ? filter_option[0] : "Brak" }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'igu')"
+                               [checked]="checkIfSelected(filter_option[0], 'igu')">
                         <span class="checkbox"></span>
                     </label>
                 </div>
@@ -161,14 +191,17 @@
 <section>
     <div class="filter_header">
         <h3>Załączone chłodzenie</h3>
-        <a>usuń</a>
+        <a (click)="deleteFilters('cooler')">usuń</a>
     </div>
     <div class="filter_body">
         @for (filter_option of filter.cooler; track filter_option) {
             <div class="option_wrapper">
                 <label class="option_checkbox_wrapper">
                     <p>{{ filter_option[0] ? "Tak" : "Nie" }} ({{ filter_option[1] }})</p>
-                    <input type="radio" [value]="filter_option[0]" name="cooler">
+                    <input type="radio" name="cooler"
+                           [value]="filter_option[0]"
+                           (change)="toggleBooleanOption(filter_option[0], 'cooler')"
+                           [checked]="checkIfSelected(filter_option[0], 'cooler')">
                     <span class="radio"></span>
                 </label>
             </div>
@@ -179,7 +212,7 @@
 <section>
     <div class="filter_header">
         <h3>Rodzaj opakowania</h3>
-        <a>usuń</a>
+        <a (click)="deleteFilters('pack')">usuń</a>
     </div>
     <div class="filter_body">
         @if (expandOptions.pack) {
@@ -187,7 +220,10 @@
                 <div class="option_wrapper">
                     <label class="option_checkbox_wrapper">
                         <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
-                        <input type="checkbox" [value]="filter_option[0]">
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'pack')"
+                               [checked]="checkIfSelected(filter_option[0], 'pack')">
                         <span class="checkbox"></span>
                     </label>
                 </div>
@@ -197,7 +233,10 @@
                 <div class="option_wrapper">
                     <label class="option_checkbox_wrapper">
                         <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
-                        <input type="checkbox" [value]="filter_option[0]">
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'pack')"
+                               [checked]="checkIfSelected(filter_option[0], 'pack')">
                         <span class="checkbox"></span>
                     </label>
                 </div>
@@ -211,14 +250,17 @@
 <section>
     <div class="filter_header">
         <h3>Odblokowany mnożnik</h3>
-        <a>usuń</a>
+        <a (click)="deleteFilters('unlocked')">usuń</a>
     </div>
     <div class="filter_body">
         @for (filter_option of filter.unlocked; track filter_option) {
             <div class="option_wrapper">
                 <label class="option_checkbox_wrapper">
                     <p>{{ filter_option[0] ? "Tak" : "Nie" }} ({{ filter_option[1] }})</p>
-                    <input type="radio" [value]="filter_option[0]" name="unlocked">
+                    <input type="radio"
+                           [value]="filter_option[0]"
+                           (change)="toggleBooleanOption(filter_option[0], 'unlocked')"
+                           [checked]="checkIfSelected(filter_option[0], 'unlocked')">
                     <span class="radio"></span>
                 </label>
             </div>

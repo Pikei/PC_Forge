@@ -1,0 +1,191 @@
+<section>
+    <div class="filter_header">
+        <h3>Format dysku</h3>
+        <a (click)="deleteFilters('format')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.format) {
+            @for (filter_option of filter.format; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'format')"
+                               [checked]="checkIfSelected(filter_option[0], 'format')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.format.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'format')"
+                               [checked]="checkIfSelected(filter_option[0], 'format')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.format.length > 5"
+           (click)="expandOptions.format = !expandOptions.format">{{ expandOptions.format ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Interfejs dysku</h3>
+        <a (click)="deleteFilters('interface')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.interface) {
+            @for (filter_option of filter.interface; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'interface')"
+                               [checked]="checkIfSelected(filter_option[0], 'interface')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.interface.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'interface')"
+                               [checked]="checkIfSelected(filter_option[0], 'interface')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.interface.length > 5"
+           (click)="expandOptions.interface = !expandOptions.interface">{{ expandOptions.interface ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Pojemność dysku</h3>
+        <a (click)="deleteFilters('storage')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.storage) {
+            @for (filter_option of filter.storage; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ (filter_option[0] > 1024) ? (filter_option[0] / 1024) + 'TB' : filter_option[0] + 'GB' }}
+                            ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'storage')"
+                               [checked]="checkIfSelected(filter_option[0], 'storage')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.storage.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ (filter_option[0] > 1024) ? (filter_option[0] / 1024) + 'TB' : filter_option[0] + 'GB' }}
+                            ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'storage')"
+                               [checked]="checkIfSelected(filter_option[0], 'storage')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.storage.length > 5"
+           (click)="expandOptions.storage = !expandOptions.storage">{{ expandOptions.storage ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Prędkość odczytu</h3>
+        <a (click)="deleteFilters('read_speed')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.read_speed) {
+            @for (filter_option of filter.read_speed; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} MB/s ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'read_speed')"
+                               [checked]="checkIfSelected(filter_option[0], 'read_speed')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.read_speed.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} MB/s ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'read_speed')"
+                               [checked]="checkIfSelected(filter_option[0], 'read_speed')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.read_speed.length > 5"
+           (click)="expandOptions.read_speed = !expandOptions.read_speed">{{ expandOptions.read_speed ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Prędkość zapisu</h3>
+        <a (click)="deleteFilters('write_speed')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.write_speed) {
+            @for (filter_option of filter.write_speed; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} MB/s ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'write_speed')"
+                               [checked]="checkIfSelected(filter_option[0], 'write_speed')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.write_speed.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} MB/s ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'write_speed')"
+                               [checked]="checkIfSelected(filter_option[0], 'write_speed')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.write_speed.length > 5"
+           (click)="expandOptions.write_speed = !expandOptions.write_speed">{{ expandOptions.write_speed ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>

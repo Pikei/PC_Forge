@@ -1,0 +1,691 @@
+<section>
+    <div class="filter_header">
+        <h3>Kolor</h3>
+        <a (click)="deleteFilters('color')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.color) {
+            @for (filter_option of filter.color; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'color')"
+                               [checked]="checkIfSelected(filter_option[0], 'color')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.color.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'color')"
+                               [checked]="checkIfSelected(filter_option[0], 'color')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.color.length > 5"
+           (click)="expandOptions.color = !expandOptions.color">{{ expandOptions.color ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Rodzaj obudowy</h3>
+        <a (click)="deleteFilters('case_type')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.case_type) {
+            @for (filter_option of filter.case_type; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'case_type')"
+                               [checked]="checkIfSelected(filter_option[0], 'case_type')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.case_type.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'case_type')"
+                               [checked]="checkIfSelected(filter_option[0], 'case_type')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.case_type.length > 5"
+           (click)="expandOptions.case_type = !expandOptions.case_type">{{ expandOptions.case_type ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Kompatybilny standard płyty głównej</h3>
+        <a (click)="deleteFilters('standard')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.standard) {
+            @for (filter_option of filter.standard; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'standard')"
+                               [checked]="checkIfSelected(filter_option[0], 'standard')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.standard.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'standard')"
+                               [checked]="checkIfSelected(filter_option[0], 'standard')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.standard.length > 5"
+           (click)="expandOptions.standard = !expandOptions.standard">{{ expandOptions.standard ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Szerokość obudowy (cm)</h3>
+        <a (click)="clearWidth()">usuń</a>
+    </div>
+    <div class="filter_body" id="value_range">
+        <input type="number" id="min_width" placeholder="Od" [min]="filter.min_width" [max]="filter.max_width"
+               (change)="setWidth()">
+        <p>――</p>
+        <input type="number" id="max_width" placeholder="Do" [min]="filter.min_width" [max]="filter.max_width"
+               (change)="setWidth()">
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Wysokość obudowy (cm)</h3>
+        <a (click)="clearHeight()">usuń</a>
+    </div>
+    <div class="filter_body" id="value_range">
+        <input type="number" id="min_height" placeholder="Od" [min]="filter.min_height" [max]="filter.max_height"
+               (change)="setHeight()">
+        <p>――</p>
+        <input type="number" id="max_height" placeholder="Do" [min]="filter.min_height" [max]="filter.max_height"
+               (change)="setHeight()">
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Głębokość obudowy (cm)</h3>
+        <a (click)="clearDepth()">usuń</a>
+    </div>
+    <div class="filter_body" id="value_range">
+        <input type="number" id="min_depth" placeholder="Od" [min]="filter.min_depth" [max]="filter.max_depth"
+               (change)="setDepth()">
+        <p>――</p>
+        <input type="number" id="max_depth" placeholder="Do" [min]="filter.min_depth" [max]="filter.max_depth"
+               (change)="setDepth()">
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Okno</h3>
+        <a (click)="deleteFilters('window')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @for (filter_option of filter.window; track filter_option) {
+            <div class="option_wrapper">
+                <label class="option_checkbox_wrapper">
+                    <p>{{ filter_option[0] ? "Tak" : "Nie" }} ({{ filter_option[1] }})</p>
+                    <input type="radio"
+                           [value]="filter_option[0]"
+                           (change)="toggleBooleanOption(filter_option[0], 'window')"
+                           [checked]="checkIfSelected(filter_option[0], 'window')">
+                    <span class="radio"></span>
+                </label>
+            </div>
+        }
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Załączony zasilacz</h3>
+        <a (click)="deleteFilters('power_supply')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @for (filter_option of filter.power_supply; track filter_option) {
+            <div class="option_wrapper">
+                <label class="option_checkbox_wrapper">
+                    <p>{{ filter_option[0] ? "Tak" : "Nie" }} ({{ filter_option[1] }})</p>
+                    <input type="radio"
+                           [value]="filter_option[0]"
+                           (change)="toggleBooleanOption(filter_option[0], 'power_supply')"
+                           [checked]="checkIfSelected(filter_option[0], 'power_supply')">
+                    <span class="radio"></span>
+                </label>
+            </div>
+        }
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Moc zasilacza</h3>
+        <a (click)="deleteFilters('power')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.power) {
+            @for (filter_option of filter.power; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ (filter_option[0] > 0) ? (filter_option[0] + 'W') : 'Brak' }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'power')"
+                               [checked]="checkIfSelected(filter_option[0], 'power')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.power.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ (filter_option[0] > 0) ? (filter_option[0] + 'W') : 'Brak' }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'power')"
+                               [checked]="checkIfSelected(filter_option[0], 'power')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.power.length > 5"
+           (click)="expandOptions.power = !expandOptions.power">{{ expandOptions.power ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Maksymalna długość karty graficznej</h3>
+        <a (click)="deleteFilters('max_gpu_length')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.max_gpu_length) {
+            @for (filter_option of filter.max_gpu_length; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} mm ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'max_gpu_length')"
+                               [checked]="checkIfSelected(filter_option[0], 'max_gpu_length')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.max_gpu_length.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} mm ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'max_gpu_length')"
+                               [checked]="checkIfSelected(filter_option[0], 'max_gpu_length')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.max_gpu_length.length > 5"
+           (click)="expandOptions.max_gpu_length = !expandOptions.max_gpu_length">{{ expandOptions.max_gpu_length ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Maksymalna wysokość chłodzenia procesora</h3>
+        <a (click)="deleteFilters('max_cpu_height')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.max_cpu_height) {
+            @for (filter_option of filter.max_cpu_height; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} mm ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'max_cpu_height')"
+                               [checked]="checkIfSelected(filter_option[0], 'max_cpu_height')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.max_cpu_height.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} mm ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'max_cpu_height')"
+                               [checked]="checkIfSelected(filter_option[0], 'max_cpu_height')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.max_cpu_height.length > 5"
+           (click)="expandOptions.max_cpu_height = !expandOptions.max_cpu_height">{{ expandOptions.max_cpu_height ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Wentylatory na panelu przednim</h3>
+        <a (click)="deleteFilters('front_fans')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.front_fans) {
+            @for (filter_option of filter.front_fans; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ (filter_option[0] != "") ? filter_option[0] : "Brak" }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'front_fans')"
+                               [checked]="checkIfSelected(filter_option[0], 'front_fans')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.front_fans.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ (filter_option[0] != "") ? filter_option[0] : "Brak" }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'front_fans')"
+                               [checked]="checkIfSelected(filter_option[0], 'front_fans')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.front_fans.length > 5"
+           (click)="expandOptions.front_fans = !expandOptions.front_fans">{{ expandOptions.front_fans ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Wentylatory na panelu tylnym</h3>
+        <a (click)="deleteFilters('back_fans')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.back_fans) {
+            @for (filter_option of filter.back_fans; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ (filter_option[0] != "") ? filter_option[0] : "Brak" }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'back_fans')"
+                               [checked]="checkIfSelected(filter_option[0], 'back_fans')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.back_fans.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ (filter_option[0] != "") ? filter_option[0] : "Brak" }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'back_fans')"
+                               [checked]="checkIfSelected(filter_option[0], 'back_fans')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.back_fans.length > 5"
+           (click)="expandOptions.back_fans = !expandOptions.back_fans">{{ expandOptions.back_fans ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Wentylatory na panelu bocznym</h3>
+        <a (click)="deleteFilters('side_fans')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.side_fans) {
+            @for (filter_option of filter.side_fans; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ (filter_option[0] != "") ? filter_option[0] : "Brak" }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'side_fans')"
+                               [checked]="checkIfSelected(filter_option[0], 'side_fans')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.side_fans.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ (filter_option[0] != "") ? filter_option[0] : "Brak" }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'side_fans')"
+                               [checked]="checkIfSelected(filter_option[0], 'side_fans')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.side_fans.length > 5"
+           (click)="expandOptions.side_fans = !expandOptions.side_fans">{{ expandOptions.side_fans ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Wentylatory na panelu dolnym</h3>
+        <a (click)="deleteFilters('bottom_fans')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.bottom_fans) {
+            @for (filter_option of filter.bottom_fans; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ (filter_option[0] != "") ? filter_option[0] : "Brak" }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'bottom_fans')"
+                               [checked]="checkIfSelected(filter_option[0], 'bottom_fans')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.bottom_fans.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ (filter_option[0] != "") ? filter_option[0] : "Brak" }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'bottom_fans')"
+                               [checked]="checkIfSelected(filter_option[0], 'bottom_fans')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.bottom_fans.length > 5"
+           (click)="expandOptions.bottom_fans = !expandOptions.bottom_fans">{{ expandOptions.bottom_fans ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Wentylatory na panelu górnym</h3>
+        <a (click)="deleteFilters('top_fans')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.top_fans) {
+            @for (filter_option of filter.top_fans; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ (filter_option[0] != "") ? filter_option[0] : "Brak" }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'top_fans')"
+                               [checked]="checkIfSelected(filter_option[0], 'top_fans')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.top_fans.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ (filter_option[0] != "") ? filter_option[0] : "Brak" }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'top_fans')"
+                               [checked]="checkIfSelected(filter_option[0], 'top_fans')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.top_fans.length > 5"
+           (click)="expandOptions.top_fans = !expandOptions.top_fans">{{ expandOptions.top_fans ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Liczba portów USB 2.0</h3>
+        <a (click)="deleteFilters('usb20')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.usb20) {
+            @for (filter_option of filter.usb20; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'usb20')"
+                               [checked]="checkIfSelected(filter_option[0], 'usb20')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.usb20.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'usb20')"
+                               [checked]="checkIfSelected(filter_option[0], 'usb20')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.usb20.length > 5"
+           (click)="expandOptions.usb20 = !expandOptions.usb20">{{ expandOptions.usb20 ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Liczba portów USB 3.0</h3>
+        <a (click)="deleteFilters('usb30')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.usb30) {
+            @for (filter_option of filter.usb30; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'usb30')"
+                               [checked]="checkIfSelected(filter_option[0], 'usb30')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.usb30.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'usb30')"
+                               [checked]="checkIfSelected(filter_option[0], 'usb30')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.usb30.length > 5"
+           (click)="expandOptions.usb30 = !expandOptions.usb30">{{ expandOptions.usb30 ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Liczba portów USB 3.1</h3>
+        <a (click)="deleteFilters('usb31')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.usb31) {
+            @for (filter_option of filter.usb31; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'usb31')"
+                               [checked]="checkIfSelected(filter_option[0], 'usb31')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.usb31.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'usb31')"
+                               [checked]="checkIfSelected(filter_option[0], 'usb31')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.usb31.length > 5"
+           (click)="expandOptions.usb31 = !expandOptions.usb31">{{ expandOptions.usb31 ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Liczba portów USB 3.2</h3>
+        <a (click)="deleteFilters('usb32')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.usb32) {
+            @for (filter_option of filter.usb32; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'usb32')"
+                               [checked]="checkIfSelected(filter_option[0], 'usb32')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.usb32.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'usb32')"
+                               [checked]="checkIfSelected(filter_option[0], 'usb32')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.usb32.length > 5"
+           (click)="expandOptions.usb32 = !expandOptions.usb32">{{ expandOptions.usb32 ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Liczba portów USB-C</h3>
+        <a (click)="deleteFilters('usbC')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.usbC) {
+            @for (filter_option of filter.usbC; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'usbC')"
+                               [checked]="checkIfSelected(filter_option[0], 'usbC')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.usbC.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'usbC')"
+                               [checked]="checkIfSelected(filter_option[0], 'usbC')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.usbC.length > 5"
+           (click)="expandOptions.usbC = !expandOptions.usbC">{{ expandOptions.usbC ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>

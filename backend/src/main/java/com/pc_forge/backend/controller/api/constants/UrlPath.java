@@ -26,56 +26,6 @@ public class UrlPath {
     public static final String PRODUCT = "/product";
 
     /**
-     * Ścieżka specyficzna dla procesorów
-     */
-    public static final String PROCESSOR = "/processor";
-
-    /**
-     * Ścieżka specyficzna dla płyt głównych
-     */
-    public static final String MOTHERBOARD = "/motherboard";
-
-    /**
-     * Ścieżka specyficzna dla pamięci RAM
-     */
-    public static final String MEMORY = "/memory";
-
-    /**
-     * Ścieżka specyficzna dla kart graficznych
-     */
-    public static final String GRAPHICS_CARD = "/graphics_card";
-
-    /**
-     * Ścieżka specyficzna dla zasilaczy
-     */
-    public static final String POWER_SUPPLY = "/power_supply";
-
-    /**
-     * Ścieżka specyficzna dla obudów komputerowych
-     */
-    public static final String CASE = "/pc_case";
-
-    /**
-     * Ścieżka specyficzna dla dysków SSD
-     */
-    public static final String SSD = "/ssd";
-
-    /**
-     * Ścieżka specyficzna dla dysków HDD
-     */
-    public static final String HDD = "/hdd";
-
-    /**
-     * Ścieżka specyficzna dla układów chłodzenia powietrzem
-     */
-    public static final String AIR_COOLER = "/air_cooler";
-
-    /**
-     * Ścieżka specyficzna dla układów chłodzenia cieczą
-     */
-    public static final String LIQUID_COOLER = "/liquid_cooler";
-
-    /**
      * Ścieżka do logowania użytkownika
      */
     public static final String LOGIN = "/login";

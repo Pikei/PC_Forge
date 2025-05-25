@@ -107,7 +107,9 @@ public abstract class AbstractProductService<T extends Product> {
     }
 
     protected void filterByName(String category, String name) {
-        filteredProducts.add(productRepository.findByNameContainsIgnoreCaseAndCategory(name, category));
+        if (name != null) {
+            filteredProducts.add(productRepository.findByNameContainsIgnoreCaseAndCategory(name, category));
+        }
     }
 
     /**

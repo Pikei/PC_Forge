@@ -1,5 +1,6 @@
 package com.pc_forge.backend.controller.api;
 
+import com.pc_forge.backend.controller.api.constants.ProductCategoryCode;
 import com.pc_forge.backend.controller.api.constants.UrlPath;
 import com.pc_forge.backend.controller.filter.*;
 import com.pc_forge.backend.controller.service.product.*;
@@ -123,7 +124,7 @@ public class ProductController {
      *                służący do filtrowania wyników.
      * @return Odpowiedź HTTP zawierająca listę {@link ProductResponse}, czyli DTO mających uproszczone dane produktów.
      */
-    @GetMapping(UrlPath.PROCESSOR)
+    @GetMapping(ProductCategoryCode.PROCESSOR)
     public ResponseEntity<List<ProductResponse>> getFilteredProcessors(HttpServletRequest request
     ) {
         Map<String, String[]> params = request.getParameterMap();
@@ -140,7 +141,7 @@ public class ProductController {
      *                służący do filtrowania wyników.
      * @return Odpowiedź HTTP zawierająca listę {@link ProductResponse}, czyli DTO mających uproszczone dane produktów.
      */
-    @GetMapping(UrlPath.MOTHERBOARD)
+    @GetMapping(ProductCategoryCode.MOTHERBOARD)
     public ResponseEntity<List<ProductResponse>> getFilteredMotherboards(HttpServletRequest request) {
         Map<String, String[]> params = request.getParameterMap();
         MotherboardFilter filter = new MotherboardFilter(params);
@@ -157,7 +158,7 @@ public class ProductController {
      * @return Odpowiedź HTTP zawierająca listę {@link ProductResponse}, czyli DTO mających uproszczone dane produktów.
      *
      */
-    @GetMapping(UrlPath.MEMORY)
+    @GetMapping(ProductCategoryCode.RAM)
     public ResponseEntity<List<ProductResponse>> getFilteredMemories(HttpServletRequest request) {
         Map<String, String[]> params = request.getParameterMap();
         MemoryFilter filter = new MemoryFilter(params);
@@ -174,7 +175,7 @@ public class ProductController {
      * @return Odpowiedź HTTP zawierająca listę {@link ProductResponse}, czyli DTO mających uproszczone dane produktów.
      *
      */
-    @GetMapping(UrlPath.GRAPHICS_CARD)
+    @GetMapping(ProductCategoryCode.GRAPHICS_CARD)
     public ResponseEntity<List<ProductResponse>> getFilteredGraphicCards(HttpServletRequest request) {
         Map<String, String[]> params = request.getParameterMap();
         GpuFilter filter = new GpuFilter(params);
@@ -190,7 +191,7 @@ public class ProductController {
      *                służący do filtrowania wyników.
      * @return Odpowiedź HTTP zawierająca listę {@link ProductResponse}, czyli DTO mających uproszczone dane produktów.
      */
-    @GetMapping(UrlPath.POWER_SUPPLY)
+    @GetMapping(ProductCategoryCode.POWER_SUPPLY)
     public ResponseEntity<List<ProductResponse>> getFilteredPowerSupplies(HttpServletRequest request) {
         Map<String, String[]> params = request.getParameterMap();
         PowerSupplyFilter filter = new PowerSupplyFilter(params);
@@ -206,7 +207,7 @@ public class ProductController {
      *                służący do filtrowania wyników.
      * @return Odpowiedź HTTP zawierająca listę {@link ProductResponse}, czyli DTO mających uproszczone dane produktów.
      */
-    @GetMapping(UrlPath.CASE)
+    @GetMapping(ProductCategoryCode.CASE)
     public ResponseEntity<List<ProductResponse>> getFilteredCases(HttpServletRequest request) {
         Map<String, String[]> params = request.getParameterMap();
         CaseFilter filter = new CaseFilter(params);
@@ -222,7 +223,7 @@ public class ProductController {
      *                służący do filtrowania wyników.
      * @return Odpowiedź HTTP zawierająca listę {@link ProductResponse}, czyli DTO mających uproszczone dane produktów.
      */
-    @GetMapping(UrlPath.SSD)
+    @GetMapping(ProductCategoryCode.SSD)
     public ResponseEntity<List<ProductResponse>> getFilteredSSDs(HttpServletRequest request) {
         Map<String, String[]> params = request.getParameterMap();
         SsdFilter filter = new SsdFilter(params);
@@ -238,7 +239,7 @@ public class ProductController {
      *                służący do filtrowania wyników.
      * @return Odpowiedź HTTP zawierająca listę {@link ProductResponse}, czyli DTO mających uproszczone dane produktów.
      */
-    @GetMapping(UrlPath.HDD)
+    @GetMapping(ProductCategoryCode.HDD)
     public ResponseEntity<List<ProductResponse>> getFilteredHDDs(HttpServletRequest request) {
         Map<String, String[]> params = request.getParameterMap();
         HddFilter filter = new HddFilter(params);
@@ -254,7 +255,7 @@ public class ProductController {
      *                służący do filtrowania wyników.
      * @return Odpowiedź HTTP zawierająca listę {@link ProductResponse}, czyli DTO mających uproszczone dane produktów.
      */
-    @GetMapping(UrlPath.AIR_COOLER)
+    @GetMapping(ProductCategoryCode.AIR_COOLER)
     public ResponseEntity<List<ProductResponse>> getFilteredAirCoolers(HttpServletRequest request) {
         Map<String, String[]> params = request.getParameterMap();
         AirCoolerFilter filter = new AirCoolerFilter(params);
@@ -270,7 +271,7 @@ public class ProductController {
      *                służący do filtrowania wyników.
      * @return Odpowiedź HTTP zawierająca listę {@link ProductResponse}, czyli DTO mających uproszczone dane produktów.
      */
-    @GetMapping(UrlPath.LIQUID_COOLER)
+    @GetMapping(ProductCategoryCode.LIQUID_COOLER)
     public ResponseEntity<List<ProductResponse>> getFilteredLiquidCoolers(HttpServletRequest request) {
         Map<String, String[]> params = request.getParameterMap();
         LiquidCoolerFilter filter = new LiquidCoolerFilter(params);

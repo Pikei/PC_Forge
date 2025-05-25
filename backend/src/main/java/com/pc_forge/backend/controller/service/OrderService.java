@@ -19,7 +19,10 @@ import com.pc_forge.backend.view.response.order.ProductOrderResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -155,7 +158,7 @@ public class OrderService {
         Order order = new Order();
         order.setUser(user);
         order.setShippingAddress(address);
-        order.setOrderDate(LocalDate.now());
+        order.setOrderDate(new Timestamp(System.currentTimeMillis()));
         List<ShoppingCart> productsInShoppingCart = shoppingCartRepository.findById_UserId(user.getId());
         if (productsInShoppingCart.isEmpty()) {
             throw new InvalidOrderDataException("Shopping cart of user \"" + user.getUsername() + "\" is empty");
@@ -189,8 +192,13 @@ public class OrderService {
         orderResponse.setShippingAddress(order.getAddress());
         orderResponse.setOrderStatus(order.getStatus().getStatusName());
         orderResponse.setOrderStatusDescription(order.getStatus().getStatusDescription());
-        orderResponse.setOrderDate(order.getOrderDate());
-        orderResponse.setDeliveryDate(order.getDeliveryDate());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
+        orderResponse.setOrderDate(order.getOrderDate().toLocalDateTime().format(formatter));
+        if (order.getDeliveryDate() != null) {
+            orderResponse.setDeliveryDate(order.getDeliveryDate().toLocalDateTime().format(formatter));
+        } else {
+            orderResponse.setDeliveryDate(null);
+        }
         orderResponse.setTotalCost(order.getTotalCost());
         List<ProductOrderResponse> productOrder = new ArrayList<>();
         for (OrderDetail orderDetail : orderDetails) {

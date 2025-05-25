@@ -1,0 +1,210 @@
+<section>
+    <div class="filter_header">
+        <h3>Rodzaj pamięci</h3>
+        <a (click)="deleteFilters('ram_type')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.ram_type) {
+            @for (filter_option of filter.ram_type; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'ram_type')"
+                               [checked]="checkIfSelected(filter_option[0], 'ram_type')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.ram_type.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'ram_type')"
+                               [checked]="checkIfSelected(filter_option[0], 'ram_type')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.ram_type.length > 5"
+           (click)="expandOptions.ram_type = !expandOptions.ram_type">{{ expandOptions.ram_type ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Pojemność łączna</h3>
+        <a (click)="deleteFilters('ram_cap')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.ram_cap) {
+            @for (filter_option of filter.ram_cap; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }}GB ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'ram_cap')"
+                               [checked]="checkIfSelected(filter_option[0], 'ram_cap')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.ram_cap.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }}GB ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'ram_cap')"
+                               [checked]="checkIfSelected(filter_option[0], 'ram_cap')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.ram_cap.length > 5"
+           (click)="expandOptions.ram_cap = !expandOptions.ram_cap">{{ expandOptions.ram_cap ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Częstotliwość taktowania</h3>
+        <a (click)="deleteFilters('freq')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.freq) {
+            @for (filter_option of filter.freq; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }}MHz ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'freq')"
+                               [checked]="checkIfSelected(filter_option[0], 'freq')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.freq.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }}MHz ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'freq')"
+                               [checked]="checkIfSelected(filter_option[0], 'freq')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.freq.length > 5"
+           (click)="expandOptions.freq = !expandOptions.freq">{{ expandOptions.freq ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Liczba modułów w zestawie</h3>
+        <a (click)="deleteFilters('modules')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.modules) {
+            @for (filter_option of filter.modules; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'modules')"
+                               [checked]="checkIfSelected(filter_option[0], 'modules')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.modules.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'modules')"
+                               [checked]="checkIfSelected(filter_option[0], 'modules')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.modules.length > 5"
+           (click)="expandOptions.modules = !expandOptions.modules">{{ expandOptions.modules ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Opóźnienie zegara</h3>
+        <a (click)="deleteFilters('latency')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @if (expandOptions.latency) {
+            @for (filter_option of filter.latency; track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'latency')"
+                               [checked]="checkIfSelected(filter_option[0], 'latency')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        } @else {
+            @for (filter_option of filter.latency.slice(0, 5); track filter_option) {
+                <div class="option_wrapper">
+                    <label class="option_checkbox_wrapper">
+                        <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
+                        <input type="checkbox"
+                               [value]="filter_option[0]"
+                               (change)="toggleFilterOption(filter_option[0], 'latency')"
+                               [checked]="checkIfSelected(filter_option[0], 'latency')">
+                        <span class="checkbox"></span>
+                    </label>
+                </div>
+            }
+        }
+        <a *ngIf="filter.latency.length > 5"
+           (click)="expandOptions.latency = !expandOptions.latency">{{ expandOptions.latency ? "zwiń" : "rozwiń wszystko" }}</a>
+    </div>
+</section>
+
+<section>
+    <div class="filter_header">
+        <h3>Podświetlenie</h3>
+        <a (click)="deleteFilters('light')">usuń</a>
+    </div>
+    <div class="filter_body">
+        @for (filter_option of filter.light; track filter_option) {
+            <div class="option_wrapper">
+                <label class="option_checkbox_wrapper">
+                    <p>{{ filter_option[0] ? "Tak" : "Nie" }} ({{ filter_option[1] }})</p>
+                    <input type="radio"
+                           [value]="filter_option[0]"
+                           (change)="toggleBooleanOption(filter_option[0], 'light')"
+                           [checked]="checkIfSelected(filter_option[0], 'light')">
+                    <span class="radio"></span>
+                </label>
+            </div>
+        }
+    </div>
+</section>

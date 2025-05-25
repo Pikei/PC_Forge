@@ -1,28 +1,32 @@
 <div class="product_filter">
+    <a (click)="clearAllFilters()">Usuń wszystkie filtry</a>
     <section>
         <div class="filter_header">
             <h3>Cena</h3>
-            <a>usuń</a>
+            <a (click)="clearPrice()">usuń</a>
         </div>
-        <div class="filter_body" id="price_range">
-            <input type="number" placeholder="Od">
+        <div class="filter_body" id="value_range">
+            <input type="number" id="price_min" placeholder="Od" [min]="getMinPrice()" [max]="getMaxPrice()">
             <p>――</p>
-            <input type="number" placeholder="Do">
+            <input type="number" id="price_max" placeholder="Do" [min]="getMinPrice()" [max]="getMaxPrice()">
         </div>
     </section>
 
     <section>
         <div class="filter_header">
             <h3>Producent</h3>
-            <a>usuń</a>
+            <a (click)="selectedProducers = []">usuń</a>
         </div>
         <div class="filter_body">
             @if (expandProducers) {
                 @for (filter_option of filter.producer; track filter_option) {
                     <div class="option_wrapper">
-                        <<label class="option_checkbox_wrapper">
+                        <label class="option_checkbox_wrapper">
                         <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
-                        <input type="checkbox" [value]="filter_option[0]">
+                            <input type="checkbox"
+                                   [value]="filter_option[0]"
+                                   (change)="toggleProducer(filter_option[0])"
+                                   [checked]="producerSelected(filter_option[0])">
                         <span class="checkbox"></span>
                     </label>
                     </div>
@@ -32,7 +36,10 @@
                     <div class="option_wrapper">
                         <label class="option_checkbox_wrapper">
                             <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
-                            <input type="checkbox" [value]="filter_option[0]">
+                            <input type="checkbox"
+                                   [value]="filter_option[0]"
+                                   (change)="toggleProducer(filter_option[0])"
+                                   [checked]="producerSelected(filter_option[0])">
                             <span class="checkbox"></span>
                         </label>
                     </div>
@@ -43,9 +50,17 @@
         </div>
     </section>
 
-    @if (category == 'CPU') {
-        <app-cpu-filter [filter]="filter"></app-cpu-filter>
-    }
+    <app-cpu-filter *ngIf="category == 'CPU'" #productFilter [filter]="filter"></app-cpu-filter>
+    <app-motherboard-filter *ngIf="category == 'MB'" #productFilter [filter]="filter"></app-motherboard-filter>
+    <app-memory-filter *ngIf="category == 'RAM'" #productFilter [filter]="filter"></app-memory-filter>
+    <app-gpu-filter *ngIf="category == 'GPU'" #productFilter [filter]="filter"></app-gpu-filter>
+    <app-ps-filter *ngIf="category == 'PS'" #productFilter [filter]="filter"></app-ps-filter>
+    <app-case-filter *ngIf="category == 'CASE'" #productFilter [filter]="filter"></app-case-filter>
+    <app-ssd-filter *ngIf="category == 'SSD'" #productFilter [filter]="filter"></app-ssd-filter>
+    <app-hdd-filter *ngIf="category == 'HDD'" #productFilter [filter]="filter"></app-hdd-filter>
+    <app-liquid-cooler-filter *ngIf="category == 'LIQUID_COOLER'" #productFilter
+                              [filter]="filter"></app-liquid-cooler-filter>
+    <app-air-cooler-filter *ngIf="category == 'AIR_COOLER'" #productFilter [filter]="filter"></app-air-cooler-filter>
 
     <div class="button_wrapper">
         <button type="button" class="apply-filter-btn" (click)="applyFilter()">Zastosuj filtry</button>

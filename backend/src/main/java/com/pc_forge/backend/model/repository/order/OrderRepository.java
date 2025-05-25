@@ -1,9 +1,7 @@
 package com.pc_forge.backend.model.repository.order;
 
 import com.pc_forge.backend.model.entity.order.Order;
-import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;

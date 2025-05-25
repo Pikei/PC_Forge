@@ -97,9 +97,9 @@ public final class CaseService extends AbstractProductService<Case> {
         response.setWidthMinimum(caseRepository.getMinWidth());
         response.setWidthMaximum(caseRepository.getMaxWidth());
         response.setHeightMaximum(caseRepository.getMinHeight());
-        response.setHeightMaximum(caseRepository.getMaxHeight());
+        response.setHeightMinimum(caseRepository.getMaxHeight());
         response.setDepthMaximum(caseRepository.getMinDepth());
-        response.setDepthMaximum(caseRepository.getMaxDepth());
+        response.setDepthMinimum(caseRepository.getMaxDepth());
         response.setHasWindow(caseRepository.getWindowFilter());
         response.setHasPowerSupply(caseRepository.getPsIncludedFilter());
         response.setPsPower(caseRepository.getPsPowerFilter());
