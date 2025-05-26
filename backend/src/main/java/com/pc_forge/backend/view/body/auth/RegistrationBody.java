@@ -39,7 +39,7 @@ public class RegistrationBody {
      */
     @NotNull
     @NotBlank
-    @Pattern(regexp = "^[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]{3,64}$")
+    @Pattern(regexp = "^[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]{3,64}$")
     private String firstName;
 
     /**
@@ -47,7 +47,7 @@ public class RegistrationBody {
      */
     @NotNull
     @NotBlank
-    @Pattern(regexp = "^[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]{3,64}$")
+    @Pattern(regexp = "^[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+(-[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+)?$")
     private String lastName;
 
     /**

@@ -1,4 +1,6 @@
 import {Injectable} from '@angular/core';
+import {TokenService} from './token.service';
+import {Router} from '@angular/router';
 
 @Injectable({providedIn: 'root'})
 export class CartService {
@@ -10,6 +12,9 @@ export class CartService {
         productPrice: number,
         productQuantity: number
     }[] = [];
+
+    constructor(private tokenService: TokenService, private router: Router) {
+    }
 
     setProducts(products: any[]) {
         this.products = products;
@@ -36,13 +41,17 @@ export class CartService {
     }
 
     addProduct(product: any) {
-        for (let i = 0; i < this.products.length; i++) {
-            if (this.products[i].productEan === product.productEan) {
-                this.products[i].productQuantity++;
-                return;
+        if (!this.tokenService.getToken()) {
+            this.router.navigate(['/login']);
+        } else {
+            for (let i = 0; i < this.products.length; i++) {
+                if (this.products[i].productEan === product.productEan) {
+                    this.products[i].productQuantity++;
+                    return;
+                }
             }
+            this.products.push(product);
         }
-        this.products.push(product);
     }
 
     removeProduct(productId: number) {

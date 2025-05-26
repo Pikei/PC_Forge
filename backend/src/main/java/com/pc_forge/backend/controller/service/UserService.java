@@ -95,11 +95,11 @@ public class UserService {
      */
     public void createAccount(RegistrationBody registration) throws UserAlreadyExistsException, EmailFailureException {
         if (userRepository.findByEmailIgnoreCase(registration.getEmail()).isPresent()) {
-            throw new UserAlreadyExistsException("Email \"" + registration.getEmail() + "\" jest już przypisany do innego użytkownika");
+            throw new UserAlreadyExistsException("EMAIL_TAKEN");
         }
 
         if (userRepository.findByUsernameIgnoreCase(registration.getUsername()).isPresent()) {
-            throw new UserAlreadyExistsException("Nazwa użytkownika \"" + registration.getUsername() + "\" jest już zajęta");
+            throw new UserAlreadyExistsException("USERNAME_TAKEN");
         }
         User user = new User();
         user.setEmail(registration.getEmail());

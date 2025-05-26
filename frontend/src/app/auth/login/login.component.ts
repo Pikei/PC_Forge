@@ -19,9 +19,24 @@ export class LoginComponent {
     }
 
     login() {
+        let login = (document.querySelector('#login') as HTMLInputElement);
+        let password = (document.querySelector('#password') as HTMLInputElement);
+        if (login.value == "") {
+            login.classList.add('invalid');
+            login.placeholder = "Podaj login"
+        }
+        if (password.value == "") {
+            password.classList.add('invalid');
+            password.placeholder = "Podaj hasło"
+        }
+
+        if (login.value == "" || password.value == "") {
+            return;
+        }
+
         const loginBody = {
-            "username": (document.querySelector('#login') as HTMLInputElement)?.value,
-            "password": (document.querySelector('#password') as HTMLInputElement)?.value
+            "username": login.value,
+            "password": password.value
         }
         this.sender.requestPost('http://localhost:8080/login', loginBody).subscribe(
             {
@@ -29,7 +44,10 @@ export class LoginComponent {
                     this.handleResponse(response);
                 },
                 error: () => {
-                    alert("Nieprawidłowy login lub hasło")
+                    login.value = "";
+                    login.classList.add('invalid');
+                    password.value = "";
+                    password.classList.add('invalid');
                 }
             });
     }
@@ -48,5 +66,9 @@ export class LoginComponent {
             }
             alert(message);
         }
+    }
+
+    removeClass($event: Event) {
+        ($event.target as HTMLInputElement).classList.remove('invalid');
     }
 }

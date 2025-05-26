@@ -24,6 +24,10 @@
     align-items: center;
     width: 20%;
     height: 50%;
+
+    h4 {
+        text-align: center;
+    }
 }
 
 img {
@@ -65,8 +69,44 @@ button:hover {
 
 a {
     color: #dadada;
-    text-decoration: underline;
     font-size: 15px;
     margin-bottom: 10px;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #ff6600;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.invalid {
+    animation: shake 0.5s;
+    text-align: center;
+    font-size: 12px;
+    border: 2px solid red;
+}
+
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(10px);
+    }
+    50% {
+        transform: translateX(-10px);
+    }
+    75% {
+        transform: translateX(10px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+input {
+    border: 2px solid #dadada;
+    color: #dadada;
 }
 

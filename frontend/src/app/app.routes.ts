@@ -13,6 +13,7 @@ import {ProductsInCategoryComponent} from './products-in-category/products-in-ca
 import {ProductSearchPageComponent} from './product-search-page/product-search-page.component';
 import {VerifyComponent} from './auth/verify/verify.component';
 import {ResetComponent} from './auth/reset/reset.component';
+import {ForgotPasswordComponent} from './auth/forgot-password/forgot-password.component';
 
 export const routes: Routes = [
     {path: '', component: HomeComponent},
@@ -29,6 +30,7 @@ export const routes: Routes = [
     {path: 'search/:name', component: ProductSearchPageComponent},
     {path: 'verify', component: VerifyComponent},
     {path: 'reset_password', component: ResetComponent},
+    {path: 'forgot_password', component: ForgotPasswordComponent},
     {path: 'page_not_found', component: ErrorPageComponent},
     {path: '**', component: ErrorPageComponent},
 ];

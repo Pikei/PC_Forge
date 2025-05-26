@@ -2,14 +2,43 @@
     <a id="home-link" href="/">
         <img src="PC_Forge_Logo_White.png">
     </a>
-    <form class="login-form">
-        <input id="email" class="form-element" type="email" placeholder="email">
-        <input id="login" class="form-element" type="text" placeholder="login">
-        <input id="password" class="form-element" type="password" placeholder="hasło">
-        <input id="password-repeated" class="form-element" type="password" placeholder="powtórz hasło">
-        <input id="firstname" class="form-element" type="text" placeholder="imię">
-        <input id="lastname" class="form-element" type="text" placeholder="nazwisko">
-        <input id="phone" class="form-element" type="text" placeholder="numer telefonu">
+    <form class="login-form" ngNativeValidate>
+        <input id="email" class="form-element"
+               type="email"
+               placeholder="email"
+               required
+               pattern="^.+@.+\..+$"
+               (change)="deleteClass($event)">
+        <input id="login" class="form-element"
+               type="text" placeholder="login"
+               minlength="3" maxlength="64"
+               required
+               (change)="deleteClass($event)">
+        <input id="password" class="form-element"
+               type="password" placeholder="hasło"
+               pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$"
+               required
+               (change)="deleteClass($event)">
+        <input id="password-repeated" class="form-element"
+               type="password"
+               placeholder="powtórz hasło"
+               pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$"
+               required
+               (change)="deleteClass($event)">
+        <input id="firstname" class="form-element" type="text" placeholder="imię"
+               pattern="^[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]{3,64}$"
+               required
+               (change)="deleteClass($event)">
+        <input id="lastname" class="form-element"
+               type="text" placeholder="nazwisko"
+               pattern="^[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]{3,64}$"
+               required
+               (change)="deleteClass($event)">
+        <input id="phone" class="form-element" type="text"
+               placeholder="numer telefonu"
+               pattern="^\\d{9}$"
+               required
+               (change)="deleteClass($event)">
 
         <button type="button" class="form-element" (click)="register()">Dołącz do kuźni</button>
         <a href="/login">Masz już konto? Zaloguj się</a>

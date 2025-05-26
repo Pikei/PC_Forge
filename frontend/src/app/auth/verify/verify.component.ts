@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {RequestSender} from '../../request.sender';
 import {NgIf} from '@angular/common';
 
@@ -15,9 +15,12 @@ export class VerifyComponent {
     private token: string = "";
     success: boolean = false;
 
-    constructor(private route: ActivatedRoute, private sender: RequestSender) {
+    constructor(private route: ActivatedRoute, private router: Router, private sender: RequestSender) {
         this.route.queryParams.subscribe(params => {
             this.token = params['token'];
+            if (this.token == null) {
+                this.router.navigate(['/page_not_found']);
+            }
         })
         this.sender.requestPost('http://localhost:8080/verify?token=' + this.token).subscribe({
             next: () => {

@@ -1,1 +1,13 @@
-<p>reset works!</p>
+<div class="content">
+    <form class="reset-form" ngNativeValidate>
+        <a id="home-link" href="/">
+            <img src="PC_Forge_Logo_White.png">
+        </a>
+        <input type="password" class="form-element" id="password" [class.error]="invalid()"
+               placeholder="Wpisz nowe hasło" pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$" required>
+        <input type="password" class="form-element" id="passwordRepeat" [class.error]="invalid()"
+               placeholder="Powtórz hasło" pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$" required>
+        <button class="form-element" (click)="resetPassword()">Resetuj hasło</button>
+        <p id="invalid" *ngIf="invalid()">{{ invalidMessage() }}</p>
+    </form>
+</div>
