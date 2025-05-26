@@ -124,27 +124,18 @@ export class HeaderComponent implements OnInit {
 
     searchItems() {
         const searchInput: string = (document.querySelector("#search-input") as HTMLInputElement).value;
-        if (searchInput != "" && searchInput) {
+        if (searchInput == "" || searchInput == null) {
             if (this.category == "") {
-                this.router.navigate(['search/' + searchInput]);
+                window.location.href = "http://localhost:4200/category";
             } else {
-                this.router.navigateByUrl('/', {
-                    skipLocationChange: true
-                }).then(() => {
-                    this.router.navigate(['category/' + this.category], {
-                        queryParams: {
-                            name: searchInput
-                        }
-                    });
-                });
+                window.location.href = "http://localhost:4200/category/" + this.category;
             }
         } else {
-            this.router.navigateByUrl('/', {
-                skipLocationChange: true
-            }).then(() => {
-                this.router.navigate(['category/' + this.category]);
-            });
-
+            if (this.category == "") {
+                window.location.href = "http://localhost:4200/search?name=" + searchInput;
+            } else {
+                window.location.href = "http://localhost:4200/category/" + this.category + "?name=" + searchInput;
+            }
         }
     }
 }

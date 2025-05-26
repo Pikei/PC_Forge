@@ -136,7 +136,6 @@ export class ProductFilterComponent implements OnInit, AfterViewInit {
     }
 
     searchName() {
-        console.log(this.name);
         return this.name != "";
     }
 

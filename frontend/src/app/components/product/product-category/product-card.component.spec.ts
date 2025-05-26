@@ -1,18 +1,18 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {ProductSearchPageComponent} from './product-search-page.component';
+import {ProductCardComponent} from './product-card.component';
 
-describe('ProductSearchPageComponent', () => {
-    let component: ProductSearchPageComponent;
-    let fixture: ComponentFixture<ProductSearchPageComponent>;
+describe('ProductCardComponent', () => {
+    let component: ProductCardComponent;
+    let fixture: ComponentFixture<ProductCardComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [ProductSearchPageComponent]
+            imports: [ProductCardComponent]
         })
             .compileComponents();
 
-        fixture = TestBed.createComponent(ProductSearchPageComponent);
+        fixture = TestBed.createComponent(ProductCardComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

@@ -41,7 +41,6 @@ export class RegisterComponent {
                 "lastName": lastName.value,
                 "phoneNumber": phone.value,
             }
-            console.log(registerBody)
             this.sender.requestPost('http://localhost:8080/register', registerBody).subscribe(
                 {
                     next: () => {
@@ -158,7 +157,6 @@ export class RegisterComponent {
             lastName.value = "";
             lastName.placeholder = "Nazwisko powinno zaczynać się wielką literą";
         }
-        console.log()
     }
 
     private validatePhone(phone: HTMLInputElement) {

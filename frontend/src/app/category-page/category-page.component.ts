@@ -49,6 +49,10 @@ export class CategoryPageComponent {
             default:
                 return;
         }
-        this.router.navigate(['/category/' + path]);
+        this.router.navigateByUrl('/', {
+            skipLocationChange: true
+        }).then(() => {
+            this.router.navigate(['category/' + path]);
+        });
     }
 }

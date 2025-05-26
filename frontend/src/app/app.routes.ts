@@ -9,11 +9,12 @@ import {PaymentComponent} from './payment/payment.component';
 import {ProductPageComponent} from './product-page/product-page.component';
 import {ErrorPageComponent} from './error-page/error-page.component';
 import {CategoryPageComponent} from './category-page/category-page.component';
-import {ProductsInCategoryComponent} from './products-in-category/products-in-category.component';
-import {ProductSearchPageComponent} from './product-search-page/product-search-page.component';
+import {ProductListComponent} from './products-list/product-list.component';
 import {VerifyComponent} from './auth/verify/verify.component';
 import {ResetComponent} from './auth/reset/reset.component';
 import {ForgotPasswordComponent} from './auth/forgot-password/forgot-password.component';
+import {ConfigListComponent} from './config-list/config-list.component';
+import {ConfigurationComponent} from './configuration/configuration.component';
 
 export const routes: Routes = [
     {path: '', component: HomeComponent},
@@ -26,8 +27,11 @@ export const routes: Routes = [
     {path: 'payment/success', component: PaymentComponent},
     {path: 'product', component: ProductPageComponent},
     {path: 'category', component: CategoryPageComponent},
-    {path: 'category/:category', component: ProductsInCategoryComponent},
-    {path: 'search/:name', component: ProductSearchPageComponent},
+    {path: 'category/:categoryName', component: ProductListComponent},
+    {path: 'search/:categoryName', component: ProductListComponent},
+    {path: 'search', component: ProductListComponent},
+    {path: 'config_list', component: ConfigListComponent},
+    {path: 'config/:configName', component: ConfigurationComponent},
     {path: 'verify', component: VerifyComponent},
     {path: 'reset_password', component: ResetComponent},
     {path: 'forgot_password', component: ForgotPasswordComponent},

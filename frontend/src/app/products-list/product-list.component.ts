@@ -2,27 +2,26 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RequestSender} from '../request.sender';
 import {HeaderComponent} from '../components/header/header.component';
-import {ProductCategoryComponent} from '../components/product/product-category/product-category.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgForOf, NgIf} from '@angular/common';
 import {ProductFilterComponent} from '../components/product/filter/product-filter/product-filter.component';
-import * as querystring from 'node:querystring';
+import {ProductCardComponent} from '../components/product/product-category/product-card.component';
 
 @Component({
-    selector: 'app-products-in-category',
+    selector: 'app-product-list',
     imports: [
         HeaderComponent,
-        ProductCategoryComponent,
         ReactiveFormsModule,
         FormsModule,
         NgIf,
         ProductFilterComponent,
-        NgForOf
+        NgForOf,
+        ProductCardComponent
     ],
-    templateUrl: './products-in-category.component.html',
-    styleUrl: './products-in-category.component.scss'
+    templateUrl: './product-list.component.html',
+    styleUrl: './product-list.component.scss'
 })
-export class ProductsInCategoryComponent implements OnInit {
+export class ProductListComponent implements OnInit {
     category!: string;
     filter!: any;
     products: any[] = [];
@@ -31,12 +30,42 @@ export class ProductsInCategoryComponent implements OnInit {
     lastPage!: number;
     productsOnPage!: any[];
     paramMap: Map<string, string[]> = new Map()
+    modeCategory: boolean = false;
+    modeSearch: boolean = false;
+    name: string = "";
+    categories: any[] = [];
+
 
     constructor(private route: ActivatedRoute, private router: Router, private sender: RequestSender) {
     }
 
     ngOnInit(): void {
-        this.category = this.route.snapshot.paramMap.get('category')!;
+        this.initMode();
+        if (this.modeCategory) {
+            this.initCategoryView();
+        } else if (this.modeSearch) {
+            this.initSearchView();
+        } else {
+            this.router.navigate(['/page_not_found']);
+        }
+    }
+
+    private initMode() {
+        if (this.route.snapshot.paramMap.has('categoryName')) {
+            this.category = this.route.snapshot.paramMap.get('categoryName')!;
+            this.modeCategory = true;
+            return;
+        }
+        if (this.route.snapshot.url.at(0)?.path == 'search') {
+            this.modeSearch = true;
+            if (this.route.snapshot.queryParams['name']) {
+                this.name = this.route.snapshot.queryParams['name'];
+                console.log(this.name)
+            }
+        }
+    }
+
+    private initCategoryView() {
         this.route.queryParamMap.subscribe(params => {
             this.paramMap = new Map<string, string[]>();
             params.keys.forEach(key => {
@@ -67,7 +96,29 @@ export class ProductsInCategoryComponent implements OnInit {
         )
     }
 
-    getCategoryName(): string {
+    private initSearchView() {
+        this.sender.requestGet('http://localhost:8080/product/search/' + this.name).subscribe(
+            response => {
+                this.products = response.body;
+                for (const product of this.products) {
+                    if (!this.categories.includes(product.category)) {
+                        this.categories.push(product.category);
+                    }
+                }
+                this.updateProductsOnPage();
+            }
+        )
+    }
+
+    isCategoryMode(): boolean {
+        return this.modeCategory;
+    }
+
+    isSearchMode(): boolean {
+        return this.modeSearch;
+    }
+
+    getCategoryNameFromUrl(): string {
         switch (this.category) {
             case "processor":
                 return "Procesory";
@@ -90,9 +141,78 @@ export class ProductsInCategoryComponent implements OnInit {
             case "pc_case":
                 return "Obudowy komputerowe";
             default:
-                this.router.navigate(['/page_not_found']);
                 return "";
         }
+    }
+
+    getCategoryNameFromCode(categoryCode: string): string {
+        switch (categoryCode) {
+            case "CPU":
+                return "Procesory";
+            case "GPU":
+                return "Karty graficzne";
+            case "RAM":
+                return "Pamięci RAM";
+            case "MB":
+                return "Płyty główne";
+            case "PS":
+                return "Zasilacze komputerowe"
+            case "SSD":
+                return "Dyski SSD";
+            case "HDD":
+                return "Dyski HDD";
+            case "AIR_COOLER":
+                return "Chłodzenie powietrzem";
+            case "LIQUID_COOLER":
+                return "Chłodzenie cieczą";
+            case "CASE":
+                return "Obudowy komputerowe";
+            default:
+                return "";
+        }
+    }
+
+    goToCategory(category: any) {
+        let path: string = "";
+        switch (category) {
+            case "CPU":
+                path = "processor";
+                break;
+            case "GPU":
+                path = "graphics_card";
+                break;
+            case "RAM":
+                path = "memory";
+                break;
+            case "MB":
+                path = "motherboard";
+                break;
+            case "PS":
+                path = "power_supply";
+                break;
+            case "SSD":
+                path = "ssd";
+                break;
+            case "HDD":
+                path = "hdd";
+                break;
+            case "AIR_COOLER":
+                path = "air_cooler";
+                break;
+            case "LIQUID_COOLER":
+                path = "liquid_cooler";
+                break;
+            case "CASE":
+                path = "pc_case";
+                break;
+            default:
+                path = "";
+        }
+        this.router.navigate(['/category/' + path], {queryParams: {name: this.name}});
+    }
+
+    numberOfFoundProducts() {
+        return this.products.length;
     }
 
     updateProductsOnPage() {
@@ -216,7 +336,6 @@ export class ProductsInCategoryComponent implements OnInit {
     }
 
     private parseParams(event: string) {
-        console.log(event)
         let result: { [key: string]: string } = {};
         let params = event.substring(1).split("&");
         for (const param of params) {
@@ -226,5 +345,10 @@ export class ProductsInCategoryComponent implements OnInit {
             }
         }
         return result;
+    }
+
+
+    getCategories() {
+        return this.categories;
     }
 }

@@ -5,14 +5,14 @@ import {NgIf} from '@angular/common';
 import {Router} from '@angular/router';
 
 @Component({
-    selector: 'app-product-category',
+    selector: 'app-product-card',
     imports: [
         NgIf
     ],
-    templateUrl: './product-category.component.html',
-    styleUrl: './product-category.component.scss'
+    templateUrl: './product-card.component.html',
+    styleUrl: './product-card.component.scss'
 })
-export class ProductCategoryComponent {
+export class ProductCardComponent {
     @Input() product: any;
 
     constructor(private sender: RequestSender, private cart: CartService, private router: Router) {

@@ -21,7 +21,7 @@
             <option value="air_cooler">Chłodzenie powietrzem</option>
         </select>
         <div class="btn-background">
-            <button (click)="searchItems()"><img src="search-icon.png"></button>
+            <button type="button" (click)="searchItems()"><img src="search-icon.png"></button>
         </div>
     </div>
 
@@ -41,7 +41,7 @@
         <a>
             <button>Konfigurator</button>
         </a>
-        <a>
+        <a href="/config_list">
             <button>Moje konfiguracje</button>
         </a>
     </div>
@@ -58,10 +58,10 @@
     </div>
     <div class="account-links">
         <a href="/orders">Moje zamówienia</a>
-        <a href="https://example.com/configurations" target="_blank">Zapisane konfiguracje</a>
+        <a href="/config_list">Zapisane konfiguracje</a>
     </div>
     <div class="danger-links">
         <a (click)="logout()">Wyloguj</a>
-        <a (click)="deleteAccount()" target="_blank">Usuń konto</a>
+        <a (click)="deleteAccount()">Usuń konto</a>
     </div>
 </div>

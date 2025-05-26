@@ -43,7 +43,6 @@ export class OrderListComponent implements OnInit {
         const url = 'http://localhost:8080/order/cancel?order_ID=' + order.id;
         this.sender.requestPost(url, null).subscribe(
             response => {
-                console.log(response);
                 alert(response.body.message);
             });
         this.orders.splice(this.orders.indexOf(order), 1);

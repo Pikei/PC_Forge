@@ -1,9 +1,14 @@
 <app-header></app-header>
 <div class="content">
     <div class="filter_wrapper">
-        <div class="filter">
+        <div class="filter" *ngIf="isCategoryMode()">
             <app-product-filter [filter]="filter" [category]="getCategoryCode()" [activeFilters]="paramMap"
                                 (filterApplied)="getFilteredProducts($event)"></app-product-filter>
+        </div>
+        <div class="filter" *ngIf="isSearchMode()">
+            <h3>Szukaj w kategoriach</h3>
+            <a *ngFor="let category of getCategories()" (click)="goToCategory(category)"
+               class="filter_option">{{ getCategoryNameFromCode(category) }}</a>
         </div>
         <div class="filter_separator"></div>
     </div>
@@ -11,8 +16,9 @@
         <p>Nie znaleziono produktów spełniających określone kryteria</p>
     </div>
     <div class="main" *ngIf="numberOfProductsInCategory() > 0">
+        <h2 *ngIf="isSearchMode()">Wyniki wyszukiwania "{{ name }}" ({{ numberOfFoundProducts() }})</h2>
         <div class="nav">
-            <h2>{{ getCategoryName() }}</h2>
+            <h2 *ngIf="isCategoryMode()">{{ getCategoryNameFromUrl() }}</h2>
             <div class="options">
                 <div class="page_nav_option">
                     <button *ngIf="pageNumber > 1" (click)="prevPage()" class="prev-page-btn">‹</button>
@@ -43,9 +49,9 @@
                 </div>
             </div>
         </div>
-        <div class="product_in_category" *ngIf="products.length > 0">
-            <app-product-category *ngFor="let product of productsOnPage" class="product"
-                                  [product]="product"></app-product-category>
+        <div class="product_list" *ngIf="products.length > 0">
+            <app-product-card *ngFor="let product of productsOnPage" class="product"
+                              [product]="product"></app-product-card>
         </div>
         <div class="pagination">
             <button *ngIf="pageNumber > 1" (click)="goToFirstPage()" class="page-nav-btn">‹‹</button>
