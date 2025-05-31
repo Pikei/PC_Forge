@@ -124,7 +124,7 @@ public final class GpuFilter extends ProductFilter {
         setCommonFilters();
         selectedChipsetProducers = getStringListFromRequestParam(RequestParams.CHIPSET_PRODUCER);
         selectedChipsets = getStringListFromRequestParam(RequestParams.CHIPSET);
-        selectedRamCapacities = getIntegerListFromRequestParam(RequestParams.RAM_CAPACITY);
+        selectedRamCapacities = getIntegerListFromRequestParam(RequestParams.VRAM_CAPACITY);
         selectedRamTypes = getStringListFromRequestParam(RequestParams.RAM_TYPE);
         selectedDlls = getStringListFromRequestParam(RequestParams.DLSS);
         selectedConnectors = getStringListFromRequestParam(RequestParams.CONNECTOR);

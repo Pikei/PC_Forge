@@ -90,6 +90,16 @@
         }
     }
 
+    .item-info a {
+        color: #dadada;
+        text-decoration: none;
+    }
+
+    .item-info a:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
     .image-wrapper {
         width: 80px;
         height: 80px;

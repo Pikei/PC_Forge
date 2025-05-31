@@ -25,7 +25,7 @@
     <div class="summary">
         <div class="item-list">
             @for (cartItem of cartItems.getProducts(); track cartItem.productEan) {
-                <div class="item">
+                <a [href]="'/product?id=' + cartItem.productEan" class="item">
                     <div class="item-data">
                         <div class="image-wrapper">
                             <img [src]="getImgUrl(cartItem)" alt="product-image">
@@ -36,7 +36,7 @@
                         </div>
                     </div>
                     <h4>{{ getProductSummaryPrice(cartItem) }} zł</h4>
-                </div>
+                </a>
             }
         </div>
         <p id="cost">Suma: <span>{{ cartItems.getTotalCost() }} zł</span></p>

@@ -1,0 +1,24 @@
+<div class="product" *ngIf="product != null">
+    <app-product-card class="product_card" [product]="product"></app-product-card>
+    <div class="buttons">
+        <button type="button" class="btn-edit" (click)="changeProduct()">
+            <img id="edit1" src="icons/edit.png" alt="edit-icon">
+            <img id="edit2" src="icons/edit-hover.png" alt="edit-icon">
+        </button>
+        <button type="button" class="btn-remove" (click)="removeProduct()">
+            <img id="trash1" src="icons/trash-white.png" alt="trash">
+            <img id="trash2" src="icons/trash-orange.png" alt="trash">
+        </button>
+    </div>
+</div>
+<div class="product" *ngIf="product == null">
+    <div class="empty product_card">
+        <div class="image-wrapper">
+            <img [src]="getProductIconSrc()" alt="product icon">
+        </div>
+        <p>Nie wybrano produktu</p>
+    </div>
+    <div class="btn-add-wrapper">
+        <button class="btn-add" (click)="changeProduct()">+</button>
+    </div>
+</div>

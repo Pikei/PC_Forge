@@ -77,38 +77,38 @@
 <section>
     <div class="filter_header">
         <h3>Pamięć VRAM</h3>
-        <a (click)="deleteFilters('ram_cap')">usuń</a>
+        <a (click)="deleteFilters('vram_cap')">usuń</a>
     </div>
     <div class="filter_body">
-        @if (expandOptions.ram_cap) {
-            @for (filter_option of filter.ram_cap; track filter_option) {
+        @if (expandOptions.vram_cap) {
+            @for (filter_option of filter.vram_cap; track filter_option) {
                 <div class="option_wrapper">
                     <label class="option_checkbox_wrapper">
                         <p>{{ filter_option[0] }}GB ({{ filter_option[1] }})</p>
                         <input type="checkbox"
                                [value]="filter_option[0]"
-                               (change)="toggleFilterOption(filter_option[0], 'ram_cap')"
-                               [checked]="checkIfSelected(filter_option[0], 'ram_cap')">
+                               (change)="toggleFilterOption(filter_option[0], 'vram_cap')"
+                               [checked]="checkIfSelected(filter_option[0], 'vram_cap')">
                         <span class="checkbox"></span>
                     </label>
                 </div>
             }
         } @else {
-            @for (filter_option of filter.ram_cap.slice(0, 5); track filter_option) {
+            @for (filter_option of filter.vram_cap.slice(0, 5); track filter_option) {
                 <div class="option_wrapper">
                     <label class="option_checkbox_wrapper">
                         <p>{{ filter_option[0] }}GB ({{ filter_option[1] }})</p>
                         <input type="checkbox"
                                [value]="filter_option[0]"
-                               (change)="toggleFilterOption(filter_option[0], 'ram_cap')"
-                               [checked]="checkIfSelected(filter_option[0], 'ram_cap')">
+                               (change)="toggleFilterOption(filter_option[0], 'vram_cap')"
+                               [checked]="checkIfSelected(filter_option[0], 'vram_cap')">
                         <span class="checkbox"></span>
                     </label>
                 </div>
             }
         }
-        <a *ngIf="filter.ram_cap.length > 5"
-           (click)="expandOptions.ram_cap = !expandOptions.ram_cap">{{ expandOptions.ram_cap ? "zwiń" : "rozwiń wszystko" }}</a>
+        <a *ngIf="filter.vram_cap.length > 5"
+           (click)="expandOptions.vram_cap = !expandOptions.vram_cap">{{ expandOptions.vram_cap ? "zwiń" : "rozwiń wszystko" }}</a>
     </div>
 </section>
 

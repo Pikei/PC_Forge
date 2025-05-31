@@ -1,0 +1,66 @@
+.choice {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 200px;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #242424;
+    position: relative;
+    border-radius: 20px;
+
+    h2 {
+        text-align: center;
+    }
+}
+
+.air_cooler_option, .liquid_cooler_option {
+    height: 100%;
+    width: 40%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.2s;
+
+    p {
+        margin: 10%;
+        color: #dadada;
+        font-size: 25px;
+        text-align: center;
+    }
+
+    .image-wrapper {
+        height: 100%;
+        aspect-ratio: 1/1;
+        background-color: #969696;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 20px;
+
+        img {
+            opacity: 0.7;
+            max-width: 80%;
+            max-height: 80%;
+        }
+    }
+}
+
+.air_cooler_option:hover, .liquid_cooler_option:hover {
+    cursor: pointer;
+    background-color: #969696;
+    transition: 0.2s;
+
+    p {
+        color: #0d0d0d;
+    }
+}
+
+.air_cooler_option {
+    border-radius: 0 50px 50px 0;
+}
+
+.liquid_cooler_option {
+    border-radius: 50px 50px;
+}

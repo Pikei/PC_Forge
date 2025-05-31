@@ -91,9 +91,14 @@ public class RequestParams {
     public static final String RAM_SLOTS = "ram_slots";
 
     /**
-     * Parametr określający maksymalną pojemność (lub maksymalną pojemność) pamięci RAM
+     * Parametr określający pojemność (lub maksymalną pojemność) pamięci RAM
      */
     public static final String RAM_CAPACITY = "ram_cap";
+
+    /**
+     * Parametr określający pojemność (lub maksymalną pojemność) pamięci RAM
+     */
+    public static final String VRAM_CAPACITY = "vram_cap";
 
     /**
      * Parametr określający, czy płyta główna posiada moduł Bluetooth

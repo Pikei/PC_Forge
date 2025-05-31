@@ -72,14 +72,6 @@ export class OrderListComponent implements OnInit {
         return (product.productPrice * product.productQuantity).toFixed(2);
     }
 
-    goToProduct(productEan: any) {
-        this.router.navigate(['/product'], {
-            queryParams: {
-                id: productEan
-            }
-        });
-    }
-
     getNumberOfOrders() {
         return this.orders.length;
     }

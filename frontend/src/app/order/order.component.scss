@@ -153,8 +153,9 @@
 
     .item {
         display: flex;
-
         flex-direction: row;
+        color: #dadada;
+        text-decoration: none;
         width: 100%;
         border-bottom: 2px solid #969696;
         justify-content: space-between;
@@ -198,6 +199,11 @@
             width: 25%;
             font-size: 17px;
         }
+    }
+
+    .item:hover {
+        cursor: pointer;
+        text-decoration: underline;
     }
 
     #cost {

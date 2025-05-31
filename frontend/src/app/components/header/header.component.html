@@ -21,24 +21,24 @@
             <option value="air_cooler">Chłodzenie powietrzem</option>
         </select>
         <div class="btn-background">
-            <button type="button" (click)="searchItems()"><img src="search-icon.png"></button>
+            <button type="button" (click)="searchItems()"><img src="icons/search-icon.png"></button>
         </div>
     </div>
 
     <div class="account">
-        <button class="shopping-cart-btn" (click)="shoppingCart()"><img src="cart-icon.png"></button>
+        <button class="shopping-cart-btn" (click)="shoppingCart()"><img src="icons/cart-icon.png"></button>
         <div id="cart-item-count" *ngIf="cartItems.getCounter() > 0">{{ cartItems.getCounter() }}</div>
-        <button class="profile-btn" (click)="showAccountMenu()"><img src="profile-icon.png"></button>
+        <button class="profile-btn" (click)="showAccountMenu()"><img src="icons/profile-icon.png"></button>
     </div>
 </nav>
 
 <div class="hiding-menu" (click)="hideAccountMenu()">
     <p>Wykuj swój komputer</p>
     <div class="hiding-buttons">
-        <a>
-            <button (click)="goToCategoryPage()">Kategorie</button>
+        <a href="/category">
+            <button>Kategorie</button>
         </a>
-        <a>
+        <a href="/config/new">
             <button>Konfigurator</button>
         </a>
         <a href="/config_list">

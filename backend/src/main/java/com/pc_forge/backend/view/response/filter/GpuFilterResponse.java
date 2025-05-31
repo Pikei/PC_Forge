@@ -35,7 +35,7 @@ public final class GpuFilterResponse extends ProductFilterResponse {
      * Lista par zawierających pojemności pamięci RAM kart graficznych
      * i liczbę kart graficznych spełniających kryterium.
      */
-    @JsonProperty(RequestParams.RAM_CAPACITY)
+    @JsonProperty(RequestParams.VRAM_CAPACITY)
     private List<Object[]> ram;
 
     /**

@@ -257,7 +257,7 @@
             <div class="option_wrapper">
                 <label class="option_checkbox_wrapper">
                     <p>{{ filter_option[0] ? "Tak" : "Nie" }} ({{ filter_option[1] }})</p>
-                    <input type="radio"
+                    <input type="radio" name="unlocked"
                            [value]="filter_option[0]"
                            (change)="toggleBooleanOption(filter_option[0], 'unlocked')"
                            [checked]="checkIfSelected(filter_option[0], 'unlocked')">
@@ -267,3 +267,4 @@
         }
     </div>
 </section>
+

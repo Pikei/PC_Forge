@@ -14,7 +14,7 @@ export class GpuFilterComponent extends AbstractProductFilter {
     @Input() filter!: {
         chipset_prod: [],
         chipset: [],
-        ram_cap: [],
+        vram_cap: [],
         ram_type: [],
         dlss: [],
         conn: [],
@@ -30,7 +30,7 @@ export class GpuFilterComponent extends AbstractProductFilter {
     expandOptions = {
         chipset_prod: false,
         chipset: false,
-        ram_cap: false,
+        vram_cap: false,
         ram_type: false,
         dlss: false,
         conn: false,

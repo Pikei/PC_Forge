@@ -4,24 +4,25 @@
     <div class="configuration">
         <div class="config" *ngFor="let config of configurations">
             <div class="options">
-                <div class="name-wrapper" (click)="goToConfig(config.name)">
+                <a [href]="'/config/' + config.name" class="name-wrapper">
                     <h2>{{ config.name }}</h2>
                     <button type="button" class="edit-btn">
-                        <img src="edit.png" alt="edit-icon">
+                        <img id="edit1" src="icons/edit.png" alt="edit-icon">
+                        <img id="edit2" src="icons/edit-hover.png" alt="edit-icon">
                     </button>
-                </div>
+                </a>
                 <div class="price-wrapper">
                     <p class="cost-summary">{{ (config.price).toFixed(2) }} zł</p>
-                    <button type="button" class="add-to-cart-btn" (click)="addToCart(config)">Dodaj do koszyka</button>
+                    <button type="button" class="add-btn" (click)="addToCart(config)">Dodaj do koszyka</button>
                 </div>
             </div>
             <div class="product-wrapper">
-                <div class="product" *ngFor="let product of config.products" (click)="goToProduct(product.productEan)">
+                <a [href]="'/product?id=' + product.productEan" class="product" *ngFor="let product of config.products">
                     <div class="image-wrapper">
                         <img [src]="getImgSrc(product)" [alt]="product.productName">
                     </div>
                     <p>{{ product.productName }}</p>
-                </div>
+                </a>
             </div>
         </div>
     </div>

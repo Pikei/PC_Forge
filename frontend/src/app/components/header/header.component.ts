@@ -62,11 +62,11 @@ export class HeaderComponent implements OnInit {
     @HostListener('window:scroll', ['$event'])
     updateStickyState() {
         const windowScroll = window.window.scrollY;
-        this.sticky = windowScroll >= 150;
+        this.sticky = windowScroll > 0;
         if (this.sticky) {
-            document.body.classList.add('full-height-header');
+            document.body.classList.add('simple_header');
         } else {
-            document.body.classList.remove('full-height-header');
+            document.body.classList.remove('simple_header');
         }
     }
 
@@ -112,10 +112,6 @@ export class HeaderComponent implements OnInit {
                 }
             )
         }
-    }
-
-    goToCategoryPage() {
-        this.router.navigate(['/category']);
     }
 
     setCategory($event: Event) {

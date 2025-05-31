@@ -3,6 +3,7 @@ import {HeaderComponent} from '../components/header/header.component';
 import {RequestSender} from '../request.sender';
 import {NgForOf} from '@angular/common';
 import {Router} from '@angular/router';
+import {CartService} from '../service/shopping-cart.service';
 
 @Component({
     selector: 'app-config-list',
@@ -16,7 +17,7 @@ import {Router} from '@angular/router';
 export class ConfigListComponent {
     configurations: any[] = [];
 
-    constructor(private sender: RequestSender, private router: Router) {
+    constructor(private sender: RequestSender, private router: Router, private cartService: CartService) {
         sender.requestGet('http://localhost:8080/configurations/all').subscribe(
             {
                 next: response => {
@@ -31,16 +32,17 @@ export class ConfigListComponent {
     }
 
     addToCart(config: any) {
-
-    }
-
-    goToConfig(name: string) {
-        this.router.navigate(['/config', name]);
-    }
-
-    goToProduct(productEan: number) {
-        this.router.navigate(['/product'], {
-            queryParams: {id: productEan}
-        })
+        for (let product of config.products) {
+            const cartItem = {
+                producer: product.producer,
+                productCategory: product.productCategory,
+                productEan: product.productEan,
+                productName: product.productName,
+                productPrice: product.productPrice,
+                productQuantity: 1
+            }
+            this.cartService.addProduct(cartItem)
+        }
+        this.sender.requestPost("http://localhost:8080/configurations/add_to_cart/" + config.name).subscribe();
     }
 }

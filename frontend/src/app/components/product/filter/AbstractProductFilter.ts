@@ -1,5 +1,3 @@
-import {EventEmitter, Output} from '@angular/core';
-
 export abstract class AbstractProductFilter {
     selectedFilter: Map<string, (string | number | boolean)[]> = new Map();
 
@@ -40,10 +38,10 @@ export abstract class AbstractProductFilter {
         this.selectedFilter.set(key, [filterOptionElement]);
     }
 
-    protected checkIfSelected(filterOption: any, value: string): boolean {
+    protected checkIfSelected(filterOption: any, value: any): boolean {
         let res = false;
         if (this.selectedFilter.has(value)) {
-            if (this.selectedFilter.get(value)?.includes(filterOption.toString())) {
+            if (this.selectedFilter.get(value)?.toString()?.includes(filterOption.toString())) {
                 res = true;
             }
         }

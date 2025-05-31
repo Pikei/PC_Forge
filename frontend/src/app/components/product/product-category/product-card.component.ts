@@ -1,4 +1,4 @@
-import {Component, inject, Input} from '@angular/core';
+import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {RequestSender} from '../../../request.sender';
 import {CartService} from '../../../service/shopping-cart.service';
 import {NgIf} from '@angular/common';
@@ -14,6 +14,8 @@ import {Router} from '@angular/router';
 })
 export class ProductCardComponent {
     @Input() product: any;
+    @Input() isConfig: boolean = false;
+    @Output() emitter: EventEmitter<any> = new EventEmitter();
 
     constructor(private sender: RequestSender, private cart: CartService, private router: Router) {
     }
@@ -37,9 +39,11 @@ export class ProductCardComponent {
         this.cart.addProduct(cartItem)
     }
 
-    goToProductUrl() {
-        this.router.navigate(['/product'], {
-            queryParams: {id: this.product.id}
-        });
+    addToConfig() {
+        this.sender.requestGet('http://localhost:8080/product/' + this.product.id).subscribe(
+            response => {
+                this.emitter.emit(response.body);
+            }
+        );
     }
 }

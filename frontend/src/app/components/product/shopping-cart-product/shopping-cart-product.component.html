@@ -1,9 +1,9 @@
 <div class="product-in-cart">
-    <div class="product-image" (click)="goToProduct()">
+    <a [href]="'/product?id=' + product.productEan" class="product-image">
         <img [src]="imgSrc" [alt]="product.productName">
-    </div>
+    </a>
     <div class="product-info">
-        <h4 (click)="goToProduct()">{{ product.productName }}</h4>
+        <a [href]="'/product?id=' + product.productEan">{{ product.productName }}</a>
         <div class="quantity-counter">
             <button type="button" class="btn-remove" (click)="removeFromCart()">
                 <p id="minus">-</p>
@@ -17,7 +17,7 @@
     </div>
     <h3 class="product-price">{{ totalProductPrice() }} zł</h3>
     <button type="button" class="btn-clear" (click)="clearFromCart()">
-        <img id="trash1" src="cart/trash-white.png" alt="trash">
-        <img id="trash2" src="cart/trash-orange.png" alt="trash">
+        <img id="trash1" src="icons/trash-white.png" alt="trash">
+        <img id="trash2" src="icons/trash-orange.png" alt="trash">
     </button>
 </div>
