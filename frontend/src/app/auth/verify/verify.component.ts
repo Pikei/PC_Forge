@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RequestSender} from '../../request.sender';
 import {NgIf} from '@angular/common';
+import {Params} from '../../Params';
 
 @Component({
     selector: 'app-verify',
@@ -22,7 +23,7 @@ export class VerifyComponent {
                 this.router.navigate(['/page_not_found']);
             }
         })
-        this.sender.requestPost('http://localhost:8080/verify?token=' + this.token).subscribe({
+        this.sender.requestPost(Params.API_URL + '/verify?token=' + this.token).subscribe({
             next: () => {
                 this.success = true;
             },

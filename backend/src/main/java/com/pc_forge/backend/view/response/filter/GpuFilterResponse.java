@@ -42,7 +42,7 @@ public final class GpuFilterResponse extends ProductFilterResponse {
      * Lista par zawierających typy pamięci RAM kart graficznych
      * i liczbę kart graficznych spełniających kryterium.
      */
-    @JsonProperty(RequestParams.RAM_TYPE)
+    @JsonProperty(RequestParams.VRAM_TYPE)
     private List<Object[]> ramType;
 
     /**

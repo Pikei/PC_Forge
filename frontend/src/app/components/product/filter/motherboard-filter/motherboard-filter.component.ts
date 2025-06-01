@@ -1,6 +1,23 @@
 import {Component, Input} from '@angular/core';
 import {AbstractProductFilter} from '../AbstractProductFilter';
 import {NgIf} from '@angular/common';
+import {Params} from '../../../../Params';
+
+type Filter = {
+    [Params.SOCKET]: [],
+    [Params.MOTHERBOARD_STANDARD]: [],
+    [Params.CHIPSET]: [],
+    [Params.RAM_TYPE]: [],
+    [Params.NUMBER_OF_MODULES]: [],
+    [Params.RAM_CAPACITY]: [],
+    [Params.RAM_FREQUENCY]: [],
+    [Params.BLUETOOTH]: [],
+    [Params.WIFI]: [],
+    [Params.WIDTH_MINIMUM]: number,
+    [Params.WIDTH_MAXIMUM]: number,
+    [Params.DEPTH_MINIMUM]: number,
+    [Params.DEPTH_MAXIMUM]: number
+}
 
 @Component({
     selector: 'app-motherboard-filter',
@@ -11,29 +28,16 @@ import {NgIf} from '@angular/common';
     styleUrl: '../product-filter/product-filter.component.scss'
 })
 export class MotherboardFilterComponent extends AbstractProductFilter {
-    @Input() filter!: {
-        socket: [],
-        standard: [],
-        chipset: [],
-        ram_type: [],
-        ram_slots: [],
-        ram_cap: [],
-        freq: [],
-        bt: [],
-        wifi: [],
-        min_width: number,
-        max_width: number,
-        min_depth: number,
-        max_depth: number
-    }
+    @Input() filter!: Filter;
 
     expandOptions = {
-        socket: false,
-        standard: false,
-        chipset: false,
-        ram_type: false,
-        ram_slots: false,
-        ram_cap: false,
-        freq: false
+        [Params.SOCKET]: false,
+        [Params.MOTHERBOARD_STANDARD]: false,
+        [Params.CHIPSET]: false,
+        [Params.RAM_TYPE]: false,
+        [Params.NUMBER_OF_MODULES]: false,
+        [Params.RAM_CAPACITY]: false,
+        [Params.RAM_FREQUENCY]: false
     }
+    protected readonly Params = Params;
 }

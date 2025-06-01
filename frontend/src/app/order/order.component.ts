@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {HeaderComponent} from '../components/header/header.component';
 import {CartService} from '../service/shopping-cart.service';
 import {RequestSender} from '../request.sender';
+import {Params} from '../Params';
 
 @Component({
     selector: 'app-order',
@@ -23,8 +24,7 @@ export class OrderComponent {
             "apartmentNumber": (document.querySelector("#apartmentNumber") as HTMLInputElement)?.value,
             "postalCode": (document.querySelector("#postalCode") as HTMLInputElement)?.value,
         }
-        console.log(orderBody)
-        this.sender.requestPost('http://localhost:8080/order/new', orderBody).subscribe(
+        this.sender.requestPost(Params.API_URL + '/order/new', orderBody).subscribe(
             response => {
                 window.open(response.body.message, '_blank')
             });

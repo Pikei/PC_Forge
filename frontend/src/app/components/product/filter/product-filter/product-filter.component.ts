@@ -10,6 +10,7 @@ import {HddFilterComponent} from '../hdd-filter/hdd-filter.component';
 import {CaseFilterComponent} from '../case-filter/case-filter.component';
 import {LiquidCoolerFilterComponent} from '../liquid-cooler-filter/liquid-cooler-filter.component';
 import {AirCoolerFilterComponent} from '../air-cooler-filter/air-cooler-filter.component';
+import {Params} from '../../../../Params';
 
 @Component({
     selector: 'app-product-filter',
@@ -49,19 +50,19 @@ export class ProductFilterComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit(): void {
         this.productFilter?.setFilters(this.activeFilters);
-        if (this.activeFilters.has('producer')) {
-            this.selectedProducers = this.activeFilters.get('producer')![0].split(',');
+        if (this.activeFilters.has(Params.PRODUCER)) {
+            this.selectedProducers = this.activeFilters.get(Params.PRODUCER)![0].split(',');
         }
-        if (this.activeFilters.has('min_price')) {
+        if (this.activeFilters.has(Params.PRICE_MINIMUM)) {
             let priceMin = (document.querySelector("#price_min") as HTMLInputElement);
             priceMin.value = "";
         }
-        if (this.activeFilters.has('max_price')) {
+        if (this.activeFilters.has(Params.PRICE_MAXIMUM)) {
             let priceMax = (document.querySelector("#price_max") as HTMLInputElement);
             priceMax.value = "";
         }
-        if (this.activeFilters.has('name')) {
-            this.name = this.activeFilters.get('name')![0];
+        if (this.activeFilters.has(Params.NAME)) {
+            this.name = this.activeFilters.get(Params.PRODUCER)![0];
         }
     }
 
@@ -70,28 +71,28 @@ export class ProductFilterComponent implements OnInit, AfterViewInit {
         const priceMax = (document.querySelector("#price_max") as HTMLInputElement)?.value;
         let filter = this.productFilter?.getSelectedFilters();
         if (this.selectedProducers.length > 0) {
-            filter.set('producer', this.selectedProducers);
+            filter.set(Params.PRODUCER, this.selectedProducers);
         } else {
-            filter.delete('producer');
+            filter.delete(Params.PRODUCER);
         }
         let paramUrl: string[] = [];
         for (const [key, value] of filter) {
             paramUrl.push(key + "=" + value);
         }
         if (priceMin != "") {
-            paramUrl.push("min_price=" + priceMin);
+            paramUrl.push(Params.PRICE_MINIMUM + "=" + priceMin);
         }
         if (priceMax != "") {
-            paramUrl.push("max_price=" + priceMax);
+            paramUrl.push(Params.PRICE_MAXIMUM + "=" + priceMax);
         }
         if (paramUrl.length == 0) {
             this.filterApplied.emit("");
             return;
         }
         if (this.name != "") {
-            paramUrl.push("name=" + this.name);
+            paramUrl.push(Params.NAME + "=" + this.name);
         } else {
-            filter.delete('name');
+            filter.delete(Params.NAME);
         }
         let paramUrlString = "?" + paramUrl.join("&");
         this.filterApplied.emit(paramUrlString)
@@ -146,4 +147,6 @@ export class ProductFilterComponent implements OnInit, AfterViewInit {
     getSearch() {
         return this.name;
     }
+
+    protected readonly Params = Params;
 }

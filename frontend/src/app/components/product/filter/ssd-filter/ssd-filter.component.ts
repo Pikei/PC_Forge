@@ -1,6 +1,15 @@
 import {Component, Input} from '@angular/core';
 import {AbstractProductFilter} from '../AbstractProductFilter';
 import {NgIf} from '@angular/common';
+import {Params} from '../../../../Params';
+
+type Filter = {
+    [Params.FORMAT]: [],
+    [Params.INTERFACE]: [],
+    [Params.STORAGE]: [],
+    [Params.READ_SPEED]: [],
+    [Params.WRITE_SPEED]: []
+}
 
 @Component({
     selector: 'app-ssd-filter',
@@ -11,19 +20,14 @@ import {NgIf} from '@angular/common';
     styleUrl: '../product-filter/product-filter.component.scss'
 })
 export class SsdFilterComponent extends AbstractProductFilter {
-    @Input() filter!: {
-        format: [],
-        interface: [],
-        storage: [],
-        read_speed: [],
-        write_speed: []
-    }
+    @Input() filter!: Filter;
 
     expandOptions = {
-        format: false,
-        interface: false,
-        storage: false,
-        read_speed: false,
-        write_speed: false
+        [Params.FORMAT]: false,
+        [Params.INTERFACE]: false,
+        [Params.STORAGE]: false,
+        [Params.READ_SPEED]: false,
+        [Params.WRITE_SPEED]: false
     }
+    protected readonly Params = Params;
 }

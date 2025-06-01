@@ -11,11 +11,6 @@ public class RequestParams {
     public static final String NAME = "name";
 
     /**
-     * Parametr określający kategorię produktu
-     */
-    public static final String PRODUCT_CATEGORY = "category";
-
-    /**
      * Parametr określający minimalną cenę produktu
      */
     public static final String PRICE_MINIMUM = "min_price";
@@ -46,9 +41,14 @@ public class RequestParams {
     public static final String NUMBER_OF_CORES = "num_cores";
 
     /**
-     * Parametr określający częstotliwość procesora/pamięci RAM lub wspieranej częstotliwości przez płytę główną
+     * Parametr określający częstotliwość pamięci RAM lub wspieranej częstotliwości przez płytę główną
      */
-    public static final String FREQUENCY = "freq";
+    public static final String RAM_FREQUENCY = "ram_freq";
+
+    /**
+     * Parametr określający częstotliwość taktowania procesora
+     */
+    public static final String CPU_FREQUENCY = "cpu_freq";
 
     /**
      * Parametr określający, czy procesor posiada zintegrowany układ graficzny
@@ -86,9 +86,9 @@ public class RequestParams {
     public static final String RAM_TYPE = "ram_type";
 
     /**
-     * Parametr określający liczbę gniazd na pamięć RAM na płycie głównej
+     * Parametr określający typ pamięci RAM (np. DDR4, DDR5)
      */
-    public static final String RAM_SLOTS = "ram_slots";
+    public static final String VRAM_TYPE = "vram_type";
 
     /**
      * Parametr określający pojemność (lub maksymalną pojemność) pamięci RAM
@@ -153,7 +153,7 @@ public class RequestParams {
     /**
      * Parametr określający liczbę modułów pamięci RAM
      */
-    public static final String NUMBER_OF_MODULES = "modules";
+    public static final String NUMBER_OF_MODULES = "ram_modules";
 
     /**
      * Parametr określający opóźnienie pamięci RAM

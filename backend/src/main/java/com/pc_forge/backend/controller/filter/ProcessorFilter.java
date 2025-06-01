@@ -97,7 +97,7 @@ public final class ProcessorFilter extends ProductFilter {
         selectedSockets = getStringListFromRequestParam(RequestParams.SOCKET);
         selectedLines = getStringListFromRequestParam(RequestParams.MODEL);
         selectedCores = getIntegerListFromRequestParam(RequestParams.NUMBER_OF_CORES);
-        selectedFrequencies = getDoubleListFromRequestParam(RequestParams.FREQUENCY);
+        selectedFrequencies = getDoubleListFromRequestParam(RequestParams.CPU_FREQUENCY);
         selectedGraphicsUnits = getStringListFromRequestParam(RequestParams.INTEGRATED_GRAPHICS_UNIT);
         selectedPackagingTypes = getStringListFromRequestParam(RequestParams.PACKAGING_TYPE);
         unlocked = getBooleanFromRequestParam(RequestParams.CORE_UNLOCKED);

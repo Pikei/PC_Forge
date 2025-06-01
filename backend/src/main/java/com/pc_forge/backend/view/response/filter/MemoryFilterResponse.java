@@ -35,7 +35,7 @@ public final class MemoryFilterResponse extends ProductFilterResponse {
      * Lista par zawierających częstotliwości pamięci RAM
      * i liczbę modułów pamięci spełniających kryterium.
      */
-    @JsonProperty(RequestParams.FREQUENCY)
+    @JsonProperty(RequestParams.RAM_FREQUENCY)
     private List<Object[]> frequency;
 
     /**

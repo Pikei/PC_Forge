@@ -13,7 +13,7 @@ import {SlideshowComponent} from '../components/slideshow/slideshow.component';
 })
 export class HomeComponent {
     images = [
-        {src: 'baner_images/baner1.png', alt: 'Konfigurator komputerowy', href: 'https://example.com/1'},
+        {src: 'baner_images/baner1.png', alt: 'Konfigurator komputerowy', href: 'config/new'},
         {
             src: 'baner_images/baner2.png',
             alt: 'Karty  RTX 5000',

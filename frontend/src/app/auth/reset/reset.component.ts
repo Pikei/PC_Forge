@@ -3,6 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {RequestSender} from '../../request.sender';
 import {FormsModule} from '@angular/forms';
 import {NgIf} from '@angular/common';
+import {Params} from '../../Params';
 
 @Component({
     selector: 'app-reset',
@@ -36,7 +37,7 @@ export class ResetComponent {
             pass.value = "";
             pass2.value = "";
         } else if (this.password == this.passwordRepeat && this.password != "") {
-            this.sender.requestPost('http://localhost:8080/password/reset', {
+            this.sender.requestPost(Params.API_URL + '/password/reset', {
                 token: this.token,
                 password: this.password
             }).subscribe({

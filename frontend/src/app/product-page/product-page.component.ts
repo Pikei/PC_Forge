@@ -5,6 +5,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {ProductSpecTableComponent} from '../components/product/product-spec-table/product-spec-table.component';
 import {NgClass} from '@angular/common';
 import {CartService} from '../service/shopping-cart.service';
+import {Params} from '../Params';
 
 @Component({
     selector: 'app-product-page',
@@ -25,7 +26,7 @@ export class ProductPageComponent {
         this.route.queryParams.subscribe(params => {
             this.productEan = params['id'];
         })
-        this.sender.requestGet('http://localhost:8080/product/' + this.productEan).subscribe(
+        this.sender.requestGet(Params.API_URL + '/product/' + this.productEan).subscribe(
             {
                 next: response => {
                     this.product = response.body;
@@ -46,7 +47,7 @@ export class ProductPageComponent {
     }
 
     addToCart() {
-        const url = 'http://localhost:8080/cart/add'
+        const url = Params.API_URL + '/cart/add'
         const body = {productId: this.productEan}
         this.sender.requestPost(url, body).subscribe();
         const cartItem = {

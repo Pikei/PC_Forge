@@ -32,12 +32,12 @@ nav {
         }
 
         img {
-            width: 15px;
+            width: 20px;
         }
     }
 
     .account img {
-        width: 40px;
+        max-width: 55%;
     }
 
     border-bottom: 5px solid #ff6600;
@@ -131,13 +131,22 @@ nav {
     position: relative;
 
     img {
-        width: 80%;
+        max-width: 75%;
     }
 
     button {
         background-color: transparent;
         border: none;
         border-radius: 50px;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        color: #dadada;
+        font-size: 15px;
+        transition: 0.2s;
         padding: 10px;
     }
 
@@ -147,7 +156,7 @@ nav {
 
     #cart-item-count {
         position: absolute;
-        width: 15%;
+        width: 25px;
         aspect-ratio: 1 / 1;
         border-radius: 50%;
         background-color: #ff6600;

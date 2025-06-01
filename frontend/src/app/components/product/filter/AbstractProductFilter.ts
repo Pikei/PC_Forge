@@ -1,3 +1,5 @@
+import {Params} from '../../../Params';
+
 export abstract class AbstractProductFilter {
     selectedFilter: Map<string, (string | number | boolean)[]> = new Map();
 
@@ -58,22 +60,22 @@ export abstract class AbstractProductFilter {
         const minWidth = (document.querySelector("#min_width") as HTMLInputElement)?.value;
         const maxWidth = (document.querySelector("#max_width") as HTMLInputElement)?.value;
         if (minWidth != "") {
-            this.selectedFilter.set('min_width', [minWidth])
+            this.selectedFilter.set(Params.WIDTH_MINIMUM, [minWidth])
         } else {
-            this.selectedFilter.delete('min_width');
+            this.selectedFilter.delete(Params.WIDTH_MINIMUM);
         }
         if (maxWidth != "") {
-            this.selectedFilter.set('max_width', [maxWidth])
+            this.selectedFilter.set(Params.WIDTH_MAXIMUM, [maxWidth])
         } else {
-            this.selectedFilter.delete('max_width');
+            this.selectedFilter.delete(Params.WIDTH_MAXIMUM);
         }
     }
 
     protected clearWidth() {
         let minWidth = (document.querySelector("#min_width") as HTMLInputElement);
         let maxWidth = (document.querySelector("#max_width") as HTMLInputElement);
-        this.selectedFilter.delete('min_width');
-        this.selectedFilter.delete('max_width');
+        this.selectedFilter.delete(Params.WIDTH_MINIMUM);
+        this.selectedFilter.delete(Params.WIDTH_MAXIMUM);
         minWidth.value = "";
         maxWidth.value = "";
     }
@@ -82,22 +84,22 @@ export abstract class AbstractProductFilter {
         const minHeight = (document.querySelector("#min_height") as HTMLInputElement)?.value;
         const maxHeight = (document.querySelector("#max_height") as HTMLInputElement)?.value;
         if (minHeight != "") {
-            this.selectedFilter.set('min_height', [minHeight])
+            this.selectedFilter.set(Params.HEIGHT_MINIMUM, [minHeight])
         } else {
-            this.selectedFilter.delete('min_height');
+            this.selectedFilter.delete(Params.HEIGHT_MINIMUM);
         }
         if (maxHeight != "") {
-            this.selectedFilter.set('max_height', [maxHeight])
+            this.selectedFilter.set(Params.HEIGHT_MAXIMUM, [maxHeight])
         } else {
-            this.selectedFilter.delete('max_height');
+            this.selectedFilter.delete(Params.HEIGHT_MAXIMUM);
         }
     }
 
     protected clearHeight() {
         let minHeight = (document.querySelector("#min_height") as HTMLInputElement);
         let maxHeight = (document.querySelector("#max_height") as HTMLInputElement);
-        this.selectedFilter.delete('min_height');
-        this.selectedFilter.delete('max_height');
+        this.selectedFilter.delete(Params.HEIGHT_MINIMUM);
+        this.selectedFilter.delete(Params.HEIGHT_MAXIMUM);
         minHeight.value = "";
         maxHeight.value = "";
     }
@@ -106,22 +108,22 @@ export abstract class AbstractProductFilter {
         const minDepth = (document.querySelector("#min_depth") as HTMLInputElement)?.value;
         const maxDepth = (document.querySelector("#max_depth") as HTMLInputElement)?.value;
         if (minDepth != "") {
-            this.selectedFilter.set('min_depth', [minDepth])
+            this.selectedFilter.set(Params.DEPTH_MINIMUM, [minDepth])
         } else {
-            this.selectedFilter.delete('min_depth');
+            this.selectedFilter.delete(Params.DEPTH_MINIMUM);
         }
         if (maxDepth != "") {
-            this.selectedFilter.set('max_depth', [maxDepth])
+            this.selectedFilter.set(Params.DEPTH_MAXIMUM, [maxDepth])
         } else {
-            this.selectedFilter.delete('max_depth');
+            this.selectedFilter.delete(Params.DEPTH_MAXIMUM);
         }
     }
 
     protected clearDepth() {
         let minDepth = (document.querySelector("#min_depth") as HTMLInputElement);
         let maxDepth = (document.querySelector("#max_depth") as HTMLInputElement);
-        this.selectedFilter.delete('min_depth');
-        this.selectedFilter.delete('max_depth');
+        this.selectedFilter.delete(Params.DEPTH_MINIMUM);
+        this.selectedFilter.delete(Params.DEPTH_MAXIMUM);
         minDepth.value = "";
         maxDepth.value = "";
     }

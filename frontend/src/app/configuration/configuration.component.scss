@@ -172,6 +172,18 @@
         }
     }
 
+    .products_not_found {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 80%;
+        height: 100%;
+        font-size: 20px;
+        color: #dadada;
+        margin-top: 100px;
+    }
+
     .main {
         display: flex;
         flex-direction: column;
@@ -187,5 +199,27 @@
         .product {
             width: 100%;
         }
+    }
+}
+
+.invalid_name {
+    animation: shake 0.5s;
+}
+
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(10px);
+    }
+    50% {
+        transform: translateX(-10px);
+    }
+    75% {
+        transform: translateX(10px);
+    }
+    100% {
+        transform: translateX(0);
     }
 }

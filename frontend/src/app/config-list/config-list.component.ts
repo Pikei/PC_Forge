@@ -4,6 +4,7 @@ import {RequestSender} from '../request.sender';
 import {NgForOf} from '@angular/common';
 import {Router} from '@angular/router';
 import {CartService} from '../service/shopping-cart.service';
+import {Params} from '../Params';
 
 @Component({
     selector: 'app-config-list',
@@ -18,7 +19,7 @@ export class ConfigListComponent {
     configurations: any[] = [];
 
     constructor(private sender: RequestSender, private router: Router, private cartService: CartService) {
-        sender.requestGet('http://localhost:8080/configurations/all').subscribe(
+        sender.requestGet(Params.API_URL + '/configurations/all').subscribe(
             {
                 next: response => {
                     this.configurations = response.body;
@@ -43,6 +44,6 @@ export class ConfigListComponent {
             }
             this.cartService.addProduct(cartItem)
         }
-        this.sender.requestPost("http://localhost:8080/configurations/add_to_cart/" + config.name).subscribe();
+        this.sender.requestPost(Params.API_URL + "/configurations/add_to_cart/" + config.name).subscribe();
     }
 }

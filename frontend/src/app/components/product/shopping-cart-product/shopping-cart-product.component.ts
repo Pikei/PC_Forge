@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {RequestSender} from '../../../request.sender';
 import {CartService} from '../../../service/shopping-cart.service';
 import {Router} from '@angular/router';
+import {Params} from '../../../Params';
 
 @Component({
     selector: 'app-shopping-cart-product',
@@ -37,19 +38,19 @@ export class ShoppingCartProductComponent implements OnInit {
     }
 
     removeFromCart() {
-        this.sender.requestPost("http://localhost:8080/cart/remove", {productId: this.product.productEan}).subscribe()
+        this.sender.requestPost(Params.API_URL + "/cart/remove", {productId: this.product.productEan}).subscribe()
         if (this.product.productQuantity > 0) {
             this.cartItems.decrementProductQuantity(this.product.productEan);
         }
     }
 
     addToCart() {
-        this.sender.requestPost("http://localhost:8080/cart/add", {productId: this.product.productEan}).subscribe()
+        this.sender.requestPost(Params.API_URL + "/cart/add", {productId: this.product.productEan}).subscribe()
         this.cartItems.incrementProductQuantity(this.product.productEan);
     }
 
     clearFromCart() {
-        this.sender.requestPost("http://localhost:8080/cart/clear/product", {productId: this.product.productEan}).subscribe()
+        this.sender.requestPost(Params.API_URL + "/cart/clear/product", {productId: this.product.productEan}).subscribe()
         this.cartItems.removeProduct(this.product.productEan);
     }
 

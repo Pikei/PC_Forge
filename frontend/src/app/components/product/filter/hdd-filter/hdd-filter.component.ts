@@ -1,6 +1,14 @@
 import {Component, Input} from '@angular/core';
 import {AbstractProductFilter} from '../AbstractProductFilter';
 import {NgIf} from '@angular/common';
+import {Params} from '../../../../Params';
+
+type Filter = {
+    [Params.FORMAT]: [],
+    [Params.INTERFACE]: [],
+    [Params.STORAGE]: [],
+    [Params.ROTATIONAL_SPEED]: []
+}
 
 @Component({
     selector: 'app-hdd-filter',
@@ -11,17 +19,13 @@ import {NgIf} from '@angular/common';
     styleUrl: '../product-filter/product-filter.component.scss'
 })
 export class HddFilterComponent extends AbstractProductFilter {
-    @Input() filter!: {
-        format: [],
-        interface: [],
-        storage: [],
-        rotational_speed: []
-    }
+    @Input() filter!: Filter;
 
     expandOptions = {
-        format: false,
-        interface: false,
-        storage: false,
-        rotational_speed: false
+        [Params.FORMAT]: false,
+        [Params.INTERFACE]: false,
+        [Params.STORAGE]: false,
+        [Params.ROTATIONAL_SPEED]: false
     }
+    protected readonly Params = Params;
 }

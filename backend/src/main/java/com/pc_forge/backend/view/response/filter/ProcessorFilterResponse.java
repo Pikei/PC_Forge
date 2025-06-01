@@ -39,7 +39,7 @@ public final class ProcessorFilterResponse extends ProductFilterResponse {
     /**
      * Lista par zawierających częstotliwości procesorów i liczbę procesorów spełniających kryterium.
      */
-    @JsonProperty(RequestParams.FREQUENCY)
+    @JsonProperty(RequestParams.CPU_FREQUENCY)
     private List<Object[]> frequency;
 
     /**

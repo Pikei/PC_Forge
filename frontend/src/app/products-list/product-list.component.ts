@@ -6,6 +6,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgForOf, NgIf} from '@angular/common';
 import {ProductFilterComponent} from '../components/product/filter/product-filter/product-filter.component';
 import {ProductCardComponent} from '../components/product/product-category/product-card.component';
+import {Params} from '../Params';
 
 @Component({
     selector: 'app-product-list',
@@ -60,7 +61,6 @@ export class ProductListComponent implements OnInit {
             this.modeSearch = true;
             if (this.route.snapshot.queryParams['name']) {
                 this.name = this.route.snapshot.queryParams['name'];
-                console.log(this.name)
             }
         }
     }
@@ -73,8 +73,8 @@ export class ProductListComponent implements OnInit {
                 this.paramMap.set(key, values);
             });
         })
-        let filter_url = "http://localhost:8080/filter/";
-        let category_url = "http://localhost:8080/category/";
+        let filter_url = Params.API_URL + "/filter/";
+        let category_url = Params.API_URL + "/category/";
         this.sender.requestGet(filter_url + this.getCategoryCode()).subscribe(
             response => {
                 this.filter = response.body;
@@ -97,7 +97,7 @@ export class ProductListComponent implements OnInit {
     }
 
     private initSearchView() {
-        this.sender.requestGet('http://localhost:8080/product/search/' + this.name).subscribe(
+        this.sender.requestGet(Params.API_URL + '/product/search/' + this.name).subscribe(
             response => {
                 this.products = response.body;
                 for (const product of this.products) {
@@ -285,7 +285,7 @@ export class ProductListComponent implements OnInit {
     }
 
     getFilteredProducts(event: string) {
-        let category_url = "http://localhost:8080/category/";
+        let category_url = Params.API_URL + "/category/";
         const queryParams = this.parseParams(event);
         if (event != "") {
             this.router.navigate(['category/' + this.category], {

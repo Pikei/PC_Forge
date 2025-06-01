@@ -3,6 +3,7 @@ import {NgStyle} from '@angular/common';
 import {TokenService} from '../../service/token.service';
 import {RequestSender} from '../../request.sender';
 import {Router} from '@angular/router';
+import {Params} from '../../Params';
 
 @Component({
     selector: 'app-login',
@@ -38,7 +39,7 @@ export class LoginComponent {
             "username": login.value,
             "password": password.value
         }
-        this.sender.requestPost('http://localhost:8080/login', loginBody).subscribe(
+        this.sender.requestPost(Params.API_URL + '/login', loginBody).subscribe(
             {
                 next: response => {
                     this.handleResponse(response);

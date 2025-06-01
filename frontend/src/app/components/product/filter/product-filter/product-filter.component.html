@@ -25,7 +25,7 @@
         </div>
         <div class="filter_body">
             @if (expandProducers) {
-                @for (filter_option of filter.producer; track filter_option) {
+                @for (filter_option of filter[Params.PRODUCER]; track filter_option) {
                     <div class="option_wrapper">
                         <label class="option_checkbox_wrapper">
                         <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
@@ -38,7 +38,7 @@
                     </div>
                 }
             } @else {
-                @for (filter_option of filter.producer.slice(0, 5); track filter_option) {
+                @for (filter_option of filter[Params.PRODUCER].slice(0, 5); track filter_option) {
                     <div class="option_wrapper">
                         <label class="option_checkbox_wrapper">
                             <p>{{ filter_option[0] }} ({{ filter_option[1] }})</p>
@@ -51,7 +51,7 @@
                     </div>
                 }
             }
-            <a *ngIf="filter.producer.length > 5"
+            <a *ngIf="filter[Params.PRODUCER].length > 5"
                (click)="expandProducers = !expandProducers">{{ expandProducers ? "zwiń" : "rozwiń wszystko" }}</a>
         </div>
     </section>

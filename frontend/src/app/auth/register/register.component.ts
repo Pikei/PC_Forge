@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {NgStyle} from '@angular/common';
 import {RequestSender} from '../../request.sender';
 import {Router} from '@angular/router';
+import {Params} from '../../Params';
 
 @Component({
     selector: 'app-register',
@@ -41,7 +42,7 @@ export class RegisterComponent {
                 "lastName": lastName.value,
                 "phoneNumber": phone.value,
             }
-            this.sender.requestPost('http://localhost:8080/register', registerBody).subscribe(
+            this.sender.requestPost(Params.API_URL + '/register', registerBody).subscribe(
                 {
                     next: () => {
                         alert("Konto utworzone. Sprawdź email, w celu weryfikacji konta")

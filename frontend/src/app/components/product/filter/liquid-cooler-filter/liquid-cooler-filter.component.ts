@@ -1,6 +1,16 @@
 import {Component, Input} from '@angular/core';
 import {AbstractProductFilter} from '../AbstractProductFilter';
 import {NgIf} from '@angular/common';
+import {Params} from '../../../../Params';
+
+type Filter = {
+    [Params.SOCKET]: [],
+    [Params.NUMBER_OF_FANS]: [],
+    [Params.FAN_DIAMETER]: [],
+    [Params.NOISE_LEVEL]: [],
+    [Params.LIGHTNING]: [],
+    [Params.COOLER_SIZE]: [],
+}
 
 @Component({
     selector: 'app-liquid-cooler-filter',
@@ -11,20 +21,14 @@ import {NgIf} from '@angular/common';
     styleUrl: '../product-filter/product-filter.component.scss'
 })
 export class LiquidCoolerFilterComponent extends AbstractProductFilter {
-    @Input() filter!: {
-        socket: [],
-        fans: [],
-        fan_diameter: [],
-        noise_lvl: [],
-        light: [],
-        cooler_size: []
-    }
+    @Input() filter!: Filter;
 
     expandOptions = {
-        socket: false,
-        fans: false,
-        fan_diameter: false,
-        noise_lvl: false,
-        cooler_size: false
+        [Params.SOCKET]: false,
+        [Params.NUMBER_OF_FANS]: false,
+        [Params.FAN_DIAMETER]: false,
+        [Params.NOISE_LEVEL]: false,
+        [Params.COOLER_SIZE]: false
     }
+    protected readonly Params = Params;
 }

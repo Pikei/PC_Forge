@@ -5,6 +5,8 @@ import {RequestSender} from '../../request.sender';
 import {CartService} from '../../service/shopping-cart.service';
 import {ReactiveFormsModule} from '@angular/forms';
 import {Router} from '@angular/router';
+import {Params} from '../../Params';
+import {response} from 'express';
 
 @Component({
     selector: 'app-header',
@@ -37,26 +39,16 @@ export class HeaderComponent implements OnInit {
         if (token == null) {
             return;
         }
-        this.sender.requestGet('http://localhost:8080/profile').subscribe(
-            {
-                next: response => {
-                    this.accountInfo.name = response.body.firstName + " " + response.body.lastName;
-                    this.accountInfo.email = response.body.email;
-                    this.accountInfo.phoneNumber = response.body.phoneNumber;
-                },
-                error: err => {
-                    console.log(err)
-                }
+        this.sender.requestGet(Params.API_URL + '/profile').subscribe(
+            response => {
+                this.accountInfo.name = response.body.firstName + " " + response.body.lastName;
+                this.accountInfo.email = response.body.email;
+                this.accountInfo.phoneNumber = response.body.phoneNumber;
+
             });
-        this.sender.requestGet('http://localhost:8080/cart').subscribe(
-            {
-                next: response => {
-                    this.cartItems.setProducts(response.body)
-                },
-                error: err => {
-                    console.log(err)
-                }
-            });
+        this.sender.requestGet(Params.API_URL + '/cart').subscribe(
+            response => this.cartItems.setProducts(response.body)
+        );
     }
 
     @HostListener('window:scroll', ['$event'])
@@ -99,7 +91,7 @@ export class HeaderComponent implements OnInit {
 
     deleteAccount() {
         if (confirm("Twoje konto zostanie bezpowrotnie usunięte. \nCzy chcesz kontynuować?")) {
-            this.sender.requestPost('http://localhost:8080/delete-account', null).subscribe(
+            this.sender.requestPost(Params.API_URL + '/delete-account', null).subscribe(
                 {
                     next: () => {
                         this.tokenService.removeToken();
@@ -122,15 +114,15 @@ export class HeaderComponent implements OnInit {
         const searchInput: string = (document.querySelector("#search-input") as HTMLInputElement).value;
         if (searchInput == "" || searchInput == null) {
             if (this.category == "") {
-                window.location.href = "http://localhost:4200/category";
+                window.location.href = Params.CLIENT_URL + "/category";
             } else {
-                window.location.href = "http://localhost:4200/category/" + this.category;
+                window.location.href = Params.CLIENT_URL + "/category/" + this.category;
             }
         } else {
             if (this.category == "") {
-                window.location.href = "http://localhost:4200/search?name=" + searchInput;
+                window.location.href = Params.CLIENT_URL + "/search?name=" + searchInput;
             } else {
-                window.location.href = "http://localhost:4200/category/" + this.category + "?name=" + searchInput;
+                window.location.href = Params.CLIENT_URL + "/category/" + this.category + "?name=" + searchInput;
             }
         }
     }

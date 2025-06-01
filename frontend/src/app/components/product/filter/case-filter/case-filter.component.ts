@@ -1,6 +1,34 @@
 import {Component, Input} from '@angular/core';
 import {AbstractProductFilter} from '../AbstractProductFilter';
 import {NgIf} from '@angular/common';
+import {Params} from '../../../../Params';
+
+type Filter = {
+    [Params.COLOR]: [],
+    [Params.CASE_TYPE]: [],
+    [Params.MOTHERBOARD_STANDARD]: [],
+    [Params.HEIGHT_MINIMUM]: number,
+    [Params.HEIGHT_MAXIMUM]: number,
+    [Params.WIDTH_MINIMUM]: number,
+    [Params.WIDTH_MAXIMUM]: number,
+    [Params.DEPTH_MINIMUM]: number,
+    [Params.DEPTH_MAXIMUM]: number,
+    [Params.HAS_WINDOW]: [],
+    [Params.HAS_POWER_SUPPLY]: [],
+    [Params.PS_POWER]: [],
+    [Params.MAX_GPU_LENGTH]: [],
+    [Params.MAX_CPU_HEIGHT]: [],
+    [Params.FRONT_FANS]: [],
+    [Params.BACK_FANS]: [],
+    [Params.BOTTOM_FANS]: [],
+    [Params.TOP_FANS]: [],
+    [Params.SIDE_FANS]: [],
+    [Params.USB_20]: [],
+    [Params.USB_30]: [],
+    [Params.USB_31]: [],
+    [Params.USB_32]: [],
+    [Params.USB_C]: [],
+}
 
 @Component({
     selector: 'app-case-filter',
@@ -11,51 +39,26 @@ import {NgIf} from '@angular/common';
     styleUrl: '../product-filter/product-filter.component.scss'
 })
 export class CaseFilterComponent extends AbstractProductFilter {
-    @Input() filter!: {
-        color: [],
-        case_type: [],
-        standard: [],
-        min_width: number,
-        max_width: number,
-        min_depth: number,
-        max_depth: number
-        min_height: number,
-        max_height: number,
-        window: [],
-        power_supply: [],
-        power: [],
-        max_gpu_length: [],
-        max_cpu_height: [],
-        front_fans: [],
-        back_fans: [],
-        side_fans: [],
-        bottom_fans: [],
-        top_fans: [],
-        usb20: [],
-        usb30: [],
-        usb31: [],
-        usb32: [],
-        usbC: [],
-
-    }
+    @Input() filter!: Filter;
 
     expandOptions = {
-        color: false,
-        case_type: false,
-        standard: false,
-        power: false,
-        max_gpu_length: false,
-        max_cpu_height: false,
-        front_fans: false,
-        back_fans: false,
-        side_fans: false,
-        bottom_fans: false,
-        top_fans: false,
-        usb20: false,
-        usb30: false,
-        usb31: false,
-        usb32: false,
-        usbC: false
+        [Params.COLOR]: false,
+        [Params.CASE_TYPE]: false,
+        [Params.MOTHERBOARD_STANDARD]: false,
+        [Params.PS_POWER]: false,
+        [Params.MAX_GPU_LENGTH]: false,
+        [Params.MAX_CPU_HEIGHT]: false,
+        [Params.FRONT_FANS]: false,
+        [Params.BACK_FANS]: false,
+        [Params.BOTTOM_FANS]: false,
+        [Params.TOP_FANS]: false,
+        [Params.SIDE_FANS]: false,
+        [Params.USB_20]: false,
+        [Params.USB_30]: false,
+        [Params.USB_31]: false,
+        [Params.USB_32]: false,
+        [Params.USB_C]: false
     }
 
+    protected readonly Params = Params;
 }

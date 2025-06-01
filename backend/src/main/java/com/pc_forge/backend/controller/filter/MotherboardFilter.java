@@ -125,9 +125,9 @@ public final class MotherboardFilter extends ProductFilter {
         selectedStandards = getStringListFromRequestParam(RequestParams.MOTHERBOARD_STANDARD);
         selectedChipsets = getStringListFromRequestParam(RequestParams.CHIPSET);
         selectedMemoryStandards = getStringListFromRequestParam(RequestParams.RAM_TYPE);
-        selectedMemorySlots = getIntegerListFromRequestParam(RequestParams.RAM_SLOTS);
+        selectedMemorySlots = getIntegerListFromRequestParam(RequestParams.NUMBER_OF_MODULES);
         selectedMaxMemoryCapacity = getIntegerListFromRequestParam(RequestParams.RAM_CAPACITY);
-        selectedFrequencies = getIntegerListFromRequestParam(RequestParams.FREQUENCY);
+        selectedFrequencies = getIntegerListFromRequestParam(RequestParams.RAM_FREQUENCY);
         bluetooth = getBooleanFromRequestParam(RequestParams.BLUETOOTH);
         wifi = getBooleanFromRequestParam(RequestParams.WIFI);
         minWidth = getDoubleFromRequestParam(RequestParams.WIDTH_MINIMUM);

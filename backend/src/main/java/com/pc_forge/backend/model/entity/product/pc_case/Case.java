@@ -1,6 +1,8 @@
 package com.pc_forge.backend.model.entity.product.pc_case;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.pc_forge.backend.controller.api.constants.RequestParams;
 import com.pc_forge.backend.model.entity.compatibility.MotherboardStandard;
 import com.pc_forge.backend.model.entity.product.Product;
 import jakarta.persistence.*;
@@ -262,6 +264,7 @@ public final class Case extends Product {
      * @return Sformatowana lista zawierająca nazwy kompatybilnych standardów płyt głównych.
      */
     @Transient
+    @JsonProperty(RequestParams.MOTHERBOARD_STANDARD)
     public List<String> getSupportedStandardNames() {
         return supportedMbStandards.stream()
                 .map(MotherboardStandard::getStandardName)

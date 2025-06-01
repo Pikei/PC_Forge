@@ -3,6 +3,7 @@ import {RequestSender} from '../../../request.sender';
 import {CartService} from '../../../service/shopping-cart.service';
 import {NgIf} from '@angular/common';
 import {Router} from '@angular/router';
+import {Params} from '../../../Params';
 
 @Component({
     selector: 'app-product-card',
@@ -25,7 +26,7 @@ export class ProductCardComponent {
     }
 
     addToCart() {
-        const url = 'http://localhost:8080/cart/add'
+        const url = Params.API_URL + '/cart/add'
         const body = {productId: this.product.id}
         this.sender.requestPost(url, body).subscribe();
         const cartItem = {
@@ -40,7 +41,7 @@ export class ProductCardComponent {
     }
 
     addToConfig() {
-        this.sender.requestGet('http://localhost:8080/product/' + this.product.id).subscribe(
+        this.sender.requestGet(Params.API_URL + '/product/' + this.product.id).subscribe(
             response => {
                 this.emitter.emit(response.body);
             }

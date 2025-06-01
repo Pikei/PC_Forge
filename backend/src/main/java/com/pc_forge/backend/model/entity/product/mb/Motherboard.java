@@ -176,6 +176,7 @@ public final class Motherboard extends Product {
      * Lista wspieranych częstotliwości pamięci RAM
      */
     @Type(ListArrayType.class)
+    @JsonProperty(RequestParams.RAM_FREQUENCY)
     @Column(name = "supported_memory_frequencies", nullable = false, columnDefinition = "_int4 (Types#ARRAY)")
     private List<Integer> supportedMemoryFrequencies;
 }

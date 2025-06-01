@@ -49,7 +49,7 @@ public final class MotherboardFilterResponse extends ProductFilterResponse {
      * Lista par zawierających liczbę slotów na pamięć RAM na płytach głównych
      * i liczbę płyt głównych spełniających kryterium.
      */
-    @JsonProperty(RequestParams.RAM_SLOTS)
+    @JsonProperty(RequestParams.NUMBER_OF_MODULES)
     private List<Object[]> memorySlot;
 
     /**
@@ -63,7 +63,7 @@ public final class MotherboardFilterResponse extends ProductFilterResponse {
      * Lista par zawierających częstotliwości pamięci RAM obsługiwane przez płyty główne
      * i liczbę płyt głównych spełniających kryterium.
      */
-    @JsonProperty(RequestParams.FREQUENCY)
+    @JsonProperty(RequestParams.RAM_FREQUENCY)
     private List<Object[]> frequency;
 
     /**

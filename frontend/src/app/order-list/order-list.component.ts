@@ -3,6 +3,7 @@ import {HeaderComponent} from '../components/header/header.component';
 import {RequestSender} from '../request.sender';
 import {NgIf} from '@angular/common';
 import {Router} from '@angular/router';
+import {Params} from '../Params';
 
 @Component({
     selector: 'app-order-list',
@@ -17,14 +18,9 @@ export class OrderListComponent implements OnInit {
     protected orders: any[] = [];
 
     constructor(private sender: RequestSender, private router: Router) {
-        sender.requestGet('http://localhost:8080/order/all').subscribe(
-            {
-                next: response => {
-                    this.orders = response.body;
-                },
-                error: err => {
-                    console.log(err)
-                }
+        sender.requestGet(Params.API_URL + '/order/all').subscribe(
+            response => {
+                this.orders = response.body;
             });
     }
 
@@ -40,7 +36,7 @@ export class OrderListComponent implements OnInit {
     }
 
     cancelOrder(order: any) {
-        const url = 'http://localhost:8080/order/cancel?order_ID=' + order.id;
+        const url = Params.API_URL + '/order/cancel?order_ID=' + order.id;
         this.sender.requestPost(url, null).subscribe(
             response => {
                 alert(response.body.message);
@@ -54,7 +50,7 @@ export class OrderListComponent implements OnInit {
     }
 
     goToPayment(order: any) {
-        let paymentUrl = "http://localhost:8080/order/payment?order_ID=" + order.id;
+        let paymentUrl = Params.API_URL + "/order/payment?order_ID=" + order.id;
         this.sender.requestPost(paymentUrl, null).subscribe(response => {
             window.open(response.body.message, '_blank');
         })

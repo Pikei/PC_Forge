@@ -7,6 +7,7 @@ import {
     ShoppingCartProductComponent
 } from '../components/product/shopping-cart-product/shopping-cart-product.component';
 import {Router} from '@angular/router';
+import {Params} from '../Params';
 
 @Component({
     selector: 'app-shopping-cart',
@@ -28,7 +29,7 @@ export class ShoppingCartComponent {
     }
 
     clearCart() {
-        this.sender.requestPost('http://localhost:8080/cart/clear', null).subscribe()
+        this.sender.requestPost(Params.API_URL + '/cart/clear', null).subscribe()
         this.cartItems.setProducts([])
     }
 }

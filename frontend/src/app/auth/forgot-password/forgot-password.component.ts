@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {NgStyle} from '@angular/common';
 import {RequestSender} from '../../request.sender';
 import {Router} from '@angular/router';
+import {Params} from '../../Params';
 
 @Component({
     selector: 'app-forgot-password',
@@ -22,14 +23,13 @@ export class ForgotPasswordComponent {
         email.classList.remove('invalid');
         this.validateEmail(email);
         if (email.value != "") {
-            this.sender.requestPost('http://localhost:8080/password/forgot?email=' + email.value).subscribe(
+            this.sender.requestPost(Params.API_URL + '/password/forgot?email=' + email.value).subscribe(
                 {
                     next: () => {
                         alert("Na wskazany adres wysłano link resetujący hasło.")
                         this.router.navigate(['/login']);
                     },
                     error: err => {
-                        console.log(err)
                         if (err.status === 400) {
                             email.classList.add('invalid');
                             email.value = "";

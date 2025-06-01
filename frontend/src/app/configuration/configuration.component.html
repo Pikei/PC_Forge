@@ -2,8 +2,9 @@
 <div class="content">
     <div class="config_name">
         <h2>Nazwa konfiguracji</h2>
-        <input type="text" [placeholder]="(configName != '') ? configName : 'Nowa konfiguracja'">
-        <button type="button" class="save-btn" (click)="saveConfig()">Zapisz</button>
+        <input type="text" id="config_name" [placeholder]="(configName != '') ? configName : 'Nowa konfiguracja'"
+               (change)="removeInvalidClass()">
+        <button type="button" class="save-btn" (click)="checkIfConfigExists()">Zapisz</button>
     </div>
 
     <div class="product_requirement">
@@ -114,7 +115,7 @@
     </div>
 
     <div class="price-wrapper">
-        <button type="button" class="save-btn" (click)="saveConfig()">
+        <button type="button" class="save-btn" (click)="checkIfConfigExists()">
             Zapisz konfigurację
         </button>
         <h2>Suma: {{ getSummaryPrice() }}</h2>
@@ -129,6 +130,9 @@
                                     (filterApplied)="getFilteredProducts($event)"></app-product-filter>
             </div>
             <div class="filter_separator"></div>
+        </div>
+        <div class="products_not_found" *ngIf="products.length == 0">
+            <p>Nie znaleziono produktów spełniających określone kryteria</p>
         </div>
         <div class="main" *ngIf="products.length > 0">
             <div class="nav">

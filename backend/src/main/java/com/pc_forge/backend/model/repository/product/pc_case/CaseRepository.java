@@ -34,7 +34,7 @@ public interface CaseRepository extends JpaRepository<Case, Long> {
      * @param mbStandard nazwa standardu płyty głównej
      * @return lista obudów kompatybilnych z danym standardem
      */
-    @Query("select c from Case c join CaseMbCompatibility comp on c.id = comp.ean.id join MotherboardStandard mb on mb.id = comp.standard.id where mb.standardName like :standard")
+    @Query("select c from Case c join CaseMbCompatibility comp on c.id = comp.ean.id join MotherboardStandard mb on mb.id = comp.standard.id where mb.standardName like concat('%', :standard, '%') ")
     List<Case> findByCompatibleMbStandard(@Param("standard") String mbStandard);
 
     /**

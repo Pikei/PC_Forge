@@ -84,7 +84,7 @@ public final class MemoryFilter extends ProductFilter {
         setCommonFilters();
         selectedTypes = getStringListFromRequestParam(RequestParams.RAM_TYPE);
         selectedCapacities = getIntegerListFromRequestParam(RequestParams.RAM_CAPACITY);
-        selectedFrequencies = getIntegerListFromRequestParam(RequestParams.FREQUENCY);
+        selectedFrequencies = getIntegerListFromRequestParam(RequestParams.RAM_FREQUENCY);
         selectedModules = getIntegerListFromRequestParam(RequestParams.NUMBER_OF_MODULES);
         selectedLatencies = getStringListFromRequestParam(RequestParams.LATENCY);
         lightning = getBooleanFromRequestParam(RequestParams.LIGHTNING);
