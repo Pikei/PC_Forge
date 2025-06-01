@@ -129,15 +129,26 @@ public class Configuration {
     @JsonProperty("totalPrice")
     public Double getTotalPrice() {
         Double totalPrice = 0.0;
-        totalPrice += graphicsCard.getPrice();
+        totalPrice += processor.getPrice();
         totalPrice += pcCase.getPrice();
         totalPrice += motherboard.getPrice();
-        totalPrice += cooler.getPrice();
-        totalPrice += powerSupply.getPrice();
         totalPrice += memory.getPrice();
-        totalPrice += processor.getPrice();
-        totalPrice += solidStateDrive.getPrice();
-        totalPrice += hardDiskDrive.getPrice();
+
+        if (cooler != null) {
+            totalPrice += cooler.getPrice();
+        }
+        if (powerSupply != null) {
+            totalPrice += powerSupply.getPrice();
+        }
+        if (solidStateDrive != null) {
+            totalPrice += solidStateDrive.getPrice();
+        }
+        if (hardDiskDrive != null) {
+            totalPrice += hardDiskDrive.getPrice();
+        }
+        if (graphicsCard != null) {
+            totalPrice += graphicsCard.getPrice();
+        }
         return totalPrice;
     }
 }

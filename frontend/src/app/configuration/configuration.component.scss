@@ -70,8 +70,7 @@
 
 .product_config {
     width: 80%;
-    padding-top: 50px;
-    padding-bottom: 50px;
+    padding: 50px;
     flex-direction: row;
     align-items: center;
     border-bottom: 2px solid #353535;
@@ -94,7 +93,7 @@
     margin-bottom: 25px;
 
     h3 {
-        margin-top: 0;
+        margin-top: 25px;
         margin-bottom: 0;
         font-size: 20px;
     }
@@ -202,7 +201,7 @@
     }
 }
 
-.invalid_name {
+.invalid {
     animation: shake 0.5s;
 }
 

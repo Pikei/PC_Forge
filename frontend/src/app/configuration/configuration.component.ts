@@ -10,7 +10,6 @@ import {FormsModule} from '@angular/forms';
 import {ProductCardComponent} from '../components/product/product-category/product-card.component';
 import {ProductFilterComponent} from '../components/product/filter/product-filter/product-filter.component';
 import {Params} from '../Params';
-import {response} from 'express';
 
 @Component({
     selector: 'app-configuration',
@@ -32,7 +31,14 @@ export class ConfigurationComponent implements AfterViewInit {
     chosenCooler: string = "";
     currentCategoryCode: string = "";
     categoryFiler: any;
-    activeFilters: Map<string, string[]> = new Map()
+    activeCpuFilters: Map<string, string[]> = new Map()
+    activeMbFilters: Map<string, string[]> = new Map()
+    activeRamFilters: Map<string, string[]> = new Map()
+    activeCaseFilters: Map<string, string[]> = new Map()
+    activeGpuFilters: Map<string, string[]> = new Map()
+    activePsFilters: Map<string, string[]> = new Map()
+    activeCoolerFilters: Map<string, string[]> = new Map()
+    activeDriveFilters: Map<string, string[]> = new Map()
     products: any[] = [];
     numberOfProductsPerPage: number = 30;
     pageNumber: number = 1;
@@ -211,44 +217,19 @@ export class ConfigurationComponent implements AfterViewInit {
         this.currentCategoryCode = '';
         switch (categoryCode) {
             case "CPU":
-                this.config.price! -= this.config.processor.price;
-                this.config.processor = null;
-                if (this.config.cooler == null && this.config.motherboard == null && this.activeFilters.has(Params.SOCKET)) {
-                    this.activeFilters.delete(Params.SOCKET);
-                }
+                this.removeCpu();
                 break;
             case "GPU":
-                this.config.price! -= this.config.graphicsCard.price;
-                this.config.graphicsCard = null;
+                this.removeGpu();
                 break;
             case "RAM":
-                this.config.price! -= this.config.memory.price;
-                this.config.memory = null;
-                if (this.config.motherboard == null) {
-                    this.activeFilters.delete(Params.RAM_TYPE);
-                    this.activeFilters.delete(Params.RAM_FREQUENCY);
-                }
+                this.removeRam();
                 break;
             case "MB":
-                this.config.price! -= this.config.motherboard.price;
-                this.config.motherboard = null;
-                if (this.config.memory == null) {
-                    this.activeFilters.delete(Params.RAM_TYPE);
-                    this.activeFilters.delete(Params.RAM_FREQUENCY);
-                }
-                if (this.config.processor == null && this.config.cooler == null && this.activeFilters.has(Params.SOCKET)) {
-                    this.activeFilters.delete(Params.SOCKET);
-                }
-                if (this.config.pcCase == null) {
-                    this.activeFilters.delete(Params.MOTHERBOARD_STANDARD)
-                }
+                this.removeMb();
                 break;
             case "PS":
-                this.config.price! -= this.config.powerSupply.price;
-                this.config.powerSupply = null;
-                if (this.config.graphicsCard == null) {
-                    this.activeFilters.delete(Params.PS_POWER);
-                }
+                this.removePs();
                 break;
             case "SSD":
                 this.config.price! -= this.config.solidStateDrive.price;
@@ -259,36 +240,20 @@ export class ConfigurationComponent implements AfterViewInit {
                 this.config.hardDiskDrive = null;
                 break;
             case "AIR_COOLER":
-                this.config.price! -= this.config.cooler.price;
-                this.config.cooler = null;
-                if (this.config.pcCase == null) {
-                    this.activeFilters.delete(Params.MAX_CPU_HEIGHT)
-                }
-                if (this.config.motherboard == null && this.config.processor == null) {
-                    this.activeFilters.delete(Params.SOCKET)
-                }
+                this.removeAirCooler();
                 break;
             case "LIQUID_COOLER":
-                this.config.price! -= this.config.cooler.price;
-                this.config.cooler = null;
-                if (this.config.processor == null && this.config.motherboard == null) {
-                    this.activeFilters.delete(Params.SOCKET)
-                }
+                this.removeLiquidCooler()
                 break;
             case "CASE":
-                this.config.price! -= this.config.pcCase.price;
-                this.config.pcCase = null;
-                this.activeFilters.delete(Params.MAX_GPU_LENGTH)
-                this.activeFilters.delete(Params.MAX_CPU_HEIGHT)
-                if (this.config.motherboard == null) {
-                    this.activeFilters.delete(Params.MOTHERBOARD_STANDARD)
-                }
+                this.removeCase();
                 break;
         }
     }
 
     editProduct($event: string) {
         this.currentCategoryCode = $event;
+        this.resetInvalidProduct($event);
         const filter_url = Params.API_URL + "/filter/";
         const category_url = Params.API_URL + "/category/";
         this.sender.requestGet(filter_url + $event).subscribe(
@@ -297,7 +262,7 @@ export class ConfigurationComponent implements AfterViewInit {
             }
         )
         let paramUrl = new Array<string>();
-        for (const [key, value] of this.activeFilters) {
+        for (const [key, value] of this.getActiveFilters()) {
             paramUrl.push(key + "=" + value);
         }
         let paramUrlString = "";
@@ -323,7 +288,7 @@ export class ConfigurationComponent implements AfterViewInit {
                 top: 0,
                 behavior: 'smooth'
             });
-            configNameInput.classList.add('invalid_name');
+            configNameInput.classList.add('invalid');
             configNameInput.placeholder = "Wpisz nazwę konfiguracji";
             configNameInput.style.border = "2px solid red";
             return;
@@ -417,26 +382,33 @@ export class ConfigurationComponent implements AfterViewInit {
     }
 
     addProductToConfig($event: any) {
+        console.log(this.getActiveFilters());
+        console.log(this.categoryFiler)
         switch ($event.category) {
             case "CPU":
                 this.config.processor = $event;
                 this.setCpuFilters();
+                document.querySelector('#cpu_wrapper')?.scrollIntoView({behavior: "smooth"});
                 break;
             case "GPU":
                 this.config.graphicsCard = $event;
                 this.setGpuFilters();
+                document.querySelector('#gpu_wrapper')?.scrollIntoView({behavior: "smooth"});
                 break;
             case "RAM":
                 this.config.memory = $event;
                 this.setMemoryFilters();
+                document.querySelector('#ram_wrapper')?.scrollIntoView({behavior: "smooth"});
                 break;
             case "MB":
                 this.config.motherboard = $event;
                 this.setMotherboardFilters();
+                document.querySelector('#mb_wrapper')?.scrollIntoView({behavior: "smooth"});
                 break;
             case "PS":
                 this.config.powerSupply = $event;
                 this.setPowerSupplyFilters();
+                document.querySelector('#ps_wrapper')?.scrollIntoView({behavior: "smooth"});
                 break;
             case "SSD":
                 this.config.solidStateDrive = $event;
@@ -449,14 +421,17 @@ export class ConfigurationComponent implements AfterViewInit {
             case "AIR_COOLER":
                 this.config.cooler = $event;
                 this.setCoolerFilters();
+                document.querySelector('#cooler_wrapper')?.scrollIntoView({behavior: "smooth"});
                 break;
             case "LIQUID_COOLER":
                 this.config.cooler = $event;
                 this.setCoolerFilters();
+                document.querySelector('#cooler_wrapper')?.scrollIntoView({behavior: "smooth"});
                 break;
             case "CASE":
                 this.config.pcCase = $event;
                 this.setCaseFilters();
+                document.querySelector('#case_wrapper')?.scrollIntoView({behavior: "smooth"});
                 break;
             default:
                 break;
@@ -465,103 +440,159 @@ export class ConfigurationComponent implements AfterViewInit {
     }
 
     getActiveFilters() {
-        return this.activeFilters;
+        switch (this.currentCategoryCode) {
+            case "CPU":
+                return this.activeCpuFilters;
+            case "GPU":
+                return this.activeGpuFilters;
+            case "RAM":
+                return this.activeRamFilters;
+            case "MB":
+                return this.activeMbFilters;
+            case "PS":
+                return this.activePsFilters;
+            case "SSD":
+                return this.activeDriveFilters;
+            case "HDD":
+                return this.activeDriveFilters;
+            case "AIR_COOLER":
+                return this.activeCoolerFilters;
+            case "LIQUID_COOLER":
+                return this.activeCoolerFilters;
+            case "CASE":
+                return this.activeCaseFilters;
+        }
+        throw new Error("Invalid category code");
     }
 
     private setCpuFilters() {
-        if (!this.activeFilters.has(Params.SOCKET)) {
-            this.activeFilters.set(Params.SOCKET, [this.config.processor.socket]);
+        if (!this.activeCpuFilters.has(Params.SOCKET) && !this.activeMbFilters.has(Params.SOCKET)) {
+            this.activeMbFilters.set(Params.SOCKET, [this.config.processor.socket]);
+            this.activeCpuFilters.set(Params.SOCKET, [this.config.processor.socket]);
+            this.activeCoolerFilters.set(Params.SOCKET, [this.config.processor.socket]);
         }
-        document.querySelector('#cpu_wrapper')?.scrollIntoView({behavior: "smooth"});
     }
 
     private setMemoryFilters() {
-        if (!this.activeFilters.has(Params.RAM_TYPE)) {
-            this.activeFilters.set(Params.RAM_TYPE, [this.config.memory.memoryType]);
+        if (!this.activeRamFilters.has(Params.RAM_TYPE) && !this.activeMbFilters.has(Params.RAM_TYPE)) {
+            this.activeMbFilters.set(Params.RAM_TYPE, [this.config.memory.memoryType]);
+            this.activeRamFilters.set(Params.RAM_TYPE, [this.config.memory.memoryType]);
         }
-        if (!this.activeFilters.has(Params.RAM_FREQUENCY)) {
-            this.activeFilters.set(Params.RAM_FREQUENCY, [this.config.memory.frequency]);
+        if (!this.activeRamFilters.has(Params.RAM_FREQUENCY) && !this.activeMbFilters.has(Params.RAM_FREQUENCY)) {
+            this.activeMbFilters.set(Params.RAM_FREQUENCY, [this.config.memory.frequency]);
+            this.activeRamFilters.set(Params.RAM_FREQUENCY, [this.config.memory.frequency]);
         }
-        document.querySelector('#ram_wrapper')?.scrollIntoView({behavior: "smooth"});
+        if (!this.activeRamFilters.has(Params.RAM_CAPACITY) && !this.activeMbFilters.has(Params.RAM_CAPACITY)) {
+            this.activeMbFilters.set(Params.RAM_CAPACITY, [this.config.memory.maxMemoryCapacity]);
+            this.activeRamFilters.set(Params.RAM_CAPACITY, [this.config.memory.maxMemoryCapacity]);
+        }
+        for (let cap of this.categoryFiler[Params.RAM_CAPACITY]) {
+            if (cap[0] <= this.config.memory.maxMemoryCapacity && !this.activeMbFilters.get(Params.RAM_CAPACITY)?.includes(cap[0])) {
+                this.activeMbFilters.get(Params.RAM_CAPACITY)?.push(cap[0]);
+                this.activeRamFilters.get(Params.RAM_CAPACITY)?.push(cap[0]);
+            }
+        }
     }
 
     private setMotherboardFilters() {
-        if (!this.activeFilters.has(Params.RAM_TYPE)) {
-            this.activeFilters.set(Params.RAM_TYPE, [this.config.motherboard.memoryStandard]);
-        }
-        if (!this.activeFilters.has(Params.RAM_FREQUENCY)) {
-            this.activeFilters.set(Params.RAM_FREQUENCY, this.config.motherboard[Params.RAM_FREQUENCY]);
-        }
-        if (!this.activeFilters.has(Params.SOCKET)) {
-            this.activeFilters.set(Params.SOCKET, [this.config.motherboard.socket]);
-        }
-        if (!this.activeFilters.has(Params.MOTHERBOARD_STANDARD)) {
-            this.activeFilters.set(Params.MOTHERBOARD_STANDARD, [this.config.motherboard[Params.MOTHERBOARD_STANDARD]]);
-        }
-        if (!this.activeFilters.has(Params.RAM_CAPACITY)) {
-            this.activeFilters.set(Params.RAM_CAPACITY, [this.config.motherboard.maxMemoryCapacity]);
-        }
-        for (let cap of this.categoryFiler[Params.RAM_CAPACITY]) {
-            if (cap[0] <= this.config.motherboard.maxMemoryCapacity && !this.activeFilters.get(Params.RAM_CAPACITY)?.includes(cap[0])) {
-                this.activeFilters.get(Params.RAM_CAPACITY)?.push(cap[0]);
+        if (this.config.processor == null) {
+            if (!this.activeCpuFilters.has(Params.SOCKET) && !this.activeMbFilters.has(Params.SOCKET)) {
+                this.activeMbFilters.set(Params.SOCKET, [this.config.motherboard.socket]);
+                this.activeCpuFilters.set(Params.SOCKET, [this.config.motherboard.socket]);
+                this.activeCoolerFilters.set(Params.SOCKET, [this.config.motherboard.socket]);
             }
+        } else {
+            this.setCpuFilters();
         }
-        document.querySelector('#mb_wrapper')?.scrollIntoView({behavior: "smooth"});
+        if (this.config.memory == null) {
+            if (!this.activeRamFilters.has(Params.RAM_TYPE) && !this.activeMbFilters.has(Params.RAM_TYPE)) {
+                this.activeMbFilters.set(Params.RAM_TYPE, [this.config.motherboard.memoryStandard]);
+                this.activeRamFilters.set(Params.RAM_TYPE, [this.config.motherboard.memoryStandard]);
+            }
+            if (!this.activeRamFilters.has(Params.RAM_FREQUENCY) && !this.activeMbFilters.has(Params.RAM_FREQUENCY)) {
+                this.activeMbFilters.set(Params.RAM_FREQUENCY, this.config.motherboard[Params.RAM_FREQUENCY]);
+                this.activeRamFilters.set(Params.RAM_FREQUENCY, this.config.motherboard[Params.RAM_FREQUENCY]);
+            }
+        } else {
+            this.setMemoryFilters();
+        }
+        if (!this.activeMbFilters.has(Params.MOTHERBOARD_STANDARD) && !this.activeCaseFilters.has(Params.MOTHERBOARD_STANDARD)) {
+            this.activeMbFilters.set(Params.MOTHERBOARD_STANDARD, [this.config.motherboard[Params.MOTHERBOARD_STANDARD]]);
+            this.activeCaseFilters.set(Params.MOTHERBOARD_STANDARD, [this.config.motherboard[Params.MOTHERBOARD_STANDARD]]);
+        }
     }
 
     private setPowerSupplyFilters() {
-        if (!this.activeFilters.has(Params.PS_POWER)) {
-            this.activeFilters.set(Params.PS_POWER, [this.config.powerSupply.recommendedPsPower]);
+        if (!this.activeGpuFilters.has(Params.PS_POWER)) {
+            this.activeGpuFilters.set(Params.PS_POWER, [this.config.powerSupply.power]);
+            for (let pow of this.categoryFiler.power) {
+                if (pow[0] <= this.config.powerSupply.power) {
+                    this.activeGpuFilters.get(Params.PS_POWER)?.push(pow[0]);
+                }
+            }
         }
-        document.querySelector('#ps_wrapper')?.scrollIntoView({behavior: "smooth"});
     }
 
     private setCoolerFilters() {
-        if (!this.activeFilters.has(Params.SOCKET)) {
-            this.activeFilters.set(Params.SOCKET, this.config.cooler.socket);
+        if (!this.activeCpuFilters.has(Params.SOCKET) && !this.activeMbFilters.has(Params.SOCKET)) {
+            this.activeMbFilters.set(Params.SOCKET, this.config.cooler.socket);
+            this.activeCpuFilters.set(Params.SOCKET, this.config.cooler.socket);
         }
-        document.querySelector('#cooler_wrapper')?.scrollIntoView({behavior: "smooth"});
     }
 
     private setCaseFilters() {
-        if (!this.activeFilters.has(Params.MOTHERBOARD_STANDARD)) {
-            this.activeFilters.set(Params.MOTHERBOARD_STANDARD, this.config.pcCase[Params.MOTHERBOARD_STANDARD]);
-        } else {
-            this.activeFilters.get(Params.MOTHERBOARD_STANDARD)!.push(this.config.pcCase[Params.MOTHERBOARD_STANDARD]);
+        if (!this.activeMbFilters.has(Params.MOTHERBOARD_STANDARD) && !this.activeCaseFilters.has(Params.MOTHERBOARD_STANDARD)) {
+            this.activeMbFilters.set(Params.MOTHERBOARD_STANDARD, this.config.pcCase[Params.MOTHERBOARD_STANDARD]);
+            this.activeCaseFilters.set(Params.MOTHERBOARD_STANDARD, this.config.pcCase[Params.MOTHERBOARD_STANDARD]);
         }
-        if (this.config.pcCase[Params.HAS_POWER_SUPPLY] == true) {
-            if (!this.activeFilters.has(Params.PS_POWER)) {
-                this.activeFilters.set(Params.PS_POWER, [this.config.pcCase.recommendedPsPower]);
+        if (this.config.pcCase[Params.HAS_POWER_SUPPLY] == true && !this.activePsFilters.has(Params.PS_POWER)) {
+            if (!this.activeGpuFilters.has(Params.PS_POWER)) {
+                this.activeGpuFilters.set(Params.PS_POWER, [this.config.pcCase.psPower]);
+            }
+            for (let pow of this.categoryFiler.power) {
+                if (pow[0] <= this.config.pcCase.psPower && !this.activeGpuFilters.get(Params.PS_POWER)?.includes(pow[0]) && pow[0] > 0) {
+                    this.activeGpuFilters.get(Params.PS_POWER)?.push(pow[0]);
+                }
             }
         }
-        this.activeFilters.set(Params.MAX_CPU_HEIGHT, [this.config.pcCase.maxCpuCoolerHeight])
-        this.activeFilters.set(Params.MAX_GPU_LENGTH, [this.config.pcCase.maxGpuLength])
-        document.querySelector('#case_wrapper')?.scrollIntoView({behavior: "smooth"});
+        this.activeCoolerFilters.set(Params.MAX_CPU_HEIGHT, [this.config.pcCase.maxCpuCoolerHeight])
+        this.activeGpuFilters.set(Params.MAX_GPU_LENGTH, [this.config.pcCase.maxGpuLength])
     }
 
     private setGpuFilters() {
-        if (!this.activeFilters.has(Params.PS_POWER)) {
-            this.activeFilters.set(Params.PS_POWER, [this.config.graphicsCard.recommendedPsPower]);
-        }
-        for (let pow of this.categoryFiler.power) {
-            if (pow[0] >= this.config.graphicsCard.recommendedPsPower && !this.activeFilters.get(Params.PS_POWER)?.includes(pow[0])) {
-                this.activeFilters.get(Params.PS_POWER)?.push(pow[0]);
+        if (!this.activePsFilters.has(Params.PS_POWER)) {
+            this.activePsFilters.set(Params.PS_POWER, [this.config.graphicsCard.recommendedPsPower]);
+            for (let pow of this.categoryFiler[Params.PS_POWER]) {
+                if (pow[0] >= this.config.graphicsCard.recommendedPsPower) {
+                    this.activePsFilters.get(Params.PS_POWER)?.push(pow[0]);
+                }
             }
         }
-        document.querySelector('#gpu_wrapper')?.scrollIntoView({behavior: "smooth"});
     }
 
     removeInvalidClass() {
         let configNameInput = document.querySelector('#config_name') as HTMLInputElement;
-        configNameInput.classList.remove('invalid_name');
+        configNameInput.classList.remove('invalid');
         configNameInput.style.border = "2px solid #dadada";
     }
 
     private saveConfig(configName: string) {
-        let cpuId = this.config.processor != null ? this.config.processor.id : null;
-        let mbId = this.config.motherboard != null ? this.config.motherboard.id : null;
-        let ramId = this.config.memory != null ? this.config.memory.id : null;
-        let caseId = this.config.pcCase != null ? this.config.pcCase.id : null;
+        if (this.config.processor == null ||
+            this.config.motherboard == null ||
+            this.config.memory == null ||
+            this.config.pcCase == null
+        ) {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            alert("Nie wybrano wszystkich wymaganych produktów.")
+            return;
+        }
+        let cpuId = this.config.processor.id;
+        let mbId = this.config.motherboard.id;
+        let ramId = this.config.memory.id;
+        let caseId = this.config.pcCase.id;
         let gpuId = this.config.graphicsCard != null ? this.config.graphicsCard.id : null;
         let coolerId = this.config.cooler != null ? this.config.cooler.id : null;
         let psId = this.config.powerSupply != null ? this.config.powerSupply.id : null;
@@ -582,9 +613,174 @@ export class ConfigurationComponent implements AfterViewInit {
         }
         this.sender.requestPost(Params.API_URL + "/configurations/save", configBody).subscribe(
             {
-                next: res => console.log(res),
-                error: err => console.log(err.error),
+                next: () => {
+                    alert("Konfiguracja została zapisana.");
+                    this.router.navigate(['/config_list']);
+                },
+                error: err => this.notCompatible(err.error)
             }
         )
+    }
+
+    private removeCpu() {
+        this.config.price! -= this.config.processor.price;
+        this.config.processor = null;
+        if (this.config.motherboard == null && this.activeCpuFilters.has(Params.SOCKET)) {
+            this.activeCpuFilters.delete(Params.SOCKET);
+            this.activeMbFilters.delete(Params.SOCKET);
+            this.activeCoolerFilters.delete(Params.SOCKET);
+        }
+    }
+
+    private removeGpu() {
+        this.config.price! -= this.config.graphicsCard.price;
+        this.config.graphicsCard = null;
+        if (this.config.powerSupply == null && this.activeGpuFilters.has(Params.PS_POWER)) {
+            this.activeGpuFilters.delete(Params.PS_POWER);
+            this.activePsFilters.delete(Params.PS_POWER);
+        }
+    }
+
+    private removeRam() {
+        this.config.price! -= this.config.memory.price;
+        this.config.memory = null;
+        if (this.config.motherboard == null && this.activeMbFilters.has(Params.RAM_TYPE)) {
+            this.activeMbFilters.delete(Params.RAM_TYPE);
+            this.activeRamFilters.delete(Params.RAM_TYPE);
+        }
+        if (this.config.motherboard == null && this.activeMbFilters.has(Params.RAM_FREQUENCY)) {
+            this.activeMbFilters.delete(Params.RAM_FREQUENCY);
+            this.activeRamFilters.delete(Params.RAM_FREQUENCY);
+        }
+        if (this.config.motherboard == null && this.activeMbFilters.has(Params.RAM_CAPACITY)) {
+            this.activeMbFilters.delete(Params.RAM_CAPACITY);
+            this.activeRamFilters.delete(Params.RAM_CAPACITY);
+        }
+    }
+
+    private removeMb() {
+        this.config.price! -= this.config.motherboard.price;
+        this.config.motherboard = null;
+        if (this.config.memory == null && this.activeRamFilters.has(Params.RAM_TYPE)) {
+            this.activeMbFilters.delete(Params.RAM_TYPE);
+            this.activeRamFilters.delete(Params.RAM_TYPE);
+        }
+        if (this.config.memory == null && this.activeRamFilters.has(Params.RAM_FREQUENCY)) {
+            this.activeMbFilters.delete(Params.RAM_FREQUENCY);
+            this.activeRamFilters.delete(Params.RAM_FREQUENCY);
+        }
+        if (this.config.memory == null && this.activeRamFilters.has(Params.RAM_CAPACITY)) {
+            this.activeMbFilters.delete(Params.RAM_CAPACITY);
+            this.activeRamFilters.delete(Params.RAM_CAPACITY);
+        }
+        if (this.config.processor == null && this.activeMbFilters.has(Params.SOCKET)) {
+            this.activeMbFilters.delete(Params.SOCKET);
+            this.activeCpuFilters.delete(Params.SOCKET);
+        }
+        if (this.config.pcCase == null && this.activeMbFilters.has(Params.MOTHERBOARD_STANDARD)) {
+            this.activeMbFilters.delete(Params.MOTHERBOARD_STANDARD);
+            this.activeCaseFilters.delete(Params.MOTHERBOARD_STANDARD);
+        }
+    }
+
+    private removePs() {
+        this.config.price! -= this.config.powerSupply.price;
+        this.config.powerSupply = null;
+        if (this.config.graphicsCard == null && this.activePsFilters.has(Params.PS_POWER)) {
+            this.activeGpuFilters.delete(Params.PS_POWER);
+            this.activePsFilters.delete(Params.PS_POWER);
+        }
+    }
+
+    private removeAirCooler() {
+        this.config.price! -= this.config.cooler.price;
+        this.config.cooler = null;
+        if (this.config.pcCase == null && this.activeCaseFilters.has(Params.MAX_CPU_HEIGHT)) {
+            this.activeCaseFilters.delete(Params.MAX_CPU_HEIGHT)
+        }
+        if (this.config.motherboard == null && this.config.processor == null) {
+            this.activeCoolerFilters.delete(Params.SOCKET)
+        }
+    }
+
+    private removeLiquidCooler() {
+
+        this.config.price! -= this.config.cooler.price;
+        this.config.cooler = null;
+
+        if (this.config.motherboard == null && this.config.processor == null) {
+            this.activeCoolerFilters.delete(Params.SOCKET)
+        }
+    }
+
+    private removeCase() {
+
+        this.config.price! -= this.config.pcCase.price;
+        this.config.pcCase = null;
+
+        this.activeCaseFilters.delete(Params.MAX_GPU_LENGTH)
+        this.activeCaseFilters.delete(Params.MAX_CPU_HEIGHT)
+        if (this.config.motherboard == null) {
+            this.activeCaseFilters.delete(Params.MOTHERBOARD_STANDARD)
+        }
+
+    }
+
+    private notCompatible(error: any) {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        })
+        alert(error.message);
+        this.invalidProduct(error.firstProductCategoryCode);
+        this.invalidProduct(error.secondProductCategoryCode);
+    }
+
+    private invalidProduct(categoryCode: string) {
+        try {
+            this.removeProduct(categoryCode);
+        } catch (error) {
+            console.log(error);
+        }
+        let selector = this.getProductSelector(categoryCode);
+        let element = document.querySelector(selector) as HTMLElement;
+        element.classList.add('invalid');
+        element.style.border = "2px solid red";
+        element.style.borderRadius = "25px";
+    }
+
+    private resetInvalidProduct(categoryCode: string) {
+        let selector = this.getProductSelector(categoryCode);
+        let element = document.querySelector(selector) as HTMLElement;
+        element.classList.remove('invalid');
+        element.style.border = "none"
+        element.style.borderBottom = "2px solid #353535";
+        element.style.borderRadius = "0";
+    }
+
+    private getProductSelector(categoryCode: string) {
+        switch (categoryCode) {
+            case "CPU":
+                return "#cpu_wrapper";
+            case "GPU":
+                return "#gpu_wrapper";
+            case "RAM":
+                return "#ram_wrapper";
+            case "MB":
+                return "#mb_wrapper";
+            case "PS":
+                return "#ps_wrapper";
+            case "SSD":
+                return "#ssd_wrapper";
+            case "HDD":
+                return "#hdd_wrapper";
+            case "AIR_COOLER":
+                return "#cooler_wrapper";
+            case "LIQUID_COOLER":
+                return "#cooler_wrapper";
+            case "CASE":
+                return "#case_wrapper";
+        }
+        throw new Error("Invalid category code");
     }
 }

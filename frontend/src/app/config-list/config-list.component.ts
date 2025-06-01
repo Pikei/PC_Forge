@@ -46,4 +46,12 @@ export class ConfigListComponent {
         }
         this.sender.requestPost(Params.API_URL + "/configurations/add_to_cart/" + config.name).subscribe();
     }
+
+    removeConfig(config: any) {
+        if (confirm("Czy na pewno chcesz usunąć konfigurację \"" + config.name + "\"?")) {
+            this.sender.requestPost(Params.API_URL + "/configurations/remove/" + config.name, null).subscribe(() => {
+                window.location.reload();
+            });
+        }
+    }
 }

@@ -25,6 +25,5 @@ public interface ConfigurationRepository extends JpaRepository<Configuration, Lo
      * @param id Identyfikator użytkownika
      * @return Lista konfiguracji użytkownika
      */
-    List<Configuration> findByUser_Id(Long id);
-
+    List<Configuration> findByUser_IdOrderByIdDesc(Long id);
 }

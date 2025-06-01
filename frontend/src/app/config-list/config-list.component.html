@@ -3,14 +3,20 @@
     <h2>Zapisane konfiguracje</h2>
     <div class="configuration">
         <div class="config" *ngFor="let config of configurations">
-            <div class="options">
-                <a [href]="'/config/' + config.name" class="name-wrapper">
-                    <h2>{{ config.name }}</h2>
-                    <button type="button" class="edit-btn">
-                        <img id="edit1" src="icons/edit.png" alt="edit-icon">
-                        <img id="edit2" src="icons/edit-hover.png" alt="edit-icon">
+            <div class="config-header">
+                <div class="options">
+                    <a [href]="'/config/' + config.name" class="name-wrapper">
+                        <h2>{{ config.name }}</h2>
+                        <button type="button" class="edit-btn">
+                            <img id="edit1" src="icons/edit.png" alt="edit-icon">
+                            <img id="edit2" src="icons/edit-hover.png" alt="edit-icon">
+                        </button>
+                    </a>
+                    <button type="button" class="remove-btn" (click)="removeConfig(config)">
+                        <img id="trash1" src="icons/trash-white.png" alt="trash">
+                        <img id="trash2" src="icons/trash-orange.png" alt="trash">
                     </button>
-                </a>
+                </div>
                 <div class="price-wrapper">
                     <p class="cost-summary">{{ (config.price).toFixed(2) }} zł</p>
                     <button type="button" class="add-btn" (click)="addToCart(config)">Dodaj do koszyka</button>

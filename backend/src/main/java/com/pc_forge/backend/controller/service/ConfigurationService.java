@@ -69,7 +69,7 @@ public class ConfigurationService {
      */
     public List<ConfigurationShortResponse> getAllConfigurations(User user) {
         List<ConfigurationShortResponse> configListResponse;
-        List<Configuration> configurations = configurationRepository.findByUser_Id(user.getId());
+        List<Configuration> configurations = configurationRepository.findByUser_IdOrderByIdDesc(user.getId());
         configListResponse = configurations.stream().map(this::getConfigurationShortResponse).collect(Collectors.toList());
         return configListResponse;
     }
@@ -90,12 +90,23 @@ public class ConfigurationService {
         products.add(ResponseBuilder.getProductConfigurationResponse(configuration.getProcessor()));
         products.add(ResponseBuilder.getProductConfigurationResponse(configuration.getMotherboard()));
         products.add(ResponseBuilder.getProductConfigurationResponse(configuration.getMemory()));
-        products.add(ResponseBuilder.getProductConfigurationResponse(configuration.getGraphicsCard()));
-        products.add(ResponseBuilder.getProductConfigurationResponse(configuration.getPowerSupply()));
-        products.add(ResponseBuilder.getProductConfigurationResponse(configuration.getCooler()));
         products.add(ResponseBuilder.getProductConfigurationResponse(configuration.getPcCase()));
-        products.add(ResponseBuilder.getProductConfigurationResponse(configuration.getHardDiskDrive()));
-        products.add(ResponseBuilder.getProductConfigurationResponse(configuration.getSolidStateDrive()));
+
+        if (configuration.getCooler() != null) {
+            products.add(ResponseBuilder.getProductConfigurationResponse(configuration.getCooler()));
+        }
+        if (configuration.getGraphicsCard() != null) {
+            products.add(ResponseBuilder.getProductConfigurationResponse(configuration.getGraphicsCard()));
+        }
+        if (configuration.getPowerSupply() != null) {
+            products.add(ResponseBuilder.getProductConfigurationResponse(configuration.getPowerSupply()));
+        }
+        if (configuration.getHardDiskDrive() != null) {
+            products.add(ResponseBuilder.getProductConfigurationResponse(configuration.getHardDiskDrive()));
+        }
+        if (configuration.getSolidStateDrive() != null) {
+            products.add(ResponseBuilder.getProductConfigurationResponse(configuration.getSolidStateDrive()));
+        }
         response.setProducts(products);
         return response;
     }
@@ -329,7 +340,7 @@ public class ConfigurationService {
 
         Integer psPower;
         if (configuration.getPowerSupply() == null) {
-            if (configuration.getPcCase().getPowerSupply() != null || configuration.getPcCase().getPsPower() == 0) {
+            if (configuration.getPcCase().getPowerSupply() == false || configuration.getPcCase().getPsPower() == 0) {
                 response.setCompatible(false);
                 response.setFirstProductCategoryCode(ProductCategoryCode.POWER_SUPPLY);
                 response.setSecondProductCategoryCode(ProductCategoryCode.CASE);
@@ -342,7 +353,7 @@ public class ConfigurationService {
         }
 
         if (configuration.getGraphicsCard() == null) {
-            if (configuration.getProcessor().getIntegratedGraphicsUnit() != null && !configuration.getProcessor().getIntegratedGraphicsUnit().isEmpty()) {
+            if (configuration.getProcessor().getIntegratedGraphicsUnit() == null) {
                 response.setCompatible(false);
                 response.setFirstProductCategoryCode(ProductCategoryCode.GRAPHICS_CARD);
                 response.setSecondProductCategoryCode(ProductCategoryCode.PROCESSOR);

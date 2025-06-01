@@ -204,7 +204,11 @@ public abstract class ProductFilter {
      */
     protected List<Integer> getIntegerListFromRequestParam(String param) {
         if (requestParameters.containsKey(param)) {
-            return Arrays.stream(requestParameters.get(param)).map(Integer::valueOf).toList();
+            try {
+                return Arrays.stream(requestParameters.get(param)).map(Integer::valueOf).toList();
+            } catch (NumberFormatException e) {
+                return null;
+            }
         }
         return null;
     }

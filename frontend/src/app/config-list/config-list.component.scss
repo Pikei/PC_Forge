@@ -26,18 +26,57 @@
     border-radius: 10px;
     background-color: #242424;
 
-    .options {
+    .config-header {
         display: flex;
         flex-direction: row;
         width: 100%;
         justify-content: space-between;
         align-items: center;
 
+        .options {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-self: left;
+            width: 50%;
+        }
+
+        .remove-btn {
+            height: 40px;
+            border-radius: 40px;
+            border: none;
+            background-color: transparent;
+
+            img {
+                margin-left: 10px;
+                transform: translate(0, -10%);
+                max-width: 70%;
+                max-height: 70%;
+            }
+
+            #trash1 {
+                display: block;
+            }
+
+            #trash2 {
+                display: none;
+            }
+        }
+
+        .remove-btn:hover {
+            #trash1 {
+                display: none;
+            }
+
+            #trash2 {
+                display: block;
+            }
+        }
+
         .name-wrapper {
             display: flex;
             flex-direction: row;
             align-items: center;
-            width: 50%;
             text-decoration: none;
             color: #dadada;
 
@@ -90,6 +129,7 @@
 
             button {
                 width: 40%;
+                font-size: 15px;
             }
 
             p {
