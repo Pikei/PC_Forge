@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {RequestSender} from '../../../request.sender';
+import {RequestSender} from '../../../service/request.sender';
 import {CartService} from '../../../service/shopping-cart.service';
 import {Router} from '@angular/router';
 import {Params} from '../../../Params';

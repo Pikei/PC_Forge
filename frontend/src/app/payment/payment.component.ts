@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {RequestSender} from '../request.sender';
+import {RequestSender} from '../service/request.sender';
 import * as http from 'node:http';
 import {Params} from '../Params';
 

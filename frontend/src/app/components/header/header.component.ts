@@ -1,7 +1,7 @@
 import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
 import {TokenService} from '../../service/token.service';
 import {NgClass, NgIf} from '@angular/common';
-import {RequestSender} from '../../request.sender';
+import {RequestSender} from '../../service/request.sender';
 import {CartService} from '../../service/shopping-cart.service';
 import {ReactiveFormsModule} from '@angular/forms';
 import {Router} from '@angular/router';
@@ -54,7 +54,7 @@ export class HeaderComponent implements OnInit {
     @HostListener('window:scroll', ['$event'])
     updateStickyState() {
         const windowScroll = window.window.scrollY;
-        this.sticky = windowScroll > 100;
+        this.sticky = windowScroll > 50;
         if (this.sticky) {
             document.body.classList.add('simple_header');
         } else {

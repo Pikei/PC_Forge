@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {HeaderComponent} from '../components/header/header.component';
 import {CartService} from '../service/shopping-cart.service';
-import {RequestSender} from '../request.sender';
+import {RequestSender} from '../service/request.sender';
 import {Params} from '../Params';
 
 @Component({

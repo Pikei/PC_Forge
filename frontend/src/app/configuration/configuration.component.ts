@@ -1,7 +1,7 @@
 import {AfterViewInit, Component} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {HeaderComponent} from '../components/header/header.component';
-import {RequestSender} from '../request.sender';
+import {RequestSender} from '../service/request.sender';
 import {NgForOf, NgIf} from '@angular/common';
 import {ProductConfigComponent} from '../components/product/product-config/product-config.component';
 import {CoolerChoiceComponent} from '../components/product/cooler-choice/cooler-choice.component';
@@ -345,6 +345,7 @@ export class ConfigurationComponent implements AfterViewInit {
 
     changeProductsPerPage(event: Event) {
         this.numberOfProductsPerPage = parseInt((event.target as HTMLInputElement).value);
+        this.pageNumber = 1;
         this.updateProductsOnPage();
     }
 

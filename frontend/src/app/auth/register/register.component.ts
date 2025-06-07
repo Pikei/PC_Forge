@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {NgStyle} from '@angular/common';
-import {RequestSender} from '../../request.sender';
+import {RequestSender} from '../../service/request.sender';
 import {Router} from '@angular/router';
 import {Params} from '../../Params';
 

@@ -1,5 +1,5 @@
 import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
-import {RequestSender} from '../../../request.sender';
+import {RequestSender} from '../../../service/request.sender';
 import {CartService} from '../../../service/shopping-cart.service';
 import {NgIf} from '@angular/common';
 import {Router} from '@angular/router';

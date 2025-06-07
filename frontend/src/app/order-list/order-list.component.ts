@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {HeaderComponent} from '../components/header/header.component';
-import {RequestSender} from '../request.sender';
+import {RequestSender} from '../service/request.sender';
 import {NgIf} from '@angular/common';
 import {Router} from '@angular/router';
 import {Params} from '../Params';

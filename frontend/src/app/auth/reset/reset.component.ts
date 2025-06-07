@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {RequestSender} from '../../request.sender';
+import {RequestSender} from '../../service/request.sender';
 import {FormsModule} from '@angular/forms';
 import {NgIf} from '@angular/common';
 import {Params} from '../../Params';

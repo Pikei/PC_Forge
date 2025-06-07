@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {RequestSender} from '../request.sender';
+import {RequestSender} from '../service/request.sender';
 import {HeaderComponent} from '../components/header/header.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgForOf, NgIf} from '@angular/common';
@@ -250,6 +250,7 @@ export class ProductListComponent implements OnInit {
 
     changeProductsPerPage(event: Event) {
         this.numberOfProductsPerPage = parseInt((event.target as HTMLInputElement).value);
+        this.pageNumber = 1;
         this.updateProductsOnPage();
     }
 

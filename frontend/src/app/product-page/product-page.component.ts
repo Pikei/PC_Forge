@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {RequestSender} from '../request.sender';
+import {RequestSender} from '../service/request.sender';
 import {HeaderComponent} from '../components/header/header.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ProductSpecTableComponent} from '../components/product/product-spec-table/product-spec-table.component';
