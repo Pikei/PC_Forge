@@ -19,7 +19,6 @@ export class HomeComponent {
             alt: 'Karty  RTX 5000',
             href: 'category/graphics_card?chipset=GeForce%20RTX%205090,GeForce%20RTX%205080,GeForce%20RTX%205070%20Ti,GeForce%20RTX%205070'
         },
-        {src: 'baner_images/baner3.png', alt: 'Procesory intel AMD', href: 'category/processor?producer=AMD,Intel'},
-        {src: 'baner_images/baner4.png', alt: 'Kontakt', href: 'https://example.com/4'},
+        {src: 'baner_images/baner3.png', alt: 'Procesory intel AMD', href: 'category/processor?producer=AMD,Intel'}
     ];
 }

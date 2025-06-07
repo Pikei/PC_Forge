@@ -54,7 +54,7 @@ export class HeaderComponent implements OnInit {
     @HostListener('window:scroll', ['$event'])
     updateStickyState() {
         const windowScroll = window.window.scrollY;
-        this.sticky = windowScroll > 0;
+        this.sticky = windowScroll > 100;
         if (this.sticky) {
             document.body.classList.add('simple_header');
         } else {

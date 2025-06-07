@@ -7,7 +7,7 @@ import {ProductConfigComponent} from '../components/product/product-config/produ
 import {CoolerChoiceComponent} from '../components/product/cooler-choice/cooler-choice.component';
 import {CartService} from '../service/shopping-cart.service';
 import {FormsModule} from '@angular/forms';
-import {ProductCardComponent} from '../components/product/product-category/product-card.component';
+import {ProductCardComponent} from '../components/product/product-card/product-card.component';
 import {ProductFilterComponent} from '../components/product/filter/product-filter/product-filter.component';
 import {Params} from '../Params';
 
@@ -31,14 +31,7 @@ export class ConfigurationComponent implements AfterViewInit {
     chosenCooler: string = "";
     currentCategoryCode: string = "";
     categoryFiler: any;
-    activeCpuFilters: Map<string, string[]> = new Map()
-    activeMbFilters: Map<string, string[]> = new Map()
-    activeRamFilters: Map<string, string[]> = new Map()
-    activeCaseFilters: Map<string, string[]> = new Map()
-    activeGpuFilters: Map<string, string[]> = new Map()
-    activePsFilters: Map<string, string[]> = new Map()
-    activeCoolerFilters: Map<string, string[]> = new Map()
-    activeDriveFilters: Map<string, string[]> = new Map()
+    activeFilters: Map<string, string[]> = new Map()
     products: any[] = [];
     numberOfProductsPerPage: number = 30;
     pageNumber: number = 1;
@@ -81,6 +74,11 @@ export class ConfigurationComponent implements AfterViewInit {
                     next: response => {
                         this.config = response.body;
                         this.chosenCooler = this.config.cooler.category;
+                        this.activeFilters.set(Params.SOCKET, this.config.processor.socket);
+                        this.activeFilters.set(Params.MOTHERBOARD_STANDARD, this.config.motherboard.standard);
+                        this.activeFilters.set(Params.RAM_TYPE, this.config.memory.memoryType);
+                        this.activeFilters.set(Params.RAM_FREQUENCY, this.config.memory.frequency);
+                        console.log(this.config);
                     },
                     error: () => {
                         router.navigate(['/page_not_found']);
@@ -440,131 +438,96 @@ export class ConfigurationComponent implements AfterViewInit {
     }
 
     getActiveFilters() {
-        switch (this.currentCategoryCode) {
-            case "CPU":
-                return this.activeCpuFilters;
-            case "GPU":
-                return this.activeGpuFilters;
-            case "RAM":
-                return this.activeRamFilters;
-            case "MB":
-                return this.activeMbFilters;
-            case "PS":
-                return this.activePsFilters;
-            case "SSD":
-                return this.activeDriveFilters;
-            case "HDD":
-                return this.activeDriveFilters;
-            case "AIR_COOLER":
-                return this.activeCoolerFilters;
-            case "LIQUID_COOLER":
-                return this.activeCoolerFilters;
-            case "CASE":
-                return this.activeCaseFilters;
-        }
-        throw new Error("Invalid category code");
+        return this.activeFilters
     }
 
     private setCpuFilters() {
-        if (!this.activeCpuFilters.has(Params.SOCKET) && !this.activeMbFilters.has(Params.SOCKET)) {
-            this.activeMbFilters.set(Params.SOCKET, [this.config.processor.socket]);
-            this.activeCpuFilters.set(Params.SOCKET, [this.config.processor.socket]);
-            this.activeCoolerFilters.set(Params.SOCKET, [this.config.processor.socket]);
+        if (!this.activeFilters.has(Params.SOCKET)) {
+            this.activeFilters.set(Params.SOCKET, [this.config.processor.socket]);
         }
     }
 
     private setMemoryFilters() {
-        if (!this.activeRamFilters.has(Params.RAM_TYPE) && !this.activeMbFilters.has(Params.RAM_TYPE)) {
-            this.activeMbFilters.set(Params.RAM_TYPE, [this.config.memory.memoryType]);
-            this.activeRamFilters.set(Params.RAM_TYPE, [this.config.memory.memoryType]);
+        if (!this.activeFilters.has(Params.RAM_TYPE)) {
+            this.activeFilters.set(Params.RAM_TYPE, [this.config.memory.memoryType]);
         }
-        if (!this.activeRamFilters.has(Params.RAM_FREQUENCY) && !this.activeMbFilters.has(Params.RAM_FREQUENCY)) {
-            this.activeMbFilters.set(Params.RAM_FREQUENCY, [this.config.memory.frequency]);
-            this.activeRamFilters.set(Params.RAM_FREQUENCY, [this.config.memory.frequency]);
+        if (!this.activeFilters.has(Params.RAM_FREQUENCY)) {
+            this.activeFilters.set(Params.RAM_FREQUENCY, [this.config.memory.frequency]);
         }
-        if (!this.activeRamFilters.has(Params.RAM_CAPACITY) && !this.activeMbFilters.has(Params.RAM_CAPACITY)) {
-            this.activeMbFilters.set(Params.RAM_CAPACITY, [this.config.memory.maxMemoryCapacity]);
-            this.activeRamFilters.set(Params.RAM_CAPACITY, [this.config.memory.maxMemoryCapacity]);
+        if (!this.activeFilters.has(Params.RAM_CAPACITY)) {
+            this.activeFilters.set(Params.RAM_CAPACITY, [this.config.memory.maxMemoryCapacity]);
         }
         for (let cap of this.categoryFiler[Params.RAM_CAPACITY]) {
-            if (cap[0] <= this.config.memory.maxMemoryCapacity && !this.activeMbFilters.get(Params.RAM_CAPACITY)?.includes(cap[0])) {
-                this.activeMbFilters.get(Params.RAM_CAPACITY)?.push(cap[0]);
-                this.activeRamFilters.get(Params.RAM_CAPACITY)?.push(cap[0]);
+            if (cap[0] <= this.config.memory.maxMemoryCapacity && !this.activeFilters.get(Params.RAM_CAPACITY)?.includes(cap[0])) {
+                this.activeFilters.get(Params.RAM_CAPACITY)?.push(cap[0]);
             }
         }
     }
 
     private setMotherboardFilters() {
         if (this.config.processor == null) {
-            if (!this.activeCpuFilters.has(Params.SOCKET) && !this.activeMbFilters.has(Params.SOCKET)) {
-                this.activeMbFilters.set(Params.SOCKET, [this.config.motherboard.socket]);
-                this.activeCpuFilters.set(Params.SOCKET, [this.config.motherboard.socket]);
-                this.activeCoolerFilters.set(Params.SOCKET, [this.config.motherboard.socket]);
+            if (!this.activeFilters.has(Params.SOCKET)) {
+                this.activeFilters.set(Params.SOCKET, [this.config.motherboard.socket]);
             }
         } else {
             this.setCpuFilters();
         }
         if (this.config.memory == null) {
-            if (!this.activeRamFilters.has(Params.RAM_TYPE) && !this.activeMbFilters.has(Params.RAM_TYPE)) {
-                this.activeMbFilters.set(Params.RAM_TYPE, [this.config.motherboard.memoryStandard]);
-                this.activeRamFilters.set(Params.RAM_TYPE, [this.config.motherboard.memoryStandard]);
+            if (!this.activeFilters.has(Params.RAM_TYPE)) {
+                this.activeFilters.set(Params.RAM_TYPE, [this.config.motherboard.memoryStandard]);
             }
-            if (!this.activeRamFilters.has(Params.RAM_FREQUENCY) && !this.activeMbFilters.has(Params.RAM_FREQUENCY)) {
-                this.activeMbFilters.set(Params.RAM_FREQUENCY, this.config.motherboard[Params.RAM_FREQUENCY]);
-                this.activeRamFilters.set(Params.RAM_FREQUENCY, this.config.motherboard[Params.RAM_FREQUENCY]);
+            if (!this.activeFilters.has(Params.RAM_FREQUENCY)) {
+                this.activeFilters.set(Params.RAM_FREQUENCY, this.config.motherboard[Params.RAM_FREQUENCY]);
             }
         } else {
             this.setMemoryFilters();
         }
-        if (!this.activeMbFilters.has(Params.MOTHERBOARD_STANDARD) && !this.activeCaseFilters.has(Params.MOTHERBOARD_STANDARD)) {
-            this.activeMbFilters.set(Params.MOTHERBOARD_STANDARD, [this.config.motherboard[Params.MOTHERBOARD_STANDARD]]);
-            this.activeCaseFilters.set(Params.MOTHERBOARD_STANDARD, [this.config.motherboard[Params.MOTHERBOARD_STANDARD]]);
+        if (!this.activeFilters.has(Params.MOTHERBOARD_STANDARD)) {
+            this.activeFilters.set(Params.MOTHERBOARD_STANDARD, [this.config.motherboard[Params.MOTHERBOARD_STANDARD]]);
         }
     }
 
     private setPowerSupplyFilters() {
-        if (!this.activeGpuFilters.has(Params.PS_POWER)) {
-            this.activeGpuFilters.set(Params.PS_POWER, [this.config.powerSupply.power]);
+        if (!this.activeFilters.has(Params.PS_POWER)) {
+            this.activeFilters.set(Params.PS_POWER, [this.config.powerSupply.power]);
             for (let pow of this.categoryFiler.power) {
                 if (pow[0] <= this.config.powerSupply.power) {
-                    this.activeGpuFilters.get(Params.PS_POWER)?.push(pow[0]);
+                    this.activeFilters.get(Params.PS_POWER)?.push(pow[0]);
                 }
             }
         }
     }
 
     private setCoolerFilters() {
-        if (!this.activeCpuFilters.has(Params.SOCKET) && !this.activeMbFilters.has(Params.SOCKET)) {
-            this.activeMbFilters.set(Params.SOCKET, this.config.cooler.socket);
-            this.activeCpuFilters.set(Params.SOCKET, this.config.cooler.socket);
+        if (!this.activeFilters.has(Params.SOCKET)) {
+            this.activeFilters.set(Params.SOCKET, this.config.cooler.socket);
         }
     }
 
     private setCaseFilters() {
-        if (!this.activeMbFilters.has(Params.MOTHERBOARD_STANDARD) && !this.activeCaseFilters.has(Params.MOTHERBOARD_STANDARD)) {
-            this.activeMbFilters.set(Params.MOTHERBOARD_STANDARD, this.config.pcCase[Params.MOTHERBOARD_STANDARD]);
-            this.activeCaseFilters.set(Params.MOTHERBOARD_STANDARD, this.config.pcCase[Params.MOTHERBOARD_STANDARD]);
+        if (!this.activeFilters.has(Params.MOTHERBOARD_STANDARD)) {
+            this.activeFilters.set(Params.MOTHERBOARD_STANDARD, this.config.pcCase[Params.MOTHERBOARD_STANDARD]);
         }
-        if (this.config.pcCase[Params.HAS_POWER_SUPPLY] == true && !this.activePsFilters.has(Params.PS_POWER)) {
-            if (!this.activeGpuFilters.has(Params.PS_POWER)) {
-                this.activeGpuFilters.set(Params.PS_POWER, [this.config.pcCase.psPower]);
+        if (this.config.pcCase[Params.HAS_POWER_SUPPLY] == true && !this.activeFilters.has(Params.PS_POWER)) {
+            if (!this.activeFilters.has(Params.PS_POWER)) {
+                this.activeFilters.set(Params.PS_POWER, [this.config.pcCase.psPower]);
             }
             for (let pow of this.categoryFiler.power) {
-                if (pow[0] <= this.config.pcCase.psPower && !this.activeGpuFilters.get(Params.PS_POWER)?.includes(pow[0]) && pow[0] > 0) {
-                    this.activeGpuFilters.get(Params.PS_POWER)?.push(pow[0]);
+                if (pow[0] <= this.config.pcCase.psPower && !this.activeFilters.get(Params.PS_POWER)?.includes(pow[0]) && pow[0] > 0) {
+                    this.activeFilters.get(Params.PS_POWER)?.push(pow[0]);
                 }
             }
         }
-        this.activeCoolerFilters.set(Params.MAX_CPU_HEIGHT, [this.config.pcCase.maxCpuCoolerHeight])
-        this.activeGpuFilters.set(Params.MAX_GPU_LENGTH, [this.config.pcCase.maxGpuLength])
+        this.activeFilters.set(Params.MAX_CPU_HEIGHT, [this.config.pcCase.maxCpuCoolerHeight])
+        this.activeFilters.set(Params.MAX_GPU_LENGTH, [this.config.pcCase.maxGpuLength])
     }
 
     private setGpuFilters() {
-        if (!this.activePsFilters.has(Params.PS_POWER)) {
-            this.activePsFilters.set(Params.PS_POWER, [this.config.graphicsCard.recommendedPsPower]);
+        if (!this.activeFilters.has(Params.PS_POWER)) {
+            this.activeFilters.set(Params.PS_POWER, [this.config.graphicsCard.recommendedPsPower]);
             for (let pow of this.categoryFiler[Params.PS_POWER]) {
                 if (pow[0] >= this.config.graphicsCard.recommendedPsPower) {
-                    this.activePsFilters.get(Params.PS_POWER)?.push(pow[0]);
+                    this.activeFilters.get(Params.PS_POWER)?.push(pow[0]);
                 }
             }
         }
@@ -625,81 +588,81 @@ export class ConfigurationComponent implements AfterViewInit {
     private removeCpu() {
         this.config.price! -= this.config.processor.price;
         this.config.processor = null;
-        if (this.config.motherboard == null && this.activeCpuFilters.has(Params.SOCKET)) {
-            this.activeCpuFilters.delete(Params.SOCKET);
-            this.activeMbFilters.delete(Params.SOCKET);
-            this.activeCoolerFilters.delete(Params.SOCKET);
+        if (this.config.motherboard == null && this.activeFilters.has(Params.SOCKET)) {
+            this.activeFilters.delete(Params.SOCKET);
+            this.activeFilters.delete(Params.SOCKET);
+            this.activeFilters.delete(Params.SOCKET);
         }
     }
 
     private removeGpu() {
         this.config.price! -= this.config.graphicsCard.price;
         this.config.graphicsCard = null;
-        if (this.config.powerSupply == null && this.activeGpuFilters.has(Params.PS_POWER)) {
-            this.activeGpuFilters.delete(Params.PS_POWER);
-            this.activePsFilters.delete(Params.PS_POWER);
+        if (this.config.powerSupply == null && this.activeFilters.has(Params.PS_POWER)) {
+            this.activeFilters.delete(Params.PS_POWER);
+            this.activeFilters.delete(Params.PS_POWER);
         }
     }
 
     private removeRam() {
         this.config.price! -= this.config.memory.price;
         this.config.memory = null;
-        if (this.config.motherboard == null && this.activeMbFilters.has(Params.RAM_TYPE)) {
-            this.activeMbFilters.delete(Params.RAM_TYPE);
-            this.activeRamFilters.delete(Params.RAM_TYPE);
+        if (this.config.motherboard == null && this.activeFilters.has(Params.RAM_TYPE)) {
+            this.activeFilters.delete(Params.RAM_TYPE);
+            this.activeFilters.delete(Params.RAM_TYPE);
         }
-        if (this.config.motherboard == null && this.activeMbFilters.has(Params.RAM_FREQUENCY)) {
-            this.activeMbFilters.delete(Params.RAM_FREQUENCY);
-            this.activeRamFilters.delete(Params.RAM_FREQUENCY);
+        if (this.config.motherboard == null && this.activeFilters.has(Params.RAM_FREQUENCY)) {
+            this.activeFilters.delete(Params.RAM_FREQUENCY);
+            this.activeFilters.delete(Params.RAM_FREQUENCY);
         }
-        if (this.config.motherboard == null && this.activeMbFilters.has(Params.RAM_CAPACITY)) {
-            this.activeMbFilters.delete(Params.RAM_CAPACITY);
-            this.activeRamFilters.delete(Params.RAM_CAPACITY);
+        if (this.config.motherboard == null && this.activeFilters.has(Params.RAM_CAPACITY)) {
+            this.activeFilters.delete(Params.RAM_CAPACITY);
+            this.activeFilters.delete(Params.RAM_CAPACITY);
         }
     }
 
     private removeMb() {
         this.config.price! -= this.config.motherboard.price;
         this.config.motherboard = null;
-        if (this.config.memory == null && this.activeRamFilters.has(Params.RAM_TYPE)) {
-            this.activeMbFilters.delete(Params.RAM_TYPE);
-            this.activeRamFilters.delete(Params.RAM_TYPE);
+        if (this.config.memory == null && this.activeFilters.has(Params.RAM_TYPE)) {
+            this.activeFilters.delete(Params.RAM_TYPE);
+            this.activeFilters.delete(Params.RAM_TYPE);
         }
-        if (this.config.memory == null && this.activeRamFilters.has(Params.RAM_FREQUENCY)) {
-            this.activeMbFilters.delete(Params.RAM_FREQUENCY);
-            this.activeRamFilters.delete(Params.RAM_FREQUENCY);
+        if (this.config.memory == null && this.activeFilters.has(Params.RAM_FREQUENCY)) {
+            this.activeFilters.delete(Params.RAM_FREQUENCY);
+            this.activeFilters.delete(Params.RAM_FREQUENCY);
         }
-        if (this.config.memory == null && this.activeRamFilters.has(Params.RAM_CAPACITY)) {
-            this.activeMbFilters.delete(Params.RAM_CAPACITY);
-            this.activeRamFilters.delete(Params.RAM_CAPACITY);
+        if (this.config.memory == null && this.activeFilters.has(Params.RAM_CAPACITY)) {
+            this.activeFilters.delete(Params.RAM_CAPACITY);
+            this.activeFilters.delete(Params.RAM_CAPACITY);
         }
-        if (this.config.processor == null && this.activeMbFilters.has(Params.SOCKET)) {
-            this.activeMbFilters.delete(Params.SOCKET);
-            this.activeCpuFilters.delete(Params.SOCKET);
+        if (this.config.processor == null && this.activeFilters.has(Params.SOCKET)) {
+            this.activeFilters.delete(Params.SOCKET);
+            this.activeFilters.delete(Params.SOCKET);
         }
-        if (this.config.pcCase == null && this.activeMbFilters.has(Params.MOTHERBOARD_STANDARD)) {
-            this.activeMbFilters.delete(Params.MOTHERBOARD_STANDARD);
-            this.activeCaseFilters.delete(Params.MOTHERBOARD_STANDARD);
+        if (this.config.pcCase == null && this.activeFilters.has(Params.MOTHERBOARD_STANDARD)) {
+            this.activeFilters.delete(Params.MOTHERBOARD_STANDARD);
+            this.activeFilters.delete(Params.MOTHERBOARD_STANDARD);
         }
     }
 
     private removePs() {
         this.config.price! -= this.config.powerSupply.price;
         this.config.powerSupply = null;
-        if (this.config.graphicsCard == null && this.activePsFilters.has(Params.PS_POWER)) {
-            this.activeGpuFilters.delete(Params.PS_POWER);
-            this.activePsFilters.delete(Params.PS_POWER);
+        if (this.config.graphicsCard == null && this.activeFilters.has(Params.PS_POWER)) {
+            this.activeFilters.delete(Params.PS_POWER);
+            this.activeFilters.delete(Params.PS_POWER);
         }
     }
 
     private removeAirCooler() {
         this.config.price! -= this.config.cooler.price;
         this.config.cooler = null;
-        if (this.config.pcCase == null && this.activeCaseFilters.has(Params.MAX_CPU_HEIGHT)) {
-            this.activeCaseFilters.delete(Params.MAX_CPU_HEIGHT)
+        if (this.config.pcCase == null && this.activeFilters.has(Params.MAX_CPU_HEIGHT)) {
+            this.activeFilters.delete(Params.MAX_CPU_HEIGHT)
         }
         if (this.config.motherboard == null && this.config.processor == null) {
-            this.activeCoolerFilters.delete(Params.SOCKET)
+            this.activeFilters.delete(Params.SOCKET)
         }
     }
 
@@ -709,7 +672,7 @@ export class ConfigurationComponent implements AfterViewInit {
         this.config.cooler = null;
 
         if (this.config.motherboard == null && this.config.processor == null) {
-            this.activeCoolerFilters.delete(Params.SOCKET)
+            this.activeFilters.delete(Params.SOCKET)
         }
     }
 
@@ -718,10 +681,10 @@ export class ConfigurationComponent implements AfterViewInit {
         this.config.price! -= this.config.pcCase.price;
         this.config.pcCase = null;
 
-        this.activeCaseFilters.delete(Params.MAX_GPU_LENGTH)
-        this.activeCaseFilters.delete(Params.MAX_CPU_HEIGHT)
+        this.activeFilters.delete(Params.MAX_GPU_LENGTH)
+        this.activeFilters.delete(Params.MAX_CPU_HEIGHT)
         if (this.config.motherboard == null) {
-            this.activeCaseFilters.delete(Params.MOTHERBOARD_STANDARD)
+            this.activeFilters.delete(Params.MOTHERBOARD_STANDARD)
         }
 
     }

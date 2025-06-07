@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {NgIf} from "@angular/common";
-import {ProductCardComponent} from "../product-category/product-card.component";
+import {ProductCardComponent} from "../product-card/product-card.component";
 
 @Component({
     selector: 'app-product-config',

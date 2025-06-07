@@ -78,9 +78,17 @@ td:nth-child(odd) {
         font-size: 17px;
     }
 
-    div {
+    .options {
         display: flex;
         align-items: center;
+        justify-content: center;
+        width: 70%;
+        gap: 5%;
+
+        div {
+            display: flex;
+            align-items: center;
+        }
     }
 
     .page_nav_option {

@@ -62,7 +62,7 @@ export class ProductFilterComponent implements OnInit, AfterViewInit {
             priceMax.value = "";
         }
         if (this.activeFilters.has(Params.NAME)) {
-            this.name = this.activeFilters.get(Params.PRODUCER)![0];
+            this.name = this.activeFilters.get(Params.NAME)![0];
         }
     }
 
@@ -142,6 +142,10 @@ export class ProductFilterComponent implements OnInit, AfterViewInit {
 
     clearSearch() {
         this.name = "";
+        if (this.activeFilters.has(Params.NAME)) {
+            this.activeFilters.delete(Params.NAME);
+            this.applyFilter();
+        }
     }
 
     getSearch() {

@@ -5,7 +5,7 @@ import {HeaderComponent} from '../components/header/header.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgForOf, NgIf} from '@angular/common';
 import {ProductFilterComponent} from '../components/product/filter/product-filter/product-filter.component';
-import {ProductCardComponent} from '../components/product/product-category/product-card.component';
+import {ProductCardComponent} from '../components/product/product-card/product-card.component';
 import {Params} from '../Params';
 
 @Component({
