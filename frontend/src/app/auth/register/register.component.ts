@@ -103,7 +103,7 @@ export class RegisterComponent {
         if (login.value.length < 3 || login.value.length > 64) {
             login.classList.add('invalid');
             login.classList.remove('valid')
-            login.placeholder = "Nieprawidłowa długość"
+            login.placeholder = "Nieprawidłowa długość loginu"
             login.value = "";
         }
     }
