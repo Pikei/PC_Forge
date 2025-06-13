@@ -381,8 +381,7 @@ export class ConfigurationComponent implements AfterViewInit {
     }
 
     addProductToConfig($event: any) {
-        console.log(this.getActiveFilters());
-        console.log(this.categoryFiler)
+        this.config.price += $event.price;
         switch ($event.category) {
             case "CPU":
                 this.config.processor = $event;

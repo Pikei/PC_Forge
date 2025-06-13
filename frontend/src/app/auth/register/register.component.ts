@@ -40,7 +40,7 @@ export class RegisterComponent {
                 "password": password.value,
                 "firstName": firstName.value,
                 "lastName": lastName.value,
-                "phoneNumber": phone.value,
+                "phoneNumber": (phone.value != "" ? phone.value : null),
             }
             this.sender.requestPost(Params.API_URL + '/register', registerBody).subscribe(
                 {
@@ -161,16 +161,26 @@ export class RegisterComponent {
     }
 
     private validatePhone(phone: HTMLInputElement) {
-        if (!(/^\d{9}$/.test(phone.value))) {
-            phone.classList.add('invalid');
-            phone.classList.remove('valid');
-            phone.value = "";
-            phone.placeholder = "Numer telefonu powinien zawierać 9 cyfr";
+        if (phone.value != "") {
+            if (!(/^\d{9}$/.test(phone.value))) {
+                phone.classList.add('invalid');
+                phone.classList.remove('valid');
+                phone.value = "";
+                phone.placeholder = "Numer telefonu powinien zawierać 9 cyfr";
+            }
         }
     }
 
     private allFieldsValid(login: HTMLInputElement, password: HTMLInputElement, passwordRepeat: HTMLInputElement, firstName: HTMLInputElement, lastName: HTMLInputElement, phone: HTMLInputElement) {
-        return login.value != "" && password.value != "" && passwordRepeat.value != "" && firstName.value != "" && lastName.value != "" && phone.value != "";
+        const res = login.value != "" && password.value != "" && passwordRepeat.value != "" && firstName.value != "" && lastName.value != "";
+        console.log(res);
+        if (phone.value == "") {
+            if (confirm("Nie wprowadzono numeru telefonu. Czy chcesz kontynuowań pomimo tego?")) {
+                return res;
+            }
+            return false;
+        }
+        return res;
     }
 
     deleteClass($event: Event) {

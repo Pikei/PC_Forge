@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {CpuFilterComponent} from '../cpu-filter/cpu-filter.component';
 import {NgIf} from '@angular/common';
 import {MotherboardFilterComponent} from '../motherboard-filter/motherboard-filter.component';
@@ -30,7 +30,7 @@ import {Params} from '../../../../Params';
     templateUrl: './product-filter.component.html',
     styleUrl: './product-filter.component.scss'
 })
-export class ProductFilterComponent implements OnInit, AfterViewInit {
+export class ProductFilterComponent implements AfterViewInit {
     @Input() filter: any;
     @Input() category!: string;
     @Input() activeFilters!: Map<string, string[]>;
@@ -40,13 +40,6 @@ export class ProductFilterComponent implements OnInit, AfterViewInit {
     expandProducers = false;
     selectedProducers: string[] = [];
     name: string = "";
-
-    ngOnInit(): void {
-        let paramUrl = []
-        for (const [key, value] of this.activeFilters) {
-            paramUrl.push(key + "=" + value);
-        }
-    }
 
     ngAfterViewInit(): void {
         this.productFilter?.setFilters(this.activeFilters);

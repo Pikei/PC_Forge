@@ -28,7 +28,6 @@ export const routes: Routes = [
     {path: 'product', component: ProductPageComponent},
     {path: 'category', component: CategoryPageComponent},
     {path: 'category/:categoryName', component: ProductListComponent},
-    {path: 'search/:categoryName', component: ProductListComponent},
     {path: 'search', component: ProductListComponent},
     {path: 'config_list', component: ConfigListComponent},
     {path: 'config/:configName', component: ConfigurationComponent},

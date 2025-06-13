@@ -40,6 +40,7 @@ export class OrderListComponent implements OnInit {
         this.sender.requestPost(url, null).subscribe(
             response => {
                 alert(response.body.message);
+                window.location.reload();
             });
         this.orders.splice(this.orders.indexOf(order), 1);
 

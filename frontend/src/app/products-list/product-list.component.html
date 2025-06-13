@@ -16,8 +16,8 @@
         <p>Nie znaleziono produktów spełniających określone kryteria</p>
     </div>
     <div class="main" *ngIf="numberOfProductsInCategory() > 0">
-        <h2 *ngIf="isSearchMode()">Wyniki wyszukiwania "{{ name }}" ({{ numberOfFoundProducts() }})</h2>
         <div class="nav">
+            <h2 *ngIf="isSearchMode()">Wyniki wyszukiwania "{{ name }}" ({{ numberOfFoundProducts() }})</h2>
             <h2 *ngIf="isCategoryMode()">{{ getCategoryNameFromUrl() }}</h2>
             <div class="options">
                 <div class="page_nav_option">

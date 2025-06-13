@@ -54,6 +54,10 @@ export class ProductListComponent implements OnInit {
     private initMode() {
         if (this.route.snapshot.paramMap.has('categoryName')) {
             this.category = this.route.snapshot.paramMap.get('categoryName')!;
+            if (this.getCategoryNameFromUrl() == "") {
+                this.router.navigate(['/page_not_found']);
+                return;
+            }
             this.modeCategory = true;
             return;
         }
@@ -217,7 +221,10 @@ export class ProductListComponent implements OnInit {
 
     updateProductsOnPage() {
         this.lastPage = Math.ceil(this.products.length / this.numberOfProductsPerPage)
-        this.productsOnPage = this.products.slice((this.pageNumber - 1) * this.numberOfProductsPerPage, this.pageNumber * this.numberOfProductsPerPage);
+        this.productsOnPage = this.products.slice(
+            (this.pageNumber - 1) * this.numberOfProductsPerPage,
+            this.pageNumber * this.numberOfProductsPerPage
+        );
         window.scrollTo({
             top: 0,
             behavior: 'smooth'

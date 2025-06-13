@@ -13,7 +13,7 @@ export class CategoryPageComponent {
     constructor(private router: Router) {
     }
 
-    goToCategory(category: string) {
+    categoryPath(category: string) {
         let path: string = "";
         switch (category) {
             case "CPU":
@@ -49,10 +49,6 @@ export class CategoryPageComponent {
             default:
                 return;
         }
-        this.router.navigateByUrl('/', {
-            skipLocationChange: true
-        }).then(() => {
-            this.router.navigate(['category/' + path]);
-        });
+        return "category/" + path;
     }
 }
